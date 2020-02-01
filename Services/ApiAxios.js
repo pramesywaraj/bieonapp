@@ -1,9 +1,17 @@
 import axios from 'axios'
+import config from 'react-native-config'
 
-const base_url = 'bieonbe.defuture.tech/'
 
-export default class ApiAxios {
-    getArticle() {
-        return this.get(base_url + 'article/list')
+// Auth services
+export const login = async (data) => {
+    try {
+        const response = await axios.post(config.API_URL, data);
+        console.log(response);
+
+        return response;
+    }
+    catch(err) {
+        console.log("Error detected in Login", err);
+        return err;
     }
 }

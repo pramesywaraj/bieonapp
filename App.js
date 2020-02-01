@@ -1,7 +1,9 @@
 import React from 'react'
 import { Provider } from 'react-redux'
-import store from './Redux/store'
+import configureStore from './Redux/store'
 import Home from './routes'
+
+const store = configureStore();
 
 
 export default class App extends React.Component {
