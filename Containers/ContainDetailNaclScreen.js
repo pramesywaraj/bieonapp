@@ -3,6 +3,24 @@ import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 export default class ContainDetailNaclScreen extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
+            sample_name:''
+        }
+    }
+    saveData() {
+        const sample_name = this.state.sample_name
+        if (sample_name.length > 0) {
+            console.log("no_seri",this.state.content.no_seri)
+            console.log("sample_name",sample_name)
+            console.log("nacl",this.state.content.nacl)
+            console.log("whiteness",this.state.content.whiteness)
+            console.log("water_content",this.state.content.water_content)
+            console.log("battery",this.state.content.battery)
+        }  else {alert("You must be fill sample name.")}
+    }
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -11,7 +29,7 @@ export default class ContainDetailNaclScreen extends Component {
                     <View style={styles.container}>
                         <View style={styles.itemContainerTop}>
                             <Image style={styles.itemIconImage} source={require('../assets/icons/retrievedata/device.png')} />
-                            <Text style={styles.itemTextTop}>BIEON-001</Text>
+                            <Text style={styles.itemTextTop}>{this.state.content.no_seri}</Text>
                         </View>
                         <View style={[styles.button]}>
                             <Image style={[styles.logo]} source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
@@ -35,11 +53,11 @@ export default class ContainDetailNaclScreen extends Component {
                                             }}>
                                                 <Text style={[styles.textbuttonGoogle]}>NaCl</Text>
                                             </Col>
-                                            <Col size={2} style={{
+                                            <Col size={3} style={{
                                                 alignItems: 'flex-end',
                                                 justifyContent: 'center',
                                             }}>
-                                                <Text style={[styles.textbuttonGoogle]}>: {this.props.navigation.state.params.contentBluetooth}</Text>
+                                                <Text style={[styles.textbuttonGoogle]}>: {this.state.content.nacl}%</Text>
                                             </Col>
                                         </Row>
                                         <View style={[styles.Border]}></View>
@@ -57,7 +75,7 @@ export default class ContainDetailNaclScreen extends Component {
                                                 alignItems: 'flex-end',
                                                 justifyContent: 'center',
                                             }}>
-                                                <Text style={[styles.textbuttonGoogle]}>: 98.6%</Text>
+                                                <Text style={[styles.textbuttonGoogle]}>: {this.state.content.whiteness}%</Text>
                                             </Col>
                                         </Row>
                                         <View style={[styles.Border]}></View>
@@ -72,10 +90,8 @@ export default class ContainDetailNaclScreen extends Component {
                                                 <Text style={[styles.textbuttonGoogle]}>Water Content</Text>
                                             </Col>
                                             <Col size={2} style={{
-                                                alignItems: 'flex-end',
-                                                justifyContent: 'center',
                                             }}>
-                                                <Text style={[styles.textbuttonGoogle]}>: 00.5%</Text>
+                                                <Text style={[styles.textbuttonGoogle]}>: {this.state.content.water_content}%</Text>
                                             </Col>
                                         </Row>
                                         <View style={[styles.BorderBottom]}></View>
@@ -83,7 +99,7 @@ export default class ContainDetailNaclScreen extends Component {
                                             <Image style={styles.itemIconContain} source={require('../assets/icons/retrievedata/sample.png')} />
                                             <Col>
                                                 <Text style={styles.text}>Sample Name</Text>
-                                                <TextInput style={[styles.TextInput]} placeholder="Sample Name" underlineColorAndroid={'transparent'}></TextInput>
+                                                <TextInput required style={[styles.TextInput]} placeholder="Sample Name" underlineColorAndroid={'transparent'} onChangeText={(sample_name) => this.setState({ sample_name })}></TextInput>
                                             </Col>
                                         </Row>
                                     </View>
@@ -92,7 +108,7 @@ export default class ContainDetailNaclScreen extends Component {
                         </View>
                         <Row>
                             <Col>
-                                <TouchableOpacity style={[styles.buttonsearchLeft]} onPress={() => navigate('RetrieveDataScreen')}>
+                                <TouchableOpacity style={[styles.buttonsearchLeft]} onPress={() => this.saveData()}>
                                     <Text style={[styles.textbuttonsearch]}>Save</Text>
                                 </TouchableOpacity>
                             </Col>

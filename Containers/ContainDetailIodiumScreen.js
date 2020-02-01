@@ -3,6 +3,22 @@ import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 export default class ContainDetailIoduiScreen extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
+            sample_name:''
+        }
+    }
+    saveData() {
+        const sample_name = this.state.sample_name
+        if (sample_name.length > 0) {
+        console.log("no_seri",this.state.content.no_seri)
+        console.log("sample_name",sample_name)
+        console.log("iodium",this.state.content.iodium)
+        console.log("battery",this.state.content.battery)
+        } else {alert("You must be fill sample name.")}
+    }
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -11,7 +27,7 @@ export default class ContainDetailIoduiScreen extends Component {
                     <View style={styles.container}>
                         <View style={styles.itemContainerTop}>
                             <Image style={styles.itemIconImage} source={require('../assets/icons/retrievedata/device.png')} />
-                            <Text style={styles.itemTextTop}>BIEON-001</Text>
+                            <Text style={styles.itemTextTop}>{this.state.content.no_seri}</Text>
                         </View>
                         <View style={[styles.button]}>
                             <Image style={[styles.logo]} source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
@@ -44,7 +60,7 @@ export default class ContainDetailIoduiScreen extends Component {
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                         }}>
-                                            <Text style={[styles.textbuttonMiddle]}>60</Text>
+                                            <Text style={[styles.textbuttonMiddle]}>{this.state.content.iodium}</Text>
                                         </Col>
                                     </Row>
                                     <Row style={{
@@ -63,7 +79,7 @@ export default class ContainDetailIoduiScreen extends Component {
                                         <Image style={styles.itemIconContain} source={require('../assets/icons/retrievedata/sample.png')} />
                                         <Col>
                                             <Text style={styles.text}>Sample Name</Text>
-                                            <TextInput style={[styles.TextInput]} placeholder="Sample Name" underlineColorAndroid={'transparent'}></TextInput>
+                                            <TextInput style={[styles.TextInput]} placeholder="Sample Name" underlineColorAndroid={'transparent'} onChangeText={(sample_name) => this.setState({ sample_name })}></TextInput>
                                         </Col>
                                     </Row>
                                 </View>
@@ -71,7 +87,7 @@ export default class ContainDetailIoduiScreen extends Component {
                         </View>
                         <Row>
                             <Col>
-                                <TouchableOpacity style={[styles.buttonsearchLeft]} onPress={() => navigate('RetrieveDataScreen')}>
+                                <TouchableOpacity style={[styles.buttonsearchLeft]} onPress={() => this.saveData()}>
                                     <Text style={[styles.textbuttonsearch]}>Save</Text>
                                 </TouchableOpacity>
                             </Col>
@@ -210,7 +226,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     textbuttonMiddle: {
-        fontSize: 100,
+        fontSize: 75,
         color: '#000',
         fontWeight: '700',
         textAlign: 'center',

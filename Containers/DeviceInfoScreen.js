@@ -5,6 +5,12 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 
 
 export default class DeviceInfoScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+        content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
+    }
+  }
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -16,7 +22,7 @@ export default class DeviceInfoScreen extends Component {
             <Image style={styles.itemIconImage} source={require('../assets/icons/devicestatus/seri.png')} />
             <Col>
               <Text style={styles.text}>No. Seri Device</Text>
-              <TextInput style={[styles.TextInput]} placeholder="No. Seri Device" underlineColorAndroid={'transparent'}></TextInput>
+              <TextInput editable={false} style={[styles.TextInput]} underlineColorAndroid={'transparent'}>{this.state.content.no_seri}</TextInput>
             </Col>
           </Row>
         </View>
@@ -25,7 +31,7 @@ export default class DeviceInfoScreen extends Component {
             <Image style={styles.itemIconImage} source={require('../assets/icons/devicestatus/battery.png')} />
             <Col>
               <Text style={styles.text}>Battery Status</Text>
-              <TextInput style={[styles.TextInput]} placeholder="Battery Status" underlineColorAndroid={'transparent'}></TextInput>
+              <TextInput editable={false} style={[styles.TextInput]} underlineColorAndroid={'transparent'}>{this.state.content.battery}%</TextInput>
             </Col>
           </Row>
         </View>
@@ -34,7 +40,7 @@ export default class DeviceInfoScreen extends Component {
             <Image style={styles.itemIconImage} source={require('../assets/icons/devicestatus/location.png')} />
             <Col>
               <Text style={styles.text}>Location</Text>
-              <TextInput style={[styles.TextInput]} placeholder="Location" underlineColorAndroid={'transparent'}></TextInput>
+              <TextInput editable={false} style={[styles.TextInput]} placeholder="Location" underlineColorAndroid={'transparent'}></TextInput>
             </Col>
           </Row>
         </View>
@@ -43,7 +49,7 @@ export default class DeviceInfoScreen extends Component {
             <Image style={styles.itemIconImage} source={require('../assets/icons/devicestatus/usage.png')} />
             <Col>
               <Text style={styles.text}>Ammount of Usage</Text>
-              <TextInput style={[styles.TextInput]} placeholder="Ammount of Usage" underlineColorAndroid={'transparent'}></TextInput>
+              <TextInput editable={false} style={[styles.TextInput]} underlineColorAndroid={'transparent'}>{this.state.content.count}</TextInput>
             </Col>
           </Row>
         </View>
@@ -52,7 +58,7 @@ export default class DeviceInfoScreen extends Component {
             <Image style={styles.itemIconImage} source={require('../assets/icons/devicestatus/calibration.png')} />
             <Col>
               <Text style={styles.text}>Last of Calibration</Text>
-              <TextInput style={[styles.TextInput]} secureTextEntry={true} placeholder="Last of Calibration" underlineColorAndroid={'transparent'}></TextInput>
+              <TextInput editable={false} style={[styles.TextInput]} underlineColorAndroid={'transparent'}>{this.state.content.lastcal}</TextInput>
             </Col>
           </Row>
         </View>
@@ -110,7 +116,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   TextInput: {
-    fontSize: 18,
+    fontSize: 14,
     alignSelf: 'stretch',
     width: 330,
     height: 40,

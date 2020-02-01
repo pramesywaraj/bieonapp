@@ -18,7 +18,7 @@ export default class SettingScreen extends Component {
         <Row size={13}>
           <View style={styles.container}>
             <View style={styles.menuContainer}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => {
                   this.props.navigation.navigate("DeviceInfoScreen");
                 }}
@@ -27,7 +27,7 @@ export default class SettingScreen extends Component {
                   <Image style={styles.itemIconImage} source={require('../assets/icons/setting/device.png')} />
                   <Text style={styles.itemText}>Device Info</Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <View style={[styles.Border]}></View>
               <TouchableOpacity
                 onPress={() => {

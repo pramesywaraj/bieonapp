@@ -16,8 +16,10 @@ export default class ScanningDeviceScreen extends Component {
           device: null,
           devices: [],
           scanning: false,
-          processing: false
+          processing: false,
+          idPrint:this.props.navigation.state.params.idPrint
         };
+        console.log("id",this.state.idPrint)
       }
     
       async componentDidMount() {
@@ -435,7 +437,7 @@ export default class ScanningDeviceScreen extends Component {
                                 </ScrollView>
                             </Col>
                         </View>
-                        <TouchableOpacity style={[styles.buttonsearch]} onPress={() => navigate('SelectedDeviceScreen')}>
+                        <TouchableOpacity style={[styles.buttonsearch]} onPress={() => navigate('SelectedDeviceScreen',{idPrint:this.state.idPrint})}>
                             <Text style={[styles.textbuttonsearch]}>Search Device</Text>
                         </TouchableOpacity>
                     </View>

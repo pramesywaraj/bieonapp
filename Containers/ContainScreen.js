@@ -358,18 +358,47 @@ export default class ContainScreen extends Component {
 
     write = async (id, message) => {
         try {
-            BluetoothSerial.device(id).write(message)
-            const data = await BluetoothSerial.readFromDevice();
-            let bluetooth = Buffer.from(data).toString()
-            // const Data1 = bluetooth.Data1;
-            let jsonBluetooth = JSON.stringify(bluetooth)
-            let objectBluetooth = JSON.parse(jsonBluetooth)
-            console.log(bluetooth);
-            console.log(jsonBluetooth);
-            console.log(objectBluetooth.NoSeri);
-            
-            this.props.navigation.navigate('ContainDetailNaclScreen', {contentBluetooth: JSON.parse(bluetooth)})
-            alert("Successfuly wrote to device");
+            // for data1
+            if(message === 'Data1') {
+                BluetoothSerial.device(id).write(message)
+                let data = await BluetoothSerial.readFromDevice();
+                let objectBluetooth = JSON.parse(data)
+                console.log('objectBluetooth',objectBluetooth);
+                const newObject = {
+                    "nacl":objectBluetooth.nacl,
+                    "battery":objectBluetooth.battery,
+                    "count":objectBluetooth.count,
+                    "no_seri":objectBluetooth.no_seri,
+                    "water_content":objectBluetooth.water_content,
+                    "whiteness":objectBluetooth.whiteness,
+                }
+                this.props.navigation.navigate('ContainDetailNaclScreen', {contentBluetooth:JSON.stringify(newObject)})
+                // for data2
+            } else if(message === 'Data2') {
+                BluetoothSerial.device(id).write(message)
+                let data = await BluetoothSerial.readFromDevice();
+                let objectBluetooth = JSON.parse(data)
+                console.log('objectBluetooth',objectBluetooth);
+                const newObject = {
+                    "iodium":objectBluetooth.iodium,
+                    "battery":objectBluetooth.battery,
+                    "count":objectBluetooth.count,
+                    "no_seri":objectBluetooth.no_seri,
+                }
+                this.props.navigation.navigate('ContainDetailIodiumScreen', {contentBluetooth:JSON.stringify(newObject)})
+            } else {
+                BluetoothSerial.device(id).write(message)
+                let data = await BluetoothSerial.readFromDevice();
+                let objectBluetooth = JSON.parse(data)
+                console.log('objectBluetooth',objectBluetooth);
+                const newObject = {
+                    "lastcal":objectBluetooth.lastcal,
+                    "battery":objectBluetooth.battery,
+                    "count":objectBluetooth.count,
+                    "no_seri":objectBluetooth.no_seri,
+                }
+                this.props.navigation.navigate('DeviceInfoScreen', {contentBluetooth:JSON.stringify(newObject)})
+            }
         } catch (e) {
             alert(e.message);
         }
@@ -427,13 +456,30 @@ export default class ContainScreen extends Component {
                             </Row>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.buttonGoogle]} onPress={() => 
-                        this.write(this.props.navigation.state.params.idBluetooth, "Data1")}>
+                        this.write(this.props.navigation.state.params.idBluetooth, "Data2")}>
                             <Row>
                                 <Col size={4} style={{
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                 }}>
                                     <Text style={[styles.textbuttonGoogle]}>Iodium</Text>
+                                </Col>
+                                <Col style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}>
+                                    <Image style={styles.itemGoogleImage} source={require('../assets/icons/retrievedata/searchblue.png')} />
+                                </Col>
+                            </Row>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.buttonGoogle]} onPress={() => 
+                        this.write(this.props.navigation.state.params.idBluetooth, "Device")}>
+                            <Row>
+                                <Col size={4} style={{
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}>
+                                    <Text style={[styles.textbuttonGoogle]}>Device Info</Text>
                                 </Col>
                                 <Col style={{
                                     alignItems: 'center',

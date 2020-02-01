@@ -9,7 +9,7 @@ export default class RetrieveDataScreen extends Component {
             <Grid>
                 <Row size={10.5}>
                     <View style={styles.container}>
-                        <TouchableOpacity style={[styles.button]} onPress={() => navigate('PopUpBluetoothScreen')}>
+                        <TouchableOpacity style={[styles.button]} onPress={() => navigate('PopUpBluetoothScreen',{idPrint:"idFieldDevice"})}>
                         <Image style={[styles.logo]} source={require('../assets/icons/retrievedata/bluetoothgray.png')}></Image>
                         </TouchableOpacity>
                         <View style={[styles.buttonGoogle]}>

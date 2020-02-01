@@ -83,7 +83,7 @@ export default class EditProfileScreen extends Component {
               <Row>
                 <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/agency.png')} />
                 <Col>
-                  <Text style={styles.text}>Agency</Text>
+                  <Text style={styles.text}>Company/Institution</Text>
                   <TextInput style={[styles.TextInput]} placeholder="Agency" underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>

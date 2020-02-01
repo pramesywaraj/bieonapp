@@ -16,7 +16,8 @@ export default class SelectedDeviceScreen extends Component {
             device: null,
             devices: [],
             scanning: false,
-            processing: false
+            processing: false,
+            idPrint:this.props.navigation.state.params.idPrint
         };
     }
 
@@ -295,8 +296,12 @@ export default class SelectedDeviceScreen extends Component {
                 alert(
                     `Connected to device ${connected.name}<${connected.id}>`
                 );
+                if(connected.name === "idPrint") {
+                    this.props.navigation.navigate('TableDataScreen',{idBluetooth:connected.address})
+                } else if (this.state.idPrint === "idFieldDevice") {
+                    this.props.navigation.navigate('ContainScreen',{idBluetooth:connected.address})
+                }
 
-                this.props.navigation.navigate('ContainScreen',{idBluetooth:connected.address})
                 this.setState(({ devices, device }) => ({
                     processing: false,
                     device: {
@@ -418,36 +423,6 @@ export default class SelectedDeviceScreen extends Component {
                                                 </View>
                                             )
                                         }
-                                        {/* <View style={[styles.BorderTop]}></View>
-                                        <TouchableOpacity onPress={() => navigate('ContainScreen')}>
-                                            <View style={styles.itemContainer}>
-                                                <Text style={styles.itemText}>Paired 1</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <View style={[styles.Border]}></View>
-                                        <TouchableOpacity onPress={() => navigate('ContainScreen')}>
-                                            <View style={styles.itemContainer}>
-                                                <Text style={styles.itemText}>Paired 2</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <View style={[styles.Border]}></View>
-                                        <TouchableOpacity onPress={() => navigate('ContainScreen')}>
-                                            <View style={styles.itemContainer}>
-                                                <Text style={styles.itemText}>Paired 3</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <View style={[styles.Border]}></View>
-                                        <TouchableOpacity onPress={() => navigate('ContainScreen')}>
-                                            <View style={styles.itemContainer}>
-                                                <Text style={styles.itemText}>Paired 4</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <View style={[styles.Border]}></View>
-                                        <TouchableOpacity onPress={() => navigate('ContainScreen')}>
-                                            <View style={styles.itemContainer}>
-                                                <Text style={styles.itemText}>Paired 5</Text>
-                                            </View>
-                                        </TouchableOpacity> */}
                                     </View>
                                 </ScrollView>
                             </Col>
