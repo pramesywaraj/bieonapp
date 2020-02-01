@@ -46,7 +46,7 @@ export default class EditProfileScreen extends Component {
                 <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/email.png')} />
                 <Col>
                   <Text style={styles.text}>Email</Text>
-                  <TextInput style={[styles.TextInput]} placeholder="Email" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput editable={false} style={[styles.TextInput]} placeholder="Email" underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
@@ -74,8 +74,8 @@ export default class EditProfileScreen extends Component {
               <Row>
                 <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/position.png')} />
                 <Col>
-                  <Text style={styles.text}>Position / Job</Text>
-                  <TextInput style={[styles.TextInput]} placeholder="Position / Job" underlineColorAndroid={'transparent'}></TextInput>
+                  <Text style={styles.text}>Position</Text>
+                  <TextInput editable={false} style={[styles.TextInput]} placeholder="Position" underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
@@ -84,7 +84,7 @@ export default class EditProfileScreen extends Component {
                 <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/agency.png')} />
                 <Col>
                   <Text style={styles.text}>Company/Institution</Text>
-                  <TextInput style={[styles.TextInput]} placeholder="Agency" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput editable={false} style={[styles.TextInput]} placeholder="Company/Institution" underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
