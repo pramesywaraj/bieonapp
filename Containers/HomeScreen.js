@@ -5,6 +5,7 @@ import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, 
 import { Col, Row, Grid } from "react-native-easy-grid";
 import loginAction from '../Redux/Actions/login'
 import ApiAxios from '../Services/ApiAxios'
+
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props)

@@ -24,16 +24,15 @@ class LoginScreen extends Component {
         email: this.state.email,
         password: this.state.password
       }
-      console.log('haha')
       loginAction(newLogin);
     } else {
-      console.warn('Haha')
+      
     }
   }
 
   render() {
     const { navigate } = this.props.navigation;
-    console.log("this is the props", this.props);
+
     return (
       <ScrollView style={styles.container}>
         <ImageBackground 
