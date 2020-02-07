@@ -3,15 +3,17 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  Text,
+  Alert,
   View,
   Dimensions,
   TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
 
 import AppsButton from './Components/Buttons/AppsButton';
+
+import Config from 'react-native-config';
+import axios from 'axios';
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -20,6 +22,37 @@ class LoginScreen extends Component {
       email: '',
       password: '',
     };
+
+    this.onPressLogin = this.onPressLogin.bind(this);
+  }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Hahahha')},
+    ]);
+  };
+
+  async onLoginProcess(payload) {
+    const {navigate} = this.props.navigation;
+
+    try {
+      let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
+
+      console.log('Response', response.status);
+
+      if (response.status === 202) {
+        navigate('HomeScreen');
+      }
+    } catch (err) {
+      const {response} = err;
+
+      if (response.status === 422) {
+        this.onAlert(
+          'Email atau Password Salah',
+          'Silahkan periksa email atau password Anda kembali.',
+        );
+      }
+    }
   }
 
   onPressLogin() {
@@ -29,15 +62,16 @@ class LoginScreen extends Component {
         password: this.state.password,
       };
 
-      navigate();
+      this.onLoginProcess(newLogin);
     } else {
-      console.log('not logged in');
+      this.onAlert(
+        'Kesalahan',
+        'Silahkan masukkan email atau password Anda terlebih dahulu.',
+      );
     }
   }
 
   render() {
-    const {navigate} = this.props.navigation;
-
     return (
       <View style={styles.container}>
         <ImageBackground
@@ -88,9 +122,9 @@ class LoginScreen extends Component {
               buttonColor={'#fff'}
               textColor={'#129cd8'}
             />
-            <TouchableOpacity onPress={() => navigate('ForgetPasswordScreen')}>
+            {/* <TouchableOpacity onPress={() => navigate('ForgetPasswordScreen')}>
               <Text style={[styles.text]}>FORGOT PASSWORD?</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>

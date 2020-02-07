@@ -6,6 +6,7 @@ import {TouchableNativeFeedback, View, Text, StyleSheet} from 'react-native';
 export default function AppsButton({action, label, textColor, buttonColor}) {
   return (
     <TouchableNativeFeedback
+      onPress={action}
       background={TouchableNativeFeedback.SelectableBackground()}>
       <View style={[buttonStyle.button, {backgroundColor: buttonColor}]}>
         <Text style={[buttonStyle.textbutton, {color: textColor}]}>
