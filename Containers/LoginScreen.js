@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { connect } from "react-redux";
-import loginAction from '../Redux/Actions/login'
+import { bindActionCreators } from 'redux';
+import { loginAction } from '../Redux/Actions/login'
 
 
 class LoginScreen extends Component {
@@ -10,109 +11,122 @@ class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "admin@bieon.com",
-      password: "password",
+      email: '',
+      password: ''
     }
   }
 
   onPressLogin() {
-    const { email, password, auth } = this.state
-    console.log("email", email)
-    console.log("password", password)
-    if (__DEV__) console.log("login nih");
-    if (email.length > 0 && password.length > 0) {
-      if (__DEV__) console.log("do login");
-      this.setState({ auth: true })
-      this.props.loginAction({
-        email,
-        password
-      })
-      this.props.navigation.navigate('HomeScreen')
-    }
-    // else if (email.length == 0 && password.length == 0) {
-    //   console.log("do register");
-    //   this.props.loginAction({
-    //     email,
-    //     password,
-    //   })
-    //   alert("Please Fill The Form!")
-    // }
-  }
+    const { loginAction } = this.props;
 
+    if(this.state.email !== '' && this.state.password !== '' ) {
+      let newLogin = {
+        email: this.state.email,
+        password: this.state.password
+      }
+      loginAction(newLogin);
+    } else {
+      
+    }
+  }
 
   render() {
     const { navigate } = this.props.navigation;
+
     return (
-      <View style={styles.container}>
-        <ImageBackground style={[styles.background]} source={require('../assets/background/3.png')}>
-          <KeyboardAvoidingView behavior='padding' style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Image style={[styles.logo]} source={require('../assets/logo/loginwhite.png')}></Image>
-            <View style={styles.itemContainer}>
-              <Image style={styles.itemIconImage} source={require('../assets/icons/signup/email.png')} />
-              <TextInput style={[styles.TextInput]} underlineColorAndroid={'transparent'} placeholder={'Email'} onChangeText={(email) => this.setState({ email })}></TextInput>
+      <ScrollView style={styles.container}>
+        <ImageBackground 
+          style={[styles.background]} 
+          source={require('../assets/background/3.png')}
+        >
+          <KeyboardAvoidingView 
+            behavior='padding' 
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Image 
+              style={[styles.logo]} 
+              source={require('../assets/logo/loginwhite.png')}
+              >
+            </Image>
+            <View 
+              style={styles.itemContainer}
+            >
+              <Image 
+                style={styles.itemIconImage} 
+                source={require('../assets/icons/signup/email.png')} 
+              />
+              <TextInput 
+                style={[styles.TextInput]}
+                value={this.state.email}
+                underlineColorAndroid='transparent'
+                placeholder={'Email'} 
+                onChangeText={(email) => this.setState({ email: email })}
+              ></TextInput>
             </View>
             <View style={styles.itemContainer}>
-              <Image style={styles.itemIconImage} source={require('../assets/icons/signup/password.png')} />
-              <TextInput style={[styles.TextInput]} secureTextEntry={true} underlineColorAndroid={'transparent'}
-                placeholder={'Password'} onChangeText={(password) => this.setState({ password })}></TextInput>
+              <Image 
+                style={styles.itemIconImage} 
+                source={require('../assets/icons/signup/password.png')} 
+              />
+              <TextInput 
+                style={[styles.TextInput]} 
+                secureTextEntry={true}
+                value={this.state.password}
+                underlineColorAndroid={'transparent'}
+                placeholder={'Password'} 
+                onChangeText={(password) => this.setState({ password: password })}
+              >
+              </TextInput>
             </View>
-            <TouchableOpacity style={[styles.button]} onPress={() => this.onPressLogin()}>
+            <TouchableOpacity 
+              style={[styles.button]} 
+              onPress={this.onPressLogin}
+            >
               <Text style={[styles.textbutton]}>LOGIN</Text>
             </TouchableOpacity>
             <Row style={[styles.Row]}>
               <Col style={[styles.Col]}>
-                <TouchableOpacity onPress={() => navigate('ForgetPasswordScreen')}>
+                <TouchableOpacity 
+                  onPress={() => navigate('ForgetPasswordScreen')}
+                >
                   <Text style={[styles.text]}>FORGOT PASSWORD?</Text>
                 </TouchableOpacity>
               </Col>
             </Row>
             <Text style={[styles.textsign]}>OR LOGIN WITH</Text>
-            <TouchableOpacity style={[styles.buttonGoogle]} onPress={() => navigate('HomeScreen')}>
+            <TouchableOpacity 
+              style={[styles.buttonGoogle]} 
+              onPress={() => navigate('HomeScreen')}
+            >
               <Row>
-                <Image style={styles.itemGoogleImage} source={require('../assets/icons/login/g.png')} />
+                <Image 
+                  style={styles.itemGoogleImage} 
+                  source={require('../assets/icons/login/g.png')} 
+                />
                 <Text style={[styles.textbuttonGoogle]}>GOOGLE</Text>
               </Row>
             </TouchableOpacity>
           </KeyboardAvoidingView>
         </ImageBackground>
-
-      </View>
+      </ScrollView>
     );
   }
 }
 
-const mapStateToProps = state => {
-  const { login } = state;
-  return { login };
-};
-
-const mapDispatchToProps = dispatch => ({
-  loginAction: data => dispatch(loginAction(data)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginScreen);
-
-
-
-const win = Dimensions.get('window');
+const win = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   logo: {
-    width: 360,
-    marginTop: 0,
-    marginBottom: 90
+    resizeMode: 'contain',
+    width: 200,
   },
   Row: {
     height: 40,
@@ -125,12 +139,11 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   background: {
-    width: '100%',
-    height: '100%',
+    resizeMode: 'contain',
+    width: win.width,
+    height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -3,
-
   },
   text: {
     color: '#fff',
@@ -168,16 +181,16 @@ const styles = StyleSheet.create({
     height: 30,
   },
   TextInput: {
-    fontSize: 18,
+    // fontSize: 18,
+    marginBottom: "10%",
+    marginLeft: "2%",
+    marginRight: "10%",
     alignSelf: 'stretch',
-    width: 380,
-    height: 40,
-    marginBottom: 20,
+    width: "100%",
+    height: "50%",
     color: '#000',
     borderBottomColor: '#000',
     borderBottomWidth: 0.7,
-    fontStyle: 'italic',
-    marginLeft: 15
   },
   button: {
     alignSelf: 'center',
@@ -213,3 +226,17 @@ const styles = StyleSheet.create({
     marginLeft: 20
   }
 });
+
+const mapStateToProps = state => {
+  const { login } = state;
+  return { login };
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  loginAction: loginAction,
+}, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginScreen);
