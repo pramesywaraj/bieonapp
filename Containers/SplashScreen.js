@@ -1,15 +1,21 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions } from 'react-native';
+import React, {Component} from 'react';
+import {
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Text,
+  View,
+  Dimensions,
+} from 'react-native';
 
 export default class SplashScreen extends Component {
-  performTimeConsumingTask = async() => {
-    return new Promise((resolve) =>
-      setTimeout(
-        () => { resolve('result') },
-        3000
-      )
-    )
-  }
+  performTimeConsumingTask = async () => {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        resolve('result');
+      }, 3000),
+    );
+  };
 
   async componentDidMount() {
     // Preload data from an external API
@@ -23,8 +29,12 @@ export default class SplashScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ImageBackground style={[styles.background]} source={require('../assets/background/3.png')}>
-          <Image style={[styles.logo]} source={require('../assets/logo/settingwhite.png')}></Image>
+        <ImageBackground
+          style={[styles.background]}
+          source={require('../assets/background/3.png')}>
+          <Image
+            style={[styles.logo]}
+            source={require('../assets/logo/settingwhite.png')}></Image>
         </ImageBackground>
       </View>
     );
@@ -42,14 +52,13 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 220,
-    height: 135
-
+    height: 135,
   },
   background: {
     width: win.width,
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -3
+    marginTop: -3,
   },
 });

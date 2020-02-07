@@ -1,46 +1,90 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { CheckBox } from 'react-native-elements'
+import React, {Component} from 'react';
+import {
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Text,
+  View,
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from 'react-native';
+import {CheckBox} from 'react-native-elements';
 
 export default class RegisterScreen extends Component {
   render() {
-    const { navigate } = this.props.navigation;
+    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <ImageBackground style={[styles.background]} source={require('../assets/background/3.png')}>
-          <Image style={[styles.logo]} source={require('../assets/logo/settingwhite.png')}></Image>
-          <KeyboardAvoidingView behavior='padding' style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <View style={styles.itemContainer}>
-          <Image style={styles.itemIconImage} source={require('../assets/icons/signup/profile.png')} />
-          <TextInput style={[styles.TextInput]} placeholder="Full Name" underlineColorAndroid={'transparent'}></TextInput>
-          </View>   
-          <View style={styles.itemContainer}>
-          <Image style={styles.itemIconImage} source={require('../assets/icons/signup/email.png')} />
-          <TextInput style={[styles.TextInput]} placeholder="Email" underlineColorAndroid={'transparent'}></TextInput>
-          </View> 
-          <View style={styles.itemContainer}>
-          <Image style={styles.itemIconImage} source={require('../assets/icons/signup/phone.png')} />
-          <TextInput style={[styles.TextInput]} placeholder="Phone Number" underlineColorAndroid={'transparent'}></TextInput>
-          </View>
-          <View style={styles.itemContainer}>
-          <Image style={styles.itemIconImage} source={require('../assets/icons/signup/password.png')} />
-          <TextInput style={[styles.TextInput]} secureTextEntry={true} placeholder="Password" underlineColorAndroid={'transparent'}></TextInput>
-          </View>
-          {/* <CheckBox title='I aggree with term & condition'
+        <ImageBackground
+          style={[styles.background]}
+          source={require('../assets/background/3.png')}>
+          <Image
+            style={[styles.logo]}
+            source={require('../assets/logo/settingwhite.png')}></Image>
+          <KeyboardAvoidingView
+            behavior="padding"
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <View style={styles.itemContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/signup/profile.png')}
+              />
+              <TextInput
+                style={[styles.TextInput]}
+                placeholder="Full Name"
+                underlineColorAndroid={'transparent'}></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/signup/email.png')}
+              />
+              <TextInput
+                style={[styles.TextInput]}
+                placeholder="Email"
+                underlineColorAndroid={'transparent'}></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/signup/phone.png')}
+              />
+              <TextInput
+                style={[styles.TextInput]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}></TextInput>
+            </View>
+            <View style={styles.itemContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/signup/password.png')}
+              />
+              <TextInput
+                style={[styles.TextInput]}
+                secureTextEntry={true}
+                placeholder="Password"
+                underlineColorAndroid={'transparent'}></TextInput>
+            </View>
+            {/* <CheckBox title='I aggree with term & condition'
           >
           </CheckBox> */}
-          <TouchableOpacity style={[styles.button]} onPress={() => navigate('LoginScreen')}>
-            <Text style={[styles.textbutton]}>SIGN UP</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigate('LoginScreen')}>
-          <Text style={[styles.textsign]}>Already have an account? Login</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => navigate('LoginScreen')}>
+              <Text style={[styles.textbutton]}>SIGN UP</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigate('LoginScreen')}>
+              <Text style={[styles.textsign]}>
+                Already have an account? Login
+              </Text>
+            </TouchableOpacity>
           </KeyboardAvoidingView>
         </ImageBackground>
-
       </View>
     );
   }
@@ -57,17 +101,17 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 190,
-    height:120,
+    height: 120,
     marginTop: -70,
     marginBottom: 50,
-    marginRight: -180
+    marginRight: -180,
   },
   background: {
     width: win.width,
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -5
+    marginTop: -5,
   },
   CheckBox: {
     fontSize: 20,
@@ -80,14 +124,14 @@ const styles = StyleSheet.create({
   TextInput: {
     fontSize: 18,
     alignSelf: 'stretch',
-    width:380,
+    width: 380,
     height: 40,
     marginBottom: 8,
     color: '#000',
     borderBottomColor: '#000',
     borderBottomWidth: 0.7,
     fontStyle: 'italic',
-    marginLeft: 15
+    marginLeft: 15,
   },
   button: {
     alignSelf: 'center',
@@ -97,13 +141,13 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     backgroundColor: '#fff',
-    marginTop: 30
+    marginTop: 30,
   },
   textbutton: {
     fontSize: 20,
     color: '#129cd8',
     fontWeight: '700',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -116,6 +160,6 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginLeft: 30,
-    marginTop: -15
+    marginTop: -15,
   },
 });
