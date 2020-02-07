@@ -10,9 +10,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {loginAction} from '../Redux/Actions/login';
+
+import AppsButton from './Components/Buttons/AppsButton';
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -24,14 +23,13 @@ class LoginScreen extends Component {
   }
 
   onPressLogin() {
-    const {loginAction} = this.props;
-
     if (this.state.email !== '' && this.state.password !== '') {
       let newLogin = {
         email: this.state.email,
         password: this.state.password,
       };
-      loginAction(newLogin);
+
+      navigate();
     } else {
       console.log('not logged in');
     }
@@ -84,11 +82,12 @@ class LoginScreen extends Component {
                   this.setState({password: password})
                 }></TextInput>
             </View>
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={this.onPressLogin}>
-              <Text style={[styles.textbutton]}>LOGIN</Text>
-            </TouchableOpacity>
+            <AppsButton
+              action={this.onPressLogin}
+              label={'Login'}
+              buttonColor={'#fff'}
+              textColor={'#129cd8'}
+            />
             <TouchableOpacity onPress={() => navigate('ForgetPasswordScreen')}>
               <Text style={[styles.text]}>FORGOT PASSWORD?</Text>
             </TouchableOpacity>
@@ -127,7 +126,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    color: '#fff',
     fontSize: 10,
     marginTop: 50,
     color: '#f8f8f8',
@@ -150,8 +148,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 30,
     height: 30,
-    // marginLeft: 30,
-    // marginTop: -20
   },
   TextInput: {
     fontSize: 16,
@@ -162,16 +158,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 0.7,
   },
-  button: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderRadius: 40,
-    width: 230,
-    height: 50,
-    padding: 10,
-    backgroundColor: '#fff',
-    marginTop: 40,
-  },
+
   buttonGoogle: {
     alignSelf: 'center',
     alignItems: 'center',
@@ -182,12 +169,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     marginTop: 20,
   },
-  textbutton: {
-    fontSize: 20,
-    color: '#129cd8',
-    fontWeight: '700',
-    textAlign: 'center',
-  },
   textbuttonGoogle: {
     fontSize: 20,
     color: '#fff',
@@ -197,17 +178,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  const {login} = state;
-  return {login};
-};
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      loginAction: loginAction,
-    },
-    dispatch,
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
+export default LoginScreen;

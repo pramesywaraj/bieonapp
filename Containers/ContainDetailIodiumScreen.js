@@ -2,13 +2,11 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
   View,
   Dimensions,
   TextInput,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 
@@ -81,10 +79,7 @@ export default class ContainDetailIoduiScreen extends Component {
                       marginBottom: -10,
                     }}>
                     <Col
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
+                      style={{alignItems: 'center', justifyContent: 'center'}}>
                       <Text style={[styles.textbuttonMiddle]}>
                         {this.state.content.iodium}
                       </Text>
