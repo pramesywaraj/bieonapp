@@ -33,10 +33,17 @@ class LoginScreen extends Component {
     ]);
   };
 
-  // storeUserCredentials = async () => {
-  //   try {
-  //   }
-  // };
+  storeUserCredentials = async (data, token) => {
+    try {
+      await AsyncStorage.setItem('userData', data);
+      await AsyncStorage.setItem('userAuth', token);
+    } catch (err) {
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika menyimpan data, silahkan restart aplikasi.',
+      );
+    }
+  };
 
   async onLoginProcess(payload) {
     const {navigate} = this.props.navigation;
@@ -45,6 +52,10 @@ class LoginScreen extends Component {
       let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
 
       if (response.status === 202) {
+        const {data, token} = response.data;
+
+        this.storeUserCredentials(data, token);
+
         navigate('HomeScreen');
       }
     } catch (err) {

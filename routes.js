@@ -26,154 +26,115 @@ const RootStack = createStackNavigator({
   SplashScreen: {
     screen: SplashScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   HomeScreen: {
     screen: HomeScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   ContainScreen: {
     screen: ContainScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   ContainDetailIodiumScreen: {
     screen: ContainDetailIodiumScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   ContainDetailNaclScreen: {
     screen: ContainDetailNaclScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   ScanningDeviceScreen: {
     screen: ScanningDeviceScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   TableDataScreen: {
     screen: TableDataScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   SelectedDeviceScreen: {
     screen: SelectedDeviceScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   RetrieveDataScreen: {
     screen: RetrieveDataScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   PopUpBluetoothScreen: {
     screen: PopUpBluetoothScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   EditProfileScreen: {
     screen: EditProfileScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   HelpFeedbackScreen: {
     screen: HelpFeedbackScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   SettingScreen: {
     screen: SettingScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   TermsConditionScreen: {
     screen: TermsConditionScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   PrivacyPolicyScreen: {
     screen: PrivacyPolicyScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   LoginScreen: {
     screen: LoginScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   DeviceInfoScreen: {
     screen: DeviceInfoScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   RegisterScreen: {
     screen: RegisterScreen,
-
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
   ForgetPasswordScreen: {
     screen: ForgetPasswordScreen,
     navigationOptions: {
-      headerLeft: null,
-      headerRight: null,
-      header: null,
+      headerShown: false,
     },
   },
 });
