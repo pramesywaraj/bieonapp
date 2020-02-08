@@ -8,11 +8,11 @@ import {
   Dimensions,
   TextInput,
   KeyboardAvoidingView,
-  AsyncStorage,
 } from 'react-native';
 
 import AppsButton from './Components/Buttons/AppsButton';
 
+import AsyncStorage from '@react-native-community/async-storage';
 import Config from 'react-native-config';
 import axios from 'axios';
 
@@ -34,10 +34,15 @@ class LoginScreen extends Component {
   };
 
   storeUserCredentials = async (data, token) => {
+    const {navigate} = this.props.navigation;
+
     try {
-      await AsyncStorage.setItem('userData', data);
-      await AsyncStorage.setItem('userAuth', token);
+      await AsyncStorage.setItem('@userData', JSON.stringify(data));
+      await AsyncStorage.setItem('@userAuth', JSON.stringify(token));
+
+      navigate('HomeScreen');
     } catch (err) {
+      console.log(err);
       this.onAlert(
         'Terjadi Kesalahan',
         'Telah terjadi kesalahan ketika menyimpan data, silahkan restart aplikasi.',
@@ -46,17 +51,13 @@ class LoginScreen extends Component {
   };
 
   async onLoginProcess(payload) {
-    const {navigate} = this.props.navigation;
-
     try {
       let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
 
       if (response.status === 202) {
-        const {data, token} = response.data;
+        const {data, token} = response.data.data;
 
-        this.storeUserCredentials(data, token);
-
-        navigate('HomeScreen');
+        await this.storeUserCredentials(data, token);
       }
     } catch (err) {
       const {response} = err;
