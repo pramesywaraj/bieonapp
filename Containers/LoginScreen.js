@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
   KeyboardAvoidingView,
+  AsyncStorage,
 } from 'react-native';
 
 import AppsButton from './Components/Buttons/AppsButton';
@@ -32,13 +33,16 @@ class LoginScreen extends Component {
     ]);
   };
 
+  // storeUserCredentials = async () => {
+  //   try {
+  //   }
+  // };
+
   async onLoginProcess(payload) {
     const {navigate} = this.props.navigation;
 
     try {
       let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
-
-      console.log('Response', response.status);
 
       if (response.status === 202) {
         navigate('HomeScreen');
@@ -50,6 +54,11 @@ class LoginScreen extends Component {
         this.onAlert(
           'Email atau Password Salah',
           'Silahkan periksa email atau password Anda kembali.',
+        );
+      } else {
+        this.onAlert(
+          'Terjadi Kesalahan',
+          'Silahkan tunggu beberapa saat dan coba kembali.',
         );
       }
     }
@@ -65,7 +74,7 @@ class LoginScreen extends Component {
       this.onLoginProcess(newLogin);
     } else {
       this.onAlert(
-        'Kesalahan',
+        'Email atau Password belum terisi',
         'Silahkan masukkan email atau password Anda terlebih dahulu.',
       );
     }
@@ -79,21 +88,18 @@ class LoginScreen extends Component {
           source={require('../assets/background/3.png')}>
           <KeyboardAvoidingView
             behavior="padding"
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+            style={{alignItems: 'center', justifyContent: 'center'}}>
             <Image
               style={[styles.logo]}
               source={require('../assets/logo/loginwhite.png')}
             />
-            <View style={styles.itemContainer}>
+            <View style={styles.inputTextContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/signup/email.png')}
               />
               <TextInput
-                style={[styles.TextInput]}
+                style={[styles.textInput]}
                 value={this.state.email}
                 underlineColorAndroid="transparent"
                 placeholder={'Email'}
@@ -101,13 +107,13 @@ class LoginScreen extends Component {
                   this.setState({email: email})
                 }></TextInput>
             </View>
-            <View style={styles.itemContainer}>
+            <View style={styles.inputTextContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/signup/password.png')}
               />
               <TextInput
-                style={[styles.TextInput]}
+                style={[styles.textInput]}
                 secureTextEntry={true}
                 value={this.state.password}
                 underlineColorAndroid={'transparent'}
@@ -170,45 +176,35 @@ const styles = StyleSheet.create({
     marginTop: 60,
     textAlign: 'center',
   },
-  itemContainer: {
+  inputTextContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     maxWidth: '100%',
-    // marginBottom: 20,
-    alignSelf: 'stretch',
+    paddingRight: '5%',
+    paddingLeft: '5%',
+    marginRight: '8%',
+    marginLeft: '8%',
+    marginBottom: '10%',
+    backgroundColor: 'rgba(74, 74, 74, 0.1)',
+    borderRadius: 10,
   },
   itemIconImage: {
     resizeMode: 'contain',
     alignItems: 'center',
     width: 30,
     height: 30,
-  },
-  TextInput: {
-    fontSize: 16,
-    marginBottom: '10%',
-    width: '80%',
-    height: '50%',
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 0.7,
-  },
-
-  buttonGoogle: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderRadius: 40,
-    width: 230,
-    height: 50,
     padding: 10,
-    backgroundColor: 'red',
-    marginTop: 20,
   },
-  textbuttonGoogle: {
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginLeft: 20,
+  textInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    color: '#424242',
+    width: '80%',
   },
 });
 
