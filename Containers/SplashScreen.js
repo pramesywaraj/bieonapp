@@ -3,10 +3,11 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  Text,
   View,
   Dimensions,
 } from 'react-native';
+
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class SplashScreen extends Component {
   performTimeConsumingTask = async () => {
@@ -18,12 +19,15 @@ export default class SplashScreen extends Component {
   };
 
   async componentDidMount() {
+    const {navigate} = this.props.navigation;
+
     // Preload data from an external API
     // Preload data using AsyncStorage
     const data = await this.performTimeConsumingTask();
+    const authToken = JSON.parse(await AsyncStorage.getItem('@userAuth'));
 
-    if (data !== null) {
-      this.props.navigation.navigate('LoginScreen');
+    if (authToken && data !== null) {
+      navigate('HomeScreen');
     }
   }
   render() {

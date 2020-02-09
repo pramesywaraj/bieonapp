@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-import AppsButton from './Components/Buttons/AppsButton';
+import AppsButton from '../Components/Buttons/AppsButton';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Config from 'react-native-config';
