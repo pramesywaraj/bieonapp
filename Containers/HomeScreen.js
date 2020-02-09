@@ -15,6 +15,7 @@ import {
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import loginAction from '../Redux/Actions/login';
 import ApiAxios from '../Services/ApiAxios';
+
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -102,63 +103,6 @@ export default class HomeScreen extends Component {
             </Row>
             <View style={[styles.Border]}></View>
           </ScrollView>
-        </Row>
-        <Row>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('HomeScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/homeblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Home</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('RetrieveDataScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/retrieveblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Retrieve Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('TableDataScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/datablue.png')}
-              />
-              <Text style={[styles.textmenu]}>View Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('EditProfileScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/profileblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Profile</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('SettingScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/settingblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Setting</Text>
-            </TouchableOpacity>
-          </Col>
         </Row>
       </Grid>
     );
