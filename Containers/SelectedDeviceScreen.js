@@ -296,7 +296,7 @@ export default class SelectedDeviceScreen extends Component {
                 alert(
                     `Connected to device ${connected.name}<${connected.id}>`
                 );
-                if(connected.name === "idPrint") {
+                if(this.state.idPrint === "idPrint") {
                     this.props.navigation.navigate('TableDataScreen',{idBluetooth:connected.address})
                 } else if (this.state.idPrint === "idFieldDevice") {
                     this.props.navigation.navigate('ContainScreen',{idBluetooth:connected.address})
