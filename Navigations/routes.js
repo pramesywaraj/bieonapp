@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -50,6 +50,63 @@ const RetrieveDataNavigator = createStackNavigator({
   },
 });
 
+const ViewDataNavigator = createStackNavigator({
+  RetrieveDataScreen: {
+    screen: RetrieveDataScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ScanningDeviceScreen: {
+    screen: ScanningDeviceScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+
+const ProfileNavigator = createStackNavigator({
+  EditProfileScreen: {
+    screen: EditProfileScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+
+const SettingsNavigator = createStackNavigator({
+  SettingScreen: {
+    screen: SettingScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  TermsConditionScreen: {
+    screen: TermsConditionScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  PrivacyPolicyScreen: {
+    screen: PrivacyPolicyScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  DeviceInfoScreen: {
+    screen: DeviceInfoScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  HelpFeedbackScreen: {
+    screen: HelpFeedbackScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+
 // const ViewDataNavigator = createStackNavigator({});
 
 const AppNavigator = createBottomTabNavigator(
@@ -58,7 +115,9 @@ const AppNavigator = createBottomTabNavigator(
       screen: HomeNavigator,
       navigationOptions: {
         tabBarLabel: ({tintColor}) => (
-          <Text style={{fontSize: 10, color: tintColor}}>Home</Text>
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Home
+          </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
           <Icon name="home" size={horizontal ? 20 : 25} color={tintColor} />
@@ -69,17 +128,68 @@ const AppNavigator = createBottomTabNavigator(
       screen: RetrieveDataNavigator,
       navigationOptions: {
         tabBarLabel: ({tintColor}) => (
-          <Text style={{fontSize: 10, color: tintColor}}>Retrieve Data</Text>
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Retrieve Data
+          </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
-          <Icon name="home" size={horizontal ? 20 : 25} color={tintColor} />
+          <Icon name="weight" size={horizontal ? 20 : 25} color={tintColor} />
+        ),
+      },
+    },
+    ViewData: {
+      screen: RetrieveDataNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            View Data
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon name="table" size={horizontal ? 20 : 25} color={tintColor} />
+        ),
+      },
+    },
+    Profile: {
+      screen: RetrieveDataNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Profile
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon
+            name="user"
+            size={horizontal ? 20 : 25}
+            color={tintColor}
+            solid
+          />
+        ),
+      },
+    },
+    Settings: {
+      screen: SettingsNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Settings
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon
+            name="cog"
+            size={horizontal ? 20 : 25}
+            color={tintColor}
+            solid
+          />
         ),
       },
     },
   },
   {
     tabBarOptions: {
-      activeTintColor: 'orange',
+      activeTintColor: '#129cd8',
       inactiveTintColor: 'gray',
     },
   },
@@ -95,6 +205,13 @@ const InitialNavigator = createSwitchNavigator(
     initialRouteName: 'Splash',
   },
 );
+
+const tabStyle = StyleSheet.create({
+  bottomTabLabel: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+});
 
 // const RootStack = createStackNavigator({
 //   //Defination of Navigaton from home screen
@@ -142,42 +259,8 @@ const InitialNavigator = createSwitchNavigator(
 //       headerShown: false,
 //     },
 //   },
-//   EditProfileScreen: {
-//     screen: EditProfileScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   HelpFeedbackScreen: {
-//     screen: HelpFeedbackScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   SettingScreen: {
-//     screen: SettingScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   TermsConditionScreen: {
-//     screen: TermsConditionScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   PrivacyPolicyScreen: {
-//     screen: PrivacyPolicyScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   DeviceInfoScreen: {
-//     screen: DeviceInfoScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
+//
+//
 //   RegisterScreen: {
 //     screen: RegisterScreen,
 //     navigationOptions: {
