@@ -220,58 +220,7 @@ export default class SelectedDeviceScreen extends Component {
                 ...paired,
                 paired: true,
               };
-            }
-
-    connect = async id => {
-        this.setState({ processing: true });
-
-        try {
-            const connected = await BluetoothSerial.device(id).connect();
-
-            console.log("connect" + connected.address);
-
-
-            if (connected.address != "") {
-                alert(
-                    `Connected to device ${connected.name}<${connected.id}>`
-                );
-                if(this.state.idPrint === "idPrint") {
-                    this.props.navigation.navigate('TableDataScreen',{idBluetooth:connected.address})
-                } else if (this.state.idPrint === "idFieldDevice") {
-                    this.props.navigation.navigate('ContainScreen',{idBluetooth:connected.address})
-                }
-
-                this.setState(({ devices, device }) => ({
-                    processing: false,
-                    device: {
-                        ...device,
-                        ...connected,
-                        connected: true
-                    },
-                    devices: devices.map(v => {
-                        if (v.id === connected.id) {
-                            return {
-                                ...v,
-                                ...connected,
-                                connected: true
-                            };
-                        }
-
-                        return v;
-                    })
-                }));
-            } else {
-                alert(`Failed to connect to device <${id}>`);
-                this.setState({ processing: false });
-            }
-
-            return v;
-          }
-            catch(err) {
-              console.log(err)
-            }
-          ),
-        }));
+            }));
       } else {
         alert(`Device <${id}> unpairing failed`);
         this.setState({processing: false});
