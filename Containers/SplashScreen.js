@@ -28,6 +28,8 @@ export default class SplashScreen extends Component {
 
     if (authToken && data !== null) {
       navigate('HomeScreen');
+    } else {
+      navigate('Auth');
     }
   }
   render() {

@@ -1,12 +1,17 @@
-import {createAppContainer} from 'react-navigation';
+import React from 'react';
+import {Text, StyleSheet} from 'react-native';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
+
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import SplashScreen from '../Containers/SplashScreen';
 import LoginScreen from '../Containers/LoginScreen';
-import RegisterScreen from '../Containers/RegisterScreen';
+// import RegisterScreen from '../Containers/RegisterScreen';
 import EditProfileScreen from '../Containers/EditProfileScreen';
 import HomeScreen from '../Containers/HomeScreen';
-import ForgetPasswordScreen from '../Containers/ForgetPasswordScreen';
+// import ForgetPasswordScreen from '../Containers/ForgetPasswordScreen';
 import SettingScreen from '../Containers/SettingScreen';
 import DeviceInfoScreen from '../Containers/DeviceInfoScreen';
 import PrivacyPolicyScreen from '../Containers/PrivacyPolicyScreen';
@@ -21,34 +26,19 @@ import ContainScreen from '../Containers/ContainScreen';
 import ContainDetailNaclScreen from '../Containers/ContainDetailNaclScreen';
 import ContainDetailIodiumScreen from '../Containers/ContainDetailIodiumScreen';
 
-const RootStack = createStackNavigator({
-  //Defination of Navigaton from home screen
-  SplashScreen: {
-    screen: SplashScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
+// App path stack
+const HomeNavigator = createStackNavigator({
   HomeScreen: {
     screen: HomeScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  ContainScreen: {
-    screen: ContainScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
-  ContainDetailIodiumScreen: {
-    screen: ContainDetailIodiumScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
-  ContainDetailNaclScreen: {
-    screen: ContainDetailNaclScreen,
+});
+
+const RetrieveDataNavigator = createStackNavigator({
+  RetrieveDataScreen: {
+    screen: RetrieveDataScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -59,8 +49,8 @@ const RootStack = createStackNavigator({
       headerShown: false,
     },
   },
-  TableDataScreen: {
-    screen: TableDataScreen,
+  PopUpBluetoothScreen: {
+    screen: PopUpBluetoothScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -71,30 +61,45 @@ const RootStack = createStackNavigator({
       headerShown: false,
     },
   },
-  RetrieveDataScreen: {
-    screen: RetrieveDataScreen,
+  ContainScreen: {
+    screen: ContainScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  PopUpBluetoothScreen: {
-    screen: PopUpBluetoothScreen,
+  ContainDetailNaclScreen: {
+    screen: ContainDetailNaclScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
+  ContainDetailIodiumScreen: {
+    screen: ContainDetailIodiumScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+
+const ViewDataNavigator = createStackNavigator({
+  TableDataScreen: {
+    screen: TableDataScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+
+const ProfileNavigator = createStackNavigator({
   EditProfileScreen: {
     screen: EditProfileScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  HelpFeedbackScreen: {
-    screen: HelpFeedbackScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
+});
+
+const SettingsNavigator = createStackNavigator({
   SettingScreen: {
     screen: SettingScreen,
     navigationOptions: {
@@ -113,30 +118,125 @@ const RootStack = createStackNavigator({
       headerShown: false,
     },
   },
-  LoginScreen: {
-    screen: LoginScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
   DeviceInfoScreen: {
     screen: DeviceInfoScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  RegisterScreen: {
-    screen: RegisterScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
-  ForgetPasswordScreen: {
-    screen: ForgetPasswordScreen,
+  HelpFeedbackScreen: {
+    screen: HelpFeedbackScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
 });
 
-export default createAppContainer(RootStack);
+// App Navigator or bottom tab navigator settings
+const AppNavigator = createBottomTabNavigator(
+  {
+    Home: {
+      screen: HomeNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Home
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon name="home" size={horizontal ? 20 : 25} color={tintColor} />
+        ),
+      },
+    },
+    RetrieveData: {
+      screen: RetrieveDataNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Retrieve Data
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon name="weight" size={horizontal ? 20 : 25} color={tintColor} />
+        ),
+      },
+    },
+    ViewData: {
+      screen: ViewDataNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            View Data
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon name="table" size={horizontal ? 20 : 25} color={tintColor} />
+        ),
+      },
+    },
+    Profile: {
+      screen: ProfileNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Profile
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon
+            name="user"
+            size={horizontal ? 20 : 25}
+            color={tintColor}
+            solid
+          />
+        ),
+      },
+    },
+    Settings: {
+      screen: SettingsNavigator,
+      navigationOptions: {
+        tabBarLabel: ({tintColor}) => (
+          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+            Settings
+          </Text>
+        ),
+        tabBarIcon: ({horizontal, tintColor}) => (
+          <Icon
+            name="cog"
+            size={horizontal ? 20 : 25}
+            color={tintColor}
+            solid
+          />
+        ),
+      },
+    },
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: '#129cd8',
+      inactiveTintColor: 'gray',
+    },
+  },
+);
+
+// The Initial branch
+const InitialNavigator = createSwitchNavigator(
+  {
+    Splash: SplashScreen,
+    Auth: LoginScreen,
+    App: AppNavigator,
+  },
+  {
+    initialRouteName: 'Splash',
+  },
+);
+
+// Styling
+const tabStyle = StyleSheet.create({
+  bottomTabLabel: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+});
+
+export default createAppContainer(InitialNavigator);
