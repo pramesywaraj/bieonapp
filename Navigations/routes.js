@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Text, StyleSheet} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
@@ -8,10 +8,10 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import SplashScreen from '../Containers/SplashScreen';
 import LoginScreen from '../Containers/LoginScreen';
-import RegisterScreen from '../Containers/RegisterScreen';
+// import RegisterScreen from '../Containers/RegisterScreen';
 import EditProfileScreen from '../Containers/EditProfileScreen';
 import HomeScreen from '../Containers/HomeScreen';
-import ForgetPasswordScreen from '../Containers/ForgetPasswordScreen';
+// import ForgetPasswordScreen from '../Containers/ForgetPasswordScreen';
 import SettingScreen from '../Containers/SettingScreen';
 import DeviceInfoScreen from '../Containers/DeviceInfoScreen';
 import PrivacyPolicyScreen from '../Containers/PrivacyPolicyScreen';
@@ -26,6 +26,7 @@ import ContainScreen from '../Containers/ContainScreen';
 import ContainDetailNaclScreen from '../Containers/ContainDetailNaclScreen';
 import ContainDetailIodiumScreen from '../Containers/ContainDetailIodiumScreen';
 
+// App path stack
 const HomeNavigator = createStackNavigator({
   HomeScreen: {
     screen: HomeScreen,
@@ -48,17 +49,41 @@ const RetrieveDataNavigator = createStackNavigator({
       headerShown: false,
     },
   },
-});
-
-const ViewDataNavigator = createStackNavigator({
-  RetrieveDataScreen: {
-    screen: RetrieveDataScreen,
+  PopUpBluetoothScreen: {
+    screen: PopUpBluetoothScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  ScanningDeviceScreen: {
-    screen: ScanningDeviceScreen,
+  SelectedDeviceScreen: {
+    screen: SelectedDeviceScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ContainScreen: {
+    screen: ContainScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ContainDetailNaclScreen: {
+    screen: ContainDetailNaclScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ContainDetailIodiumScreen: {
+    screen: ContainDetailIodiumScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+
+const ViewDataNavigator = createStackNavigator({
+  TableDataScreen: {
+    screen: TableDataScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -107,8 +132,7 @@ const SettingsNavigator = createStackNavigator({
   },
 });
 
-// const ViewDataNavigator = createStackNavigator({});
-
+// App Navigator or bottom tab navigator settings
 const AppNavigator = createBottomTabNavigator(
   {
     Home: {
@@ -138,7 +162,7 @@ const AppNavigator = createBottomTabNavigator(
       },
     },
     ViewData: {
-      screen: RetrieveDataNavigator,
+      screen: ViewDataNavigator,
       navigationOptions: {
         tabBarLabel: ({tintColor}) => (
           <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
@@ -151,7 +175,7 @@ const AppNavigator = createBottomTabNavigator(
       },
     },
     Profile: {
-      screen: RetrieveDataNavigator,
+      screen: ProfileNavigator,
       navigationOptions: {
         tabBarLabel: ({tintColor}) => (
           <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
@@ -195,6 +219,7 @@ const AppNavigator = createBottomTabNavigator(
   },
 );
 
+// The Initial branch
 const InitialNavigator = createSwitchNavigator(
   {
     Splash: SplashScreen,
@@ -206,73 +231,12 @@ const InitialNavigator = createSwitchNavigator(
   },
 );
 
+// Styling
 const tabStyle = StyleSheet.create({
   bottomTabLabel: {
     fontSize: 12,
     textAlign: 'center',
   },
 });
-
-// const RootStack = createStackNavigator({
-//   //Defination of Navigaton from home screen
-//   SplashScreen: {
-//     screen: SplashScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-
-//   ContainScreen: {
-//     screen: ContainScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   ContainDetailIodiumScreen: {
-//     screen: ContainDetailIodiumScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   ContainDetailNaclScreen: {
-//     screen: ContainDetailNaclScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   TableDataScreen: {
-//     screen: TableDataScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   SelectedDeviceScreen: {
-//     screen: SelectedDeviceScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-
-//   PopUpBluetoothScreen: {
-//     screen: PopUpBluetoothScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//
-//
-//   RegisterScreen: {
-//     screen: RegisterScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-//   ForgetPasswordScreen: {
-//     screen: ForgetPasswordScreen,
-//     navigationOptions: {
-//       headerShown: false,
-//     },
-//   },
-// });
 
 export default createAppContainer(InitialNavigator);
