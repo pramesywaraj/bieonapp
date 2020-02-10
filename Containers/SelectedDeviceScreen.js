@@ -222,48 +222,55 @@ export default class SelectedDeviceScreen extends Component {
               };
             }
 
-            return v;
-          }),
-        }));
-      } else {
-        alert(`Device <${id}> pairing failed`);
-        this.setState({processing: false});
-      }
-    } catch (e) {
-      alert(e.message);
-      this.setState({processing: false});
-    }
-  };
+    connect = async id => {
+        this.setState({ processing: true });
 
-  unpairDevice = async id => {
-    this.setState({processing: true});
+        try {
+            const connected = await BluetoothSerial.device(id).connect();
 
-    try {
-      const unpaired = await BluetoothSerial.unpairDevice(id);
+            console.log("connect" + connected.address);
 
-      if (unpaired) {
-        alert(`Device ${unpaired.name}<${unpaired.id}> unpaired successfully`);
 
-        this.setState(({devices, device}) => ({
-          processing: false,
-          device: {
-            ...device,
-            ...unpaired,
-            connected: false,
-            paired: false,
-          },
-          devices: devices.map(v => {
-            if (v.id === unpaired.id) {
-              return {
-                ...v,
-                ...unpaired,
-                connected: false,
-                paired: false,
-              };
+            if (connected.address != "") {
+                alert(
+                    `Connected to device ${connected.name}<${connected.id}>`
+                );
+                if(this.state.idPrint === "idPrint") {
+                    this.props.navigation.navigate('TableDataScreen',{idBluetooth:connected.address})
+                } else if (this.state.idPrint === "idFieldDevice") {
+                    this.props.navigation.navigate('ContainScreen',{idBluetooth:connected.address})
+                }
+
+                this.setState(({ devices, device }) => ({
+                    processing: false,
+                    device: {
+                        ...device,
+                        ...connected,
+                        connected: true
+                    },
+                    devices: devices.map(v => {
+                        if (v.id === connected.id) {
+                            return {
+                                ...v,
+                                ...connected,
+                                connected: true
+                            };
+                        }
+
+                        return v;
+                    })
+                }));
+            } else {
+                alert(`Failed to connect to device <${id}>`);
+                this.setState({ processing: false });
             }
 
             return v;
-          }),
+          }
+            catch(err) {
+              console.log(err)
+            }
+          ),
         }));
       } else {
         alert(`Device <${id}> unpairing failed`);
