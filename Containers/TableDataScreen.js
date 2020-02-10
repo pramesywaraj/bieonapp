@@ -87,94 +87,53 @@ export default class HomeScreen extends Component {
         this.setState({modalVisible: visible});
     }
 
-    if (Platform.OS === 'ios') {
-      let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
-      this._listeners.push(
-        bluetoothManagerEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-          rsp => {
-            this._deviceAlreadPaired(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        bluetoothManagerEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_FOUND,
-          rsp => {
-            this._deviceFoundEvent(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        bluetoothManagerEmitter.addListener(
-          BluetoothManager.EVENT_CONNECTION_LOST,
-          () => {
+    _deviceAlreadPaired(rsp) {
+        var ds = null;
+        if (typeof(rsp.devices) == 'object') {
+            ds = rsp.devices;
+        } else {
+            try {
+                ds = JSON.parse(rsp.devices);
+            } catch (e) {
+            }
+        }
+        if(ds && ds.length) {
+            let pared = this.state.pairedDs;
+            pared = pared.concat(ds||[]);
             this.setState({
-              name: '',
-              boundAddress: '',
+                pairedDs:pared
             });
-          },
-        ),
-      );
-    } else if (Platform.OS === 'android') {
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-          rsp => {
-            this._deviceAlreadPaired(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_FOUND,
-          rsp => {
-            this._deviceFoundEvent(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_CONNECTION_LOST,
-          () => {
-            this.setState({
-              name: '',
-              boundAddress: '',
-            });
-          },
-        ),
-      );
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_BLUETOOTH_NOT_SUPPORT,
-          () => {
-            ToastAndroid.show(
-              'Device Not Support Bluetooth !',
-              ToastAndroid.LONG,
-            );
-          },
-        ),
-      );
+        }
     }
-  }
 
-  _deviceAlreadPaired(rsp) {
-    var ds = null;
-    if (typeof rsp.devices == 'object') {
-      ds = rsp.devices;
-    } else {
-      try {
-        ds = JSON.parse(rsp.devices);
-      } catch (e) {}
+    _deviceFoundEvent(rsp) {//alert(JSON.stringify(rsp))
+        var r = null;
+        try {
+            if (typeof(rsp.device) == "object") {
+                r = rsp.device;
+            } else {
+                r = JSON.parse(rsp.device);
+            }
+        } catch (e) {//alert(e.message);
+            //ignore
+        }
+        //alert('f')
+        if (r) {
+            let found = this.state.foundDs || [];
+            if(found.findIndex) {
+                let duplicated = found.findIndex(function (x) {
+                    return x.address == r.address
+                });
+                //CHECK DEPLICATED HERE...
+                if (duplicated == -1) {
+                    found.push(r);
+                    this.setState({
+                        foundDs: found
+                    });
+                }
+            }
+        }
     }
-    if (ds && ds.length) {
-      let pared = this.state.pairedDs;
-      pared = pared.concat(ds || []);
-      this.setState({
-        pairedDs: pared,
-      });
-    }
-  }
 
     _renderRow(rows){
         let items = [];
@@ -221,44 +180,13 @@ export default class HomeScreen extends Component {
                 );
             }
         }
-      }
+        return items;
     }
-  }
-
-  _renderRow(rows) {
-    let items = [];
-    for (let i in rows) {
-      let row = rows[i];
-      if (row.address) {
-        items.push(
-          <TouchableOpacity
-            key={new Date().getTime() + i}
-            stlye={styles.wtf}
-            onPress={() => {
-              this.setState({
-                loading: true,
-              });
-              BluetoothManager.connect(row.address).then(
-                s => {
-                  this.setState({
-                    loading: false,
-                    boundAddress: row.address,
-                    name: row.name || 'UNKNOWN',
-                  });
-                },
-                e => {
-                  this.setState({
-                    loading: false,
-                  });
-                  alert(e);
-                },
-              );
-            }}>
-            <Text style={styles.name}>{row.name || 'UNKNOWN'}</Text>
-            <Text style={styles.address}>{row.address}</Text>
-          </TouchableOpacity>,
-        );
-      }
+    checkStatus() {
+        this.setState({
+            isChecked:!this.state.isChecked
+        })
+        console.log("check?", this.state.isChecked)
     }
     
     render() {
@@ -402,75 +330,55 @@ export default class HomeScreen extends Component {
                                <Image style={[styles.logo]} source={require('../assets/icons/retrievedata/bluetoothgray.png')}></Image>
                                 </TouchableOpacity> */}
 
-              <DatePicker
-                style={[styles.startDate]}
-                date={this.state.date}
-                mode="date"
-                placeholder="select date"
-                format="ddd, DD-MMM-YYYY"
-                minDate="2016-05-01"
-                maxDate="2030-06-01"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    marginLeft: 36,
-                  },
-                  // ... You can check the source to find the other keys.
-                }}
-                onDateChange={date => {
-                  this.setState({date: date});
-                }}
-              />
-              <Text style={[styles.until]}>-</Text>
-              <DatePicker
-                style={[styles.endDate]}
-                date={this.state.date}
-                mode="date"
-                placeholder="select date"
-                format="ddd, DD-MMM-YYYY"
-                minDate="2016-05-01"
-                maxDate="2030-06-01"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    marginLeft: 36,
-                  },
-                  // ... You can check the source to find the other keys.
-                }}
-                onDateChange={date => {
-                  this.setState({date: date});
-                }}
-              />
-            </Row>
-            <Row style={[styles.ColTop]}>
-              <Row onClick={() => this.checkStatus()}>
-                <CheckBox
-                  style={[styles.checked]}
-                  isChecked={this.state.isChecked}
-                />
-                <Text style={[styles.textCategory]}>No</Text>
-                <Text style={[styles.textTime]}>Date</Text>
-                <Text style={[styles.Icon]}>NaCl</Text>
-                <Text style={[styles.Icon]}>Whiteness</Text>
-                <Text style={[styles.Icon]}>Water Content</Text>
-              </Row>
-            </Row>
-            <View style={[styles.Border]}></View>
-            {/* {this.state.salt.map(sal =>(
+                            <DatePicker style={[styles.startDate]} date={this.state.date}
+                                mode="date" placeholder="select date" format="ddd, DD-MMM-YYYY"
+                                minDate="2016-05-01" maxDate="2030-06-01"  confirmBtnText="Confirm" cancelBtnText="Cancel"
+                                customStyles={{
+                                dateIcon: {
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 4,
+                                    marginLeft: 0
+                                },
+                                dateInput: {
+                                    marginLeft: 36
+                                }
+                                // ... You can check the source to find the other keys.
+                                }}
+                                onDateChange={(date) => {this.setState({date: date})}}
+                            /><Text style={[styles.until]}>-</Text>
+                            <DatePicker style={[styles.endDate]} date={this.state.date}
+                                mode="date" placeholder="select date" format="ddd, DD-MMM-YYYY"
+                                minDate="2016-05-01" maxDate="2030-06-01"  confirmBtnText="Confirm" cancelBtnText="Cancel"
+                                customStyles={{
+                                dateIcon: {
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 4,
+                                    marginLeft: 0
+                                },
+                                dateInput: {
+                                    marginLeft: 36
+                                }
+                                // ... You can check the source to find the other keys.
+                                }}
+                                onDateChange={(date) => {this.setState({date: date})}}
+                            />
+                        </Row>
+                        <Row style={[styles.ColTop]}>
+                            <Row  onClick={()=>this.checkStatus()}>
+                            <CheckBox style={[styles.checked]}
+                                isChecked={this.state.isChecked}
+                            />
+                                <Text style={[styles.textCategory]}>No</Text>
+                                <Text style={[styles.textTime]}>Date</Text>
+                                <Text style={[styles.Icon]}>NaCl</Text>
+                                <Text style={[styles.Icon]}>Whiteness</Text>
+                                <Text style={[styles.Icon]}>Water Content</Text>
+                            </Row>
+                        </Row>
+                        <View style={[styles.Border]}></View>
+                        {/* {this.state.salt.map(sal =>(
                             <Row>
                             <CheckBox style={[styles.checked]} onClick={()=>this.checkStatus()}
                                 isChecked={this.state.isChecked}
@@ -552,38 +460,6 @@ export default class HomeScreen extends Component {
                       </TouchableHighlight>
                     </Col>
                 </Row>
-                <Row>
-                    <Col style={[styles.col]}>
-                        <TouchableOpacity style={[styles.col]} onPress={() => navigate('HomeScreen')}>
-                            <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/homeblue.png')} />
-                            <Text style={[styles.textmenu]}>Home</Text>
-                        </TouchableOpacity>
-                    </Col>
-                    <Col style={[styles.col]}>
-                        <TouchableOpacity style={[styles.col]} onPress={() => navigate('RetrieveDataScreen')}>
-                            <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/retrieveblue.png')} />
-                            <Text style={[styles.textmenu]}>Retrieve Data</Text>
-                        </TouchableOpacity>
-                    </Col>
-                    <Col style={[styles.col]}>
-                        <TouchableOpacity style={[styles.col]} onPress={() => navigate('')}>
-                            <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/datablue.png')} />
-                            <Text style={[styles.textmenu]}>View Data</Text>
-                        </TouchableOpacity>
-                    </Col>
-                    <Col style={[styles.col]}>
-                        <TouchableOpacity style={[styles.col]} onPress={() => navigate('EditProfileScreen')}>
-                            <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/profileblue.png')} />
-                            <Text style={[styles.textmenu]}>Profile</Text>
-                        </TouchableOpacity>
-                    </Col>
-                    <Col style={[styles.col]}>
-                        <TouchableOpacity style={[styles.col]} onPress={() => navigate('SettingScreen')}>
-                            <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/settingblue.png')} />
-                            <Text style={[styles.textmenu]}>Setting</Text>
-                        </TouchableOpacity>
-                    </Col>
-                </Row>
             </Grid>
 
         );
@@ -592,18 +468,34 @@ export default class HomeScreen extends Component {
     _scan() {
         this.setModalVisible(true);
         this.setState({
-          foundDs: fds,
-          loading: false,
-        });
-      },
-      er => {
-        this.setState({
-          loading: false,
-        });
-        alert('error' + JSON.stringify(er));
-      },
-    );
-  }
+            loading: true
+        })
+        BluetoothManager.scanDevices()
+            .then((s)=> {
+                var ss = s;
+                var found = ss.found;
+                try {
+                    found = JSON.parse(found);//@FIX_it: the parse action too weired..
+                } catch (e) {
+                    //ignore
+                }
+                var fds =  this.state.foundDs;
+                if(found && found.length){
+                    fds = found;
+                }
+                this.setState({
+                    foundDs:fds,
+                    loading: false
+                });
+            }, (er)=> {
+                this.setState({
+                    loading: false
+                })
+                alert('error' + JSON.stringify(er));
+            });
+    }
+
+
 }
 
 const win = Dimensions.get('window');

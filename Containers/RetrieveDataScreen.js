@@ -55,63 +55,6 @@ export default class RetrieveDataScreen extends Component {
             Touch Bluetooth symbol on the top right to connect to a probe
           </Text>
         </Row>
-        <Row>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('HomeScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/homeblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Home</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('RetrieveDataScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/retrieveblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Retrieve Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('TableDataScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/datablue.png')}
-              />
-              <Text style={[styles.textmenu]}>View Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('EditProfileScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/profileblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Profile</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('SettingScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/settingblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Setting</Text>
-            </TouchableOpacity>
-          </Col>
-        </Row>
       </Grid>
     );
   }
@@ -142,7 +85,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     margin: 15,
     textAlign: 'justify',
-    color: '#000',
     fontWeight: '600',
   },
   itemMenuImage: {

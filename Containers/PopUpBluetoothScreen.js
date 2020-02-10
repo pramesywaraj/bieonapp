@@ -414,43 +414,6 @@ export default class PopUpBluetoothScreen extends Component {
             </View>
           </View>
         </Row>
-        <Row>
-          <Col style={[styles.col]}>
-            <Image
-              style={styles.itemMenuImage}
-              source={require('../assets/icons/menubar/homeblue.png')}
-            />
-            <Text style={[styles.textmenu]}>Home</Text>
-          </Col>
-          <Col style={[styles.col]}>
-            <Image
-              style={styles.itemMenuImage}
-              source={require('../assets/icons/menubar/retrieveblue.png')}
-            />
-            <Text style={[styles.textmenu]}>Retrieve Data</Text>
-          </Col>
-          <Col style={[styles.col]}>
-            <Image
-              style={styles.itemMenuImage}
-              source={require('../assets/icons/menubar/datablue.png')}
-            />
-            <Text style={[styles.textmenu]}>View Data</Text>
-          </Col>
-          <Col style={[styles.col]}>
-            <Image
-              style={styles.itemMenuImage}
-              source={require('../assets/icons/menubar/profileblue.png')}
-            />
-            <Text style={[styles.textmenu]}>Profile</Text>
-          </Col>
-          <Col style={[styles.col]}>
-            <Image
-              style={styles.itemMenuImage}
-              source={require('../assets/icons/menubar/settingblue.png')}
-            />
-            <Text style={[styles.textmenu]}>Setting</Text>
-          </Col>
-        </Row>
       </Grid>
     );
   }
