@@ -5,6 +5,7 @@ import Config from 'react-native-config';
 import {
   StyleSheet,
   Image,
+  Text,
   FlatList,
   View,
   Dimensions,
@@ -33,7 +34,6 @@ export default class HomeScreen extends Component {
     axios
       .get(`${Config.API_URL}/article/list`)
       .then(response => {
-        console.log(response);
         const {articles} = response.data.data;
         this.setState({articles: articles, refreshing: false});
       })
@@ -47,31 +47,46 @@ export default class HomeScreen extends Component {
     this.setState({refreshing: true}, () => this.fetchArticles());
   }
 
+  renderSeparator = () => {
+    return (
+      <View
+        style={{
+          flex: 1.5,
+          height: 2,
+          backgroundColor: '#CED0CE',
+        }}
+      />
+    );
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <Image
           style={[styles.headingImage]}
-          resizeMode="contain"
-          resizeMethod="resize"
+          resizeMode="stretch"
           source={{
             uri:
               'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
           }}
         />
-        <FlatList
-          data={this.state.articles}
-          renderItem={({item}) => (
-            <Article
-              title={item.title}
-              imageUri={item.picture}
-              createdAt={item.create_at}
-            />
-          )}
-          keyExtractor={item => item.article_id}
-          refreshing={this.state.refreshing}
-          onRefresh={this.handleRefresh}
-        />
+        <View style={styles.articleContainer}>
+          <Text style={styles.homeScreenTitle}>Headline</Text>
+          <FlatList
+            data={this.state.articles}
+            renderItem={({item}) => (
+              <Article
+                title={item.title}
+                imageUri={item.picture}
+                createdAt={item.create_at}
+              />
+            )}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={item => item.article_id}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
+          />
+        </View>
       </View>
     );
   }
@@ -82,12 +97,25 @@ const deviceWindow = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
     top: 0,
     width: '100%',
     height: '40%',
+  },
+  articleContainer: {
+    marginTop: '50%',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    backgroundColor: 'white',
+  },
+  homeScreenTitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    margin: '5%',
   },
 });
