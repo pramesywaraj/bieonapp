@@ -220,7 +220,51 @@ export default class SelectedDeviceScreen extends Component {
                 ...paired,
                 paired: true,
               };
-            }));
+            }
+
+            return v;
+          }),
+        }));
+      } else {
+        alert(`Device <${id}> pairing failed`);
+        this.setState({processing: false});
+      }
+    } catch (e) {
+      alert(e.message);
+      this.setState({processing: false});
+    }
+  };
+
+  unpairDevice = async id => {
+    this.setState({processing: true});
+
+    try {
+      const unpaired = await BluetoothSerial.unpairDevice(id);
+
+      if (unpaired) {
+        alert(`Device ${unpaired.name}<${unpaired.id}> unpaired successfully`);
+
+        this.setState(({devices, device}) => ({
+          processing: false,
+          device: {
+            ...device,
+            ...unpaired,
+            connected: false,
+            paired: false,
+          },
+          devices: devices.map(v => {
+            if (v.id === unpaired.id) {
+              return {
+                ...v,
+                ...unpaired,
+                connected: false,
+                paired: false,
+              };
+            }
+
+            return v;
+          }),
+        }));
       } else {
         alert(`Device <${id}> unpairing failed`);
         this.setState({processing: false});
@@ -394,63 +438,6 @@ export default class SelectedDeviceScreen extends Component {
             </TouchableOpacity>
           </View>
         </Row>
-        <Row>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('HomeScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/homeblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Home</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('RetrieveDataScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/retrieveblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Retrieve Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('TableDataScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/datablue.png')}
-              />
-              <Text style={[styles.textmenu]}>View Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('EditProfileScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/profileblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Profile</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity
-              style={[styles.col]}
-              onPress={() => navigate('SettingScreen')}>
-              <Image
-                style={styles.itemMenuImage}
-                source={require('../assets/icons/menubar/settingblue.png')}
-              />
-              <Text style={[styles.textmenu]}>Setting</Text>
-            </TouchableOpacity>
-          </Col>
-        </Row>
       </Grid>
     );
   }
@@ -481,7 +468,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     margin: 15,
     textAlign: 'justify',
-    color: '#000',
     fontWeight: '600',
   },
   itemMenuImage: {
