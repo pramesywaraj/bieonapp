@@ -11,9 +11,9 @@ import moment from 'moment';
 
 import Config from 'react-native-config';
 
-export default function Article({title, imageUri, createdAt}) {
+export default function Article({onClick, title, imageUri, createdAt}) {
   return (
-    <TouchableNativeFeedback>
+    <TouchableNativeFeedback onPress={onClick}>
       <View style={[styles.articleContainer]}>
         <View style={styles.articleImageContainer}>
           <Image

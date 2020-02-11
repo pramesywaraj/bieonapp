@@ -9,7 +9,6 @@ import {
   FlatList,
   View,
   Dimensions,
-  ScrollView,
 } from 'react-native';
 
 import Article from '../Components/Articles/Article';
@@ -40,7 +39,6 @@ export default class HomeScreen extends Component {
       })
       .catch(function(error) {
         this.setState({
-          ...this.state.articles,
           refreshing: false,
         });
         console.log('error in HomeScreen', error);
@@ -48,7 +46,18 @@ export default class HomeScreen extends Component {
   }
 
   handleRefresh() {
-    this.setState({refreshing: true}, () => this.fetchArticles());
+    this.setState(
+      {
+        ...this.state.articles,
+        refreshing: true,
+      },
+      () => this.fetchArticles(),
+    );
+  }
+
+  goToArticleDetail(item) {
+    const {navigate} = this.props.navigation;
+    navigate('ArticleDetailScreen', {article: item});
   }
 
   renderSeparator = () => {
@@ -80,13 +89,14 @@ export default class HomeScreen extends Component {
             data={this.state.articles}
             renderItem={({item}) => (
               <Article
+                onClick={this.goToArticleDetail.bind(this, item)}
                 title={item.title}
                 imageUri={item.picture}
                 createdAt={item.create_at}
               />
             )}
             ItemSeparatorComponent={this.renderSeparator}
-            keyExtractor={item => item.article_id}
+            keyExtractor={item => item.article_id.toString()}
             refreshing={this.state.refreshing}
             onRefresh={this.handleRefresh}
           />
