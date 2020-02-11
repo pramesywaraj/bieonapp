@@ -24,6 +24,7 @@ export default class HomeScreen extends Component {
 
     this.fetchArticles = this.fetchArticles.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
+    this.renderSeparator = this.renderSeparator.bind(this);
   }
 
   componentDidMount() {
@@ -38,7 +39,10 @@ export default class HomeScreen extends Component {
         this.setState({articles: articles, refreshing: false});
       })
       .catch(function(error) {
-        this.setState({refreshing: false});
+        this.setState({
+          ...this.state.articles,
+          refreshing: false,
+        });
         console.log('error in HomeScreen', error);
       });
   }
