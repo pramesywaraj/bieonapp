@@ -29,7 +29,7 @@ class LoginScreen extends Component {
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Hahahha')},
+      {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
 

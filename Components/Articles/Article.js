@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, View, ActivityIndicator, Text} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+  TouchableNativeFeedback,
+} from 'react-native';
 import {Image} from 'react-native-elements';
 import moment from 'moment';
 
@@ -7,25 +13,27 @@ import Config from 'react-native-config';
 
 export default function Article({title, imageUri, createdAt}) {
   return (
-    <View style={[styles.articleContainer]}>
-      <View style={styles.articleImageContainer}>
-        <Image
-          style={[styles.articleImage]}
-          resizeMode="cover"
-          source={{uri: `${Config.API_URL}/${imageUri}`}}
-          PlaceholderContent={<ActivityIndicator />}
-        />
-      </View>
-      <View style={styles.articleTextContainer}>
-        <Text style={[styles.title]}>{title}</Text>
-        <View style={styles.date}>
-          <Text style={styles.dateText}>Terbit tanggal</Text>
-          <Text style={styles.dateText}>
-            {moment(createdAt).format('Do MMMM YYYY')}
-          </Text>
+    <TouchableNativeFeedback>
+      <View style={[styles.articleContainer]}>
+        <View style={styles.articleImageContainer}>
+          <Image
+            style={[styles.articleImage]}
+            resizeMode="cover"
+            source={{uri: `${Config.API_URL}/${imageUri}`}}
+            PlaceholderContent={<ActivityIndicator />}
+          />
+        </View>
+        <View style={styles.articleTextContainer}>
+          <Text style={[styles.title]}>{title}</Text>
+          <View style={styles.date}>
+            <Text style={styles.dateText}>Terbit tanggal</Text>
+            <Text style={styles.dateText}>
+              {moment(createdAt).format('Do MMMM YYYY')}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableNativeFeedback>
   );
 }
 
