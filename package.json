@@ -17,7 +17,6 @@
     "react": "16.9.0",
     "react-data-table-component": "^6.2.2",
     "react-native": "0.61.5",
-    "react-native-bluetooth-escpos-printer": "0.0.5",
     "react-native-bluetooth-serial-next": "^1.2.3",
     "react-native-check-box": "^2.1.7",
     "react-native-config": "^0.12.0",
