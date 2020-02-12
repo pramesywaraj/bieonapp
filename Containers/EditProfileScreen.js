@@ -1,21 +1,32 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { CheckBox } from 'react-native-elements'
-import { Col, Row, Grid } from "react-native-easy-grid";
-import { Dropdown } from 'react-native-material-dropdown';
-
-
+import React, {Component} from 'react';
+import {
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Text,
+  View,
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from 'react-native';
+import {CheckBox} from 'react-native-elements';
+import {Col, Row, Grid} from 'react-native-easy-grid';
+import {Dropdown} from 'react-native-material-dropdown';
 
 export default class EditProfileScreen extends Component {
   render() {
-    let data = [{
-      value: 'Male',
-    }, {
-      value: 'Female',
-    }];
-    const { navigate } = this.props.navigation;
+    let data = [
+      {
+        value: 'Male',
+      },
+      {
+        value: 'Female',
+      },
+    ];
+    const {navigate} = this.props.navigation;
     return (
-      <Grid style={{ marginTop: 30 }}>
+      <Grid style={{marginTop: 30}}>
         <Row size={13}>
           <View style={styles.container}>
             <Image
@@ -25,110 +36,123 @@ export default class EditProfileScreen extends Component {
             <Text style={[styles.textTitle]}>Guntur Putra</Text>
             <View style={styles.itemContainer}>
               <Row>
-                <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/profile.png')} />
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/profile.png')}
+                />
                 <Col>
                   <Text style={styles.text}>Identity Number</Text>
-                  <TextInput style={[styles.TextInput]} placeholder="Identity Number" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput
+                    style={[styles.TextInput]}
+                    placeholder="Identity Number"
+                    underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
             <View style={styles.itemContainer}>
               <Row>
-                <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/address.png')} />
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/address.png')}
+                />
                 <Col>
                   <Text style={styles.text}>Address</Text>
-                  <TextInput style={[styles.TextInput]} placeholder="Address" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput
+                    style={[styles.TextInput]}
+                    placeholder="Address"
+                    underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
             <View style={styles.itemContainer}>
               <Row>
-                <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/email.png')} />
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/email.png')}
+                />
                 <Col>
                   <Text style={styles.text}>Email</Text>
-                  <TextInput editable={false} style={[styles.TextInput]} placeholder="Email" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput
+                    editable={false}
+                    style={[styles.TextInput]}
+                    placeholder="Email"
+                    underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
             <View style={styles.itemContainer}>
               <Row>
-                <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/phone.png')} />
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/phone.png')}
+                />
                 <Col>
                   <Text style={styles.text}>Phone Number</Text>
-                  <TextInput style={[styles.TextInput]} placeholder="Phone Number" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput
+                    style={[styles.TextInput]}
+                    placeholder="Phone Number"
+                    underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
             <View style={styles.itemContainer}>
               <Row>
-                <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/gender.png')} />
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/gender.png')}
+                />
                 <Col>
                   <Text style={styles.text}>Gender</Text>
                   <Dropdown
-                    data={data} style={[styles.Dropdown]} pickerStyle={{borderBottomColor:'transparent',borderWidth: 0}}
-                    dropdownOffset={{ 'top': 10 }} placeholder="Gender"></Dropdown>
+                    data={data}
+                    style={[styles.Dropdown]}
+                    pickerStyle={{
+                      borderBottomColor: 'transparent',
+                      borderWidth: 0,
+                    }}
+                    dropdownOffset={{top: 10}}
+                    placeholder="Gender"></Dropdown>
                 </Col>
               </Row>
             </View>
             <View style={styles.itemContainer}>
               <Row>
-                <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/position.png')} />
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/position.png')}
+                />
                 <Col>
                   <Text style={styles.text}>Position</Text>
-                  <TextInput editable={false} style={[styles.TextInput]} placeholder="Position" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput
+                    editable={false}
+                    style={[styles.TextInput]}
+                    placeholder="Position"
+                    underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
             <View style={styles.itemContainer}>
               <Row>
-                <Image style={styles.itemIconImage} source={require('../assets/icons/editprofile/agency.png')} />
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/agency.png')}
+                />
                 <Col>
                   <Text style={styles.text}>Company/Institution</Text>
-                  <TextInput editable={false} style={[styles.TextInput]} placeholder="Company/Institution" underlineColorAndroid={'transparent'}></TextInput>
+                  <TextInput
+                    editable={false}
+                    style={[styles.TextInput]}
+                    placeholder="Company/Institution"
+                    underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
             </View>
-            <TouchableOpacity style={[styles.button]} onPress={() => navigate('EditProfileScreen')}>
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => navigate('EditProfileScreen')}>
               <Text style={[styles.textbutton]}>SAVE</Text>
             </TouchableOpacity>
           </View>
-        </Row>
-        <Row>
-
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('HomeScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/homeblue.png')} />
-              <Text style={[styles.textmenu]}>Home</Text>
-            </TouchableOpacity>
-          </Col>
-
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('RetrieveDataScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/retrieveblue.png')} />
-              <Text style={[styles.textmenu]}>Retrieve Data</Text>
-            </TouchableOpacity>
-          </Col>
-
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('TableDataScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/datablue.png')} />
-              <Text style={[styles.textmenu]}>View Data</Text>
-            </TouchableOpacity>
-          </Col>
-
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('EditProfileScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/profileblue.png')} />
-              <Text style={[styles.textmenu]}>Profile</Text>
-            </TouchableOpacity>
-          </Col>
-
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('SettingScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/settingblue.png')} />
-              <Text style={[styles.textmenu]}>Setting</Text>
-            </TouchableOpacity>
-          </Col>
         </Row>
       </Grid>
     );
@@ -153,7 +177,7 @@ const styles = StyleSheet.create({
     color: '#000',
     borderBottomColor: '#000',
     borderBottomWidth: 1,
-    marginLeft: 15
+    marginLeft: 15,
   },
   Dropdown: {
     fontSize: 18,
@@ -172,12 +196,12 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     marginLeft: 20,
-    marginTop: 10
+    marginTop: 10,
   },
   text: {
     marginLeft: 15,
     marginBottom: -8,
-    fontSize: 12
+    fontSize: 12,
   },
   button: {
     alignSelf: 'center',
@@ -187,13 +211,13 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     backgroundColor: '#129cd8',
-    marginTop: 25
+    marginTop: 25,
   },
   textbutton: {
     fontSize: 20,
     color: '#fff',
     fontWeight: '700',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   avatarImage: {
     borderRadius: 400,
@@ -207,15 +231,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     marginTop: 15,
-    marginBottom: 20
+    marginBottom: 20,
   },
   avatarImage: {
     borderRadius: 400,
     resizeMode: 'contain',
     width: 110,
     height: 120,
-    marginTop: -20
-
+    marginTop: -20,
   },
   textTitle: {
     margin: 10,
@@ -223,13 +246,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
     marginTop: 10,
-    marginBottom: 30
+    marginBottom: 30,
   },
   itemMenuImage: {
     resizeMode: 'contain',
     width: 25,
     height: 25,
-    marginTop: 3
+    marginTop: 3,
   },
   col: {
     alignItems: 'center',
@@ -240,7 +263,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 5,
     color: '#808080',
-
-  }
+  },
 });
-

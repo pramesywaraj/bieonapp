@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   Image,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
-import { Header } from 'react-native-elements';
-import { Col, Row, Grid } from "react-native-easy-grid";
+import {Header} from 'react-native-elements';
+import {Col, Row, Grid} from 'react-native-easy-grid';
 
 export default class SettingScreen extends Component {
   render() {
-    const { navigate } = this.props.navigation;
+    const {navigate} = this.props.navigation;
     return (
-      <Grid style={{ marginTop: 80 }}>
+      <Grid style={{marginTop: 80}}>
         <Row size={13}>
           <View style={styles.container}>
             <View style={styles.menuContainer}>
@@ -31,77 +31,56 @@ export default class SettingScreen extends Component {
               <View style={[styles.Border]}></View>
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("PrivacyPolicyScreen");
-                }}
-              >
+                  this.props.navigation.navigate('PrivacyPolicyScreen');
+                }}>
                 <View style={styles.itemContainer}>
-                  <Image style={styles.itemIconImage} source={require('../assets/icons/setting/privacy.png')} />
+                  <Image
+                    style={styles.itemIconImage}
+                    source={require('../assets/icons/setting/privacy.png')}
+                  />
                   <Text style={styles.itemText}>Privacy Policy</Text>
                 </View>
               </TouchableOpacity>
               <View style={[styles.Border]}></View>
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("TermsConditionScreen");
-                }}
-              >
+                  this.props.navigation.navigate('TermsConditionScreen');
+                }}>
                 <View style={styles.itemContainer}>
-                  <Image style={styles.itemIconImage} source={require('../assets/icons/setting/terms.png')} />
+                  <Image
+                    style={styles.itemIconImage}
+                    source={require('../assets/icons/setting/terms.png')}
+                  />
                   <Text style={styles.itemText}>Terms & Condition</Text>
                 </View>
               </TouchableOpacity>
               <View style={[styles.Border]}></View>
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("");
-                }}
-              >
+                  this.props.navigation.navigate('');
+                }}>
                 <View style={styles.itemContainer}>
-                  <Image style={styles.itemIconImage} source={require('../assets/icons/setting/help.png')} />
+                  <Image
+                    style={styles.itemIconImage}
+                    source={require('../assets/icons/setting/help.png')}
+                  />
                   <Text style={styles.itemText}>Help & Feedback</Text>
                 </View>
               </TouchableOpacity>
               <View style={[styles.Border]}></View>
-              <TouchableOpacity style={[styles.buttonGoogle]} onPress={() => navigate('LoginScreen')}>
+              <TouchableOpacity
+                style={[styles.buttonGoogle]}
+                onPress={() => navigate('LoginScreen')}>
                 <Row>
-                  <Image style={styles.itemIconImage} source={require('../assets/icons/setting/logout.png')} />
+                  <Image
+                    style={styles.itemIconImage}
+                    source={require('../assets/icons/setting/logout.png')}
+                  />
                   <Text style={[styles.textbuttonGoogle]}>LOGOUT</Text>
                 </Row>
               </TouchableOpacity>
             </View>
           </View>
-        </Row>
-        <Row>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('HomeScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/homeblue.png')} />
-              <Text style={[styles.textmenu]}>Home</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('RetrieveDataScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/retrieveblue.png')} />
-              <Text style={[styles.textmenu]}>Retrieve Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('TableDataScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/datablue.png')} />
-              <Text style={[styles.textmenu]}>View Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('EditProfileScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/profileblue.png')} />
-              <Text style={[styles.textmenu]}>Profile</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('SettingScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/settingblue.png')} />
-              <Text style={[styles.textmenu]}>Setting</Text>
-            </TouchableOpacity>
-          </Col>
         </Row>
       </Grid>
     );
@@ -118,7 +97,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 30,
-    marginBottom: 30
+    marginBottom: 30,
   },
   itemIconImage: {
     resizeMode: 'contain',
@@ -128,7 +107,7 @@ const styles = StyleSheet.create({
   itemText: {
     color: 'gray',
     marginLeft: 13,
-    fontSize: 18
+    fontSize: 18,
   },
   Border: {
     alignSelf: 'stretch',
@@ -145,20 +124,20 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     backgroundColor: '#129cd8',
-    marginTop: 70
+    marginTop: 70,
   },
   textbuttonGoogle: {
     fontSize: 20,
     color: '#fff',
     fontWeight: '700',
     textAlign: 'center',
-    marginLeft: 20
+    marginLeft: 20,
   },
   itemMenuImage: {
     resizeMode: 'contain',
     width: 25,
     height: 25,
-    marginTop: 3
+    marginTop: 3,
   },
   col: {
     alignItems: 'center',
@@ -169,6 +148,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 5,
     color: '#808080',
-
-  }
+  },
 });

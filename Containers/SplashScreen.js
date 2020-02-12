@@ -1,30 +1,46 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions } from 'react-native';
+import React, {Component} from 'react';
+import {
+  StyleSheet,
+  Image,
+  ImageBackground,
+  View,
+  Dimensions,
+} from 'react-native';
+
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class SplashScreen extends Component {
-  performTimeConsumingTask = async() => {
-    return new Promise((resolve) =>
-      setTimeout(
-        () => { resolve('result') },
-        3000
-      )
-    )
-  }
+  performTimeConsumingTask = async () => {
+    return new Promise(resolve =>
+      setTimeout(() => {
+        resolve('result');
+      }, 3000),
+    );
+  };
 
   async componentDidMount() {
+    const {navigate} = this.props.navigation;
+
     // Preload data from an external API
     // Preload data using AsyncStorage
     const data = await this.performTimeConsumingTask();
+    const authToken = JSON.parse(await AsyncStorage.getItem('@userAuth'));
 
-    if (data !== null) {
-      this.props.navigation.navigate('LoginScreen');
+    if (authToken && data !== null) {
+      navigate('HomeScreen');
+    } else {
+      navigate('Auth');
     }
   }
   render() {
     return (
       <View style={styles.container}>
-        <ImageBackground style={[styles.background]} source={require('../assets/background/3.png')}>
-          <Image style={[styles.logo]} source={require('../assets/logo/settingwhite.png')}></Image>
+        <ImageBackground
+          style={[styles.background]}
+          source={require('../assets/background/3.png')}>
+          <Image
+            style={[styles.logo]}
+            source={require('../assets/logo/settingwhite.png')}></Image>
         </ImageBackground>
       </View>
     );
@@ -42,14 +58,13 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 220,
-    height: 135
-
+    height: 135,
   },
   background: {
     width: win.width,
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -3
+    marginTop: -3,
   },
 });

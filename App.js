@@ -1,8 +1,7 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import store from './Redux/store'
-import Home from './routes'
-
+import React from 'react';
+import {Provider} from 'react-redux';
+import store from './Redux/store';
+import Home from './Navigations/routes';
 
 export default class App extends React.Component {
   render() {
@@ -10,6 +9,6 @@ export default class App extends React.Component {
       <Provider store={store}>
         <Home />
       </Provider>
-    )
+    );
   }
 }

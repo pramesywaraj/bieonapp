@@ -1,118 +1,110 @@
-import React, { Component } from 'react';
-import axios from 'axios'
+import React, {Component} from 'react';
+import axios from 'axios';
 
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { Col, Row, Grid } from "react-native-easy-grid";
-import loginAction from '../Redux/Actions/login'
-import ApiAxios from '../Services/ApiAxios'
+import {
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Text,
+  View,
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import {Col, Row, Grid} from 'react-native-easy-grid';
+import loginAction from '../Redux/Actions/login';
+import ApiAxios from '../Services/ApiAxios';
+
 export default class HomeScreen extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      listArticle:[]
-    }
+      listArticle: [],
+    };
   }
   componentDidMount() {
-    console.log("homey")
-    this.getArticle()
+    console.log('homey');
+    this.getArticle();
   }
   async getArticle() {
-    axios.get('https://bieonbe.defuture.tech/article/list')
-    .then(response => {
-      // handle success
-      console.log("all article",response.data);
-    })
-    .catch(function (error) {
-      // handle error
-      console.log("er",error);
-    })
+    axios
+      .get('https://bieonbe.defuture.tech/article/list')
+      .then(response => {
+        // handle success
+        console.log('all article', response.data);
+      })
+      .catch(function(error) {
+        // handle error
+        console.log('er', error);
+      });
   }
   render() {
-    const { navigate } = this.props.navigation;
+    const {navigate} = this.props.navigation;
     return (
       <Grid>
         <Row size={13}>
-        <ScrollView>
-          <Row style={[styles.Col1]}>
-            <Image style={[styles.TopPic]} source={require('../assets/car.png')}></Image>
-          </Row>
-          <Text style={[styles.text]}>HEADLINE</Text>
-          <Row style={[styles.Col]}>
-            <Image style={[styles.BottomPic]} source={require('../assets/photo.jpg')}></Image>
-            <Col>
-              <Text style={[styles.textSource]}>Source</Text>
-              <Text style={[styles.textTitle]}>Lorem Ipsum Dolor Sir Amet</Text>
-              <Row>
-                <Text style={[styles.textCategory]}>Category</Text>
-                <Text style={[styles.textTime]}>Time</Text>
-                <Text style={[styles.Icon]}>Icon</Text>
-              </Row>
-            </Col>
-          </Row>
-          <View style={[styles.Border]}></View>
-          <Row style={[styles.Col]}>
-            <Image style={[styles.BottomPic]} source={require('../assets/photo.jpg')}></Image>
-            <Col>
-              <Text style={[styles.textSource]}>Source</Text>
-              <Text style={[styles.textTitle]}>Lorem Ipsum Dolor Sir Amet</Text>
-              <Row>
-                <Text style={[styles.textCategory]}>Category</Text>
-                <Text style={[styles.textTime]}>Time</Text>
-                <Text style={[styles.Icon]}>Icon</Text>
-              </Row>
-            </Col>
-          </Row>
-          <View style={[styles.Border]}></View>
-          <Row style={[styles.Col]}>
-            <Image style={[styles.BottomPic]} source={require('../assets/photo.jpg')}></Image>
-            <Col>
-              <Text style={[styles.textSource]}>Source</Text>
-              <Text style={[styles.textTitle]}>Lorem Ipsum Dolor Sir Amet</Text>
-              <Row>
-                <Text style={[styles.textCategory]}>Category</Text>
-                <Text style={[styles.textTime]}>Time</Text>
-                <Text style={[styles.Icon]}>Icon</Text>
-              </Row>
-            </Col>
-          </Row>
-          <View style={[styles.Border]}></View>
-
-        </ScrollView>
-        </Row>
-        <Row>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('HomeScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/homeblue.png')} />
-              <Text style={[styles.textmenu]}>Home</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('RetrieveDataScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/retrieveblue.png')} />
-              <Text style={[styles.textmenu]}>Retrieve Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('TableDataScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/datablue.png')} />
-              <Text style={[styles.textmenu]}>View Data</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('EditProfileScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/profileblue.png')} />
-              <Text style={[styles.textmenu]}>Profile</Text>
-            </TouchableOpacity>
-          </Col>
-          <Col style={[styles.col]}>
-            <TouchableOpacity style={[styles.col]} onPress={() => navigate('SettingScreen')}>
-              <Image style={styles.itemMenuImage} source={require('../assets/icons/menubar/settingblue.png')} />
-              <Text style={[styles.textmenu]}>Setting</Text>
-            </TouchableOpacity>
-          </Col>
+          <ScrollView>
+            <Row style={[styles.Col1]}>
+              <Image
+                style={[styles.TopPic]}
+                source={require('../assets/car.png')}></Image>
+            </Row>
+            <Text style={[styles.text]}>HEADLINE</Text>
+            <Row style={[styles.Col]}>
+              <Image
+                style={[styles.BottomPic]}
+                source={require('../assets/photo.jpg')}></Image>
+              <Col>
+                <Text style={[styles.textSource]}>Source</Text>
+                <Text style={[styles.textTitle]}>
+                  Lorem Ipsum Dolor Sir Amet
+                </Text>
+                <Row>
+                  <Text style={[styles.textCategory]}>Category</Text>
+                  <Text style={[styles.textTime]}>Time</Text>
+                  <Text style={[styles.Icon]}>Icon</Text>
+                </Row>
+              </Col>
+            </Row>
+            <View style={[styles.Border]}></View>
+            <Row style={[styles.Col]}>
+              <Image
+                style={[styles.BottomPic]}
+                source={require('../assets/photo.jpg')}></Image>
+              <Col>
+                <Text style={[styles.textSource]}>Source</Text>
+                <Text style={[styles.textTitle]}>
+                  Lorem Ipsum Dolor Sir Amet
+                </Text>
+                <Row>
+                  <Text style={[styles.textCategory]}>Category</Text>
+                  <Text style={[styles.textTime]}>Time</Text>
+                  <Text style={[styles.Icon]}>Icon</Text>
+                </Row>
+              </Col>
+            </Row>
+            <View style={[styles.Border]}></View>
+            <Row style={[styles.Col]}>
+              <Image
+                style={[styles.BottomPic]}
+                source={require('../assets/photo.jpg')}></Image>
+              <Col>
+                <Text style={[styles.textSource]}>Source</Text>
+                <Text style={[styles.textTitle]}>
+                  Lorem Ipsum Dolor Sir Amet
+                </Text>
+                <Row>
+                  <Text style={[styles.textCategory]}>Category</Text>
+                  <Text style={[styles.textTime]}>Time</Text>
+                  <Text style={[styles.Icon]}>Icon</Text>
+                </Row>
+              </Col>
+            </Row>
+            <View style={[styles.Border]}></View>
+          </ScrollView>
         </Row>
       </Grid>
-
     );
   }
 }
@@ -124,13 +116,13 @@ const styles = StyleSheet.create({
     height: 210,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f3f3f3'
+    backgroundColor: '#f3f3f3',
   },
   Col1: {
     height: 280,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#808080'
+    backgroundColor: '#808080',
   },
   text: {
     fontWeight: 'bold',
@@ -138,18 +130,18 @@ const styles = StyleSheet.create({
   },
   TopPic: {
     height: 300,
-    resizeMode: 'center'
+    resizeMode: 'center',
   },
   BottomPic: {
     width: 160,
     height: 160,
     margin: 10,
-    marginLeft: 20
+    marginLeft: 20,
   },
   textSource: {
     marginTop: 20,
     margin: 10,
-    color: '#808080'
+    color: '#808080',
   },
   textTitle: {
     margin: 10,
@@ -160,19 +152,19 @@ const styles = StyleSheet.create({
   textCategory: {
     marginTop: 47,
     margin: 10,
-    color: '#0000FF'
+    color: '#0000FF',
   },
   textTime: {
     marginLeft: 5,
     marginTop: 47,
     margin: 10,
-    color: '#808080'
+    color: '#808080',
   },
   Icon: {
     marginTop: 47,
     margin: 10,
     marginLeft: 25,
-    color: '#808080'
+    color: '#808080',
   },
   Border: {
     alignSelf: 'stretch',
@@ -185,7 +177,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 25,
     height: 25,
-    marginTop: 3
+    marginTop: 3,
   },
   col: {
     alignItems: 'center',
@@ -196,6 +188,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 5,
     color: '#808080',
-
-  }
+  },
 });

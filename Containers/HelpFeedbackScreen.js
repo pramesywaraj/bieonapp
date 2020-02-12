@@ -1,24 +1,32 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, TouchableOpacity } from 'react-native';
-import { Col, Row, Grid } from "react-native-easy-grid";
-import { Dropdown } from 'react-native-material-dropdown';
+import React, {Component} from 'react';
+import {
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Text,
+  View,
+  Dimensions,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import {Col, Row, Grid} from 'react-native-easy-grid';
+import {Dropdown} from 'react-native-material-dropdown';
 
 export default class HelpFeedbackScreen extends Component {
   render() {
-    let data = [{
-      value: 'Banana',
-    }, {
-      value: 'Mango',
-    }, {
-      value: 'Pear',
-    }];
+    let data = [
+      {
+        value: 'Banana',
+      },
+      {
+        value: 'Mango',
+      },
+      {
+        value: 'Pear',
+      },
+    ];
 
-    return (
-      <Dropdown
-        label='Favorite Fruit'
-        data={data}
-      />
-    );
+    return <Dropdown label="Favorite Fruit" data={data} />;
   }
 }
 
@@ -34,7 +42,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 360,
     marginTop: 0,
-    marginBottom: 70
+    marginBottom: 70,
   },
   Row: {
     height: 40,
@@ -50,20 +58,20 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: -50
+    marginRight: -50,
   },
   background: {
     width: win.width,
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -5
+    marginTop: -5,
   },
   text: {
     color: '#fff',
     fontSize: 10,
     marginTop: 50,
-    color: '#f8f8f8'
+    color: '#f8f8f8',
   },
   textsign: {
     color: '#fff',
@@ -96,7 +104,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 0.7,
     fontStyle: 'italic',
-    marginLeft: 15
+    marginLeft: 15,
   },
   button: {
     alignSelf: 'center',
@@ -106,7 +114,7 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     backgroundColor: '#fff',
-    marginTop: 40
+    marginTop: 40,
   },
   buttonGoogle: {
     alignSelf: 'center',
@@ -116,19 +124,19 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     backgroundColor: 'red',
-    marginTop: 20
+    marginTop: 20,
   },
   textbutton: {
     fontSize: 20,
     color: '#129cd8',
     fontWeight: '700',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   textbuttonGoogle: {
     fontSize: 20,
     color: '#fff',
     fontWeight: '700',
     textAlign: 'center',
-    marginLeft: 20
-  }
+    marginLeft: 20,
+  },
 });

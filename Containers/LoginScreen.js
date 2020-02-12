@@ -1,215 +1,223 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, ImageBackground, Text, View, Dimensions, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import { Col, Row, Grid } from "react-native-easy-grid";
-import { connect } from "react-redux";
-import loginAction from '../Redux/Actions/login'
+import React, {Component} from 'react';
+import {
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Alert,
+  View,
+  Dimensions,
+  TextInput,
+  KeyboardAvoidingView,
+} from 'react-native';
 
+import AppsButton from '../Components/Buttons/AppsButton';
+
+import AsyncStorage from '@react-native-community/async-storage';
+import Config from 'react-native-config';
+import axios from 'axios';
 
 class LoginScreen extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      email: "admin@bieon.com",
-      password: "password",
+      email: '',
+      password: '',
+    };
+
+    this.onPressLogin = this.onPressLogin.bind(this);
+  }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Hahahha')},
+    ]);
+  };
+
+  storeUserCredentials = async (data, token) => {
+    const {navigate} = this.props.navigation;
+
+    try {
+      await AsyncStorage.setItem('@userData', JSON.stringify(data));
+      await AsyncStorage.setItem('@userAuth', JSON.stringify(token));
+
+      navigate('HomeScreen');
+    } catch (err) {
+      console.log(err);
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika menyimpan data, silahkan restart aplikasi.',
+      );
+    }
+  };
+
+  async onLoginProcess(payload) {
+    try {
+      let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
+
+      if (response.status === 202) {
+        const {data, token} = response.data.data;
+
+        await this.storeUserCredentials(data, token);
+      }
+    } catch (err) {
+      const {response} = err;
+
+      if (response.status === 422) {
+        this.onAlert(
+          'Email atau Password Salah',
+          'Silahkan periksa email atau password Anda kembali.',
+        );
+      } else {
+        this.onAlert(
+          'Terjadi Kesalahan',
+          'Silahkan tunggu beberapa saat dan coba kembali.',
+        );
+      }
     }
   }
 
   onPressLogin() {
-    const { email, password, auth } = this.state
-    console.log("email", email)
-    console.log("password", password)
-    if (__DEV__) console.log("login nih");
-    if (email.length > 0 && password.length > 0) {
-      if (__DEV__) console.log("do login");
-      this.setState({ auth: true })
-      this.props.loginAction({
-        email,
-        password
-      })
-      this.props.navigation.navigate('HomeScreen')
+    if (this.state.email !== '' && this.state.password !== '') {
+      let newLogin = {
+        email: this.state.email,
+        password: this.state.password,
+      };
+
+      this.onLoginProcess(newLogin);
+    } else {
+      this.onAlert(
+        'Email atau Password belum terisi',
+        'Silahkan masukkan email atau password Anda terlebih dahulu.',
+      );
     }
-    // else if (email.length == 0 && password.length == 0) {
-    //   console.log("do register");
-    //   this.props.loginAction({
-    //     email,
-    //     password,
-    //   })
-    //   alert("Please Fill The Form!")
-    // }
   }
 
-
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <ImageBackground style={[styles.background]} source={require('../assets/background/3.png')}>
-          <KeyboardAvoidingView behavior='padding' style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Image style={[styles.logo]} source={require('../assets/logo/loginwhite.png')}></Image>
-            <View style={styles.itemContainer}>
-              <Image style={styles.itemIconImage} source={require('../assets/icons/signup/email.png')} />
-              <TextInput style={[styles.TextInput]} underlineColorAndroid={'transparent'} placeholder={'Email'} onChangeText={(email) => this.setState({ email })}></TextInput>
+        <ImageBackground
+          style={[styles.background]}
+          source={require('../assets/background/3.png')}>
+          <KeyboardAvoidingView
+            behavior="padding"
+            style={{alignItems: 'center', justifyContent: 'center'}}>
+            <Image
+              style={[styles.logo]}
+              source={require('../assets/logo/loginwhite.png')}
+            />
+            <View style={styles.inputTextContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/signup/email.png')}
+              />
+              <TextInput
+                style={[styles.textInput]}
+                value={this.state.email}
+                underlineColorAndroid="transparent"
+                placeholder={'Email'}
+                onChangeText={email =>
+                  this.setState({email: email})
+                }></TextInput>
             </View>
-            <View style={styles.itemContainer}>
-              <Image style={styles.itemIconImage} source={require('../assets/icons/signup/password.png')} />
-              <TextInput style={[styles.TextInput]} secureTextEntry={true} underlineColorAndroid={'transparent'}
-                placeholder={'Password'} onChangeText={(password) => this.setState({ password })}></TextInput>
+            <View style={styles.inputTextContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/signup/password.png')}
+              />
+              <TextInput
+                style={[styles.textInput]}
+                secureTextEntry={true}
+                value={this.state.password}
+                underlineColorAndroid={'transparent'}
+                placeholder={'Password'}
+                onChangeText={password =>
+                  this.setState({password: password})
+                }></TextInput>
             </View>
-            <TouchableOpacity style={[styles.button]} onPress={() => this.onPressLogin()}>
-              <Text style={[styles.textbutton]}>LOGIN</Text>
-            </TouchableOpacity>
-            <Row style={[styles.Row]}>
-              <Col style={[styles.Col]}>
-                <TouchableOpacity onPress={() => navigate('ForgetPasswordScreen')}>
-                  <Text style={[styles.text]}>FORGOT PASSWORD?</Text>
-                </TouchableOpacity>
-              </Col>
-            </Row>
-            <Text style={[styles.textsign]}>OR LOGIN WITH</Text>
-            <TouchableOpacity style={[styles.buttonGoogle]} onPress={() => navigate('HomeScreen')}>
-              <Row>
-                <Image style={styles.itemGoogleImage} source={require('../assets/icons/login/g.png')} />
-                <Text style={[styles.textbuttonGoogle]}>GOOGLE</Text>
-              </Row>
-            </TouchableOpacity>
+            <AppsButton
+              action={this.onPressLogin}
+              label={'Login'}
+              buttonColor={'#fff'}
+              textColor={'#129cd8'}
+            />
+            {/* <TouchableOpacity onPress={() => navigate('ForgetPasswordScreen')}>
+              <Text style={[styles.text]}>FORGOT PASSWORD?</Text>
+            </TouchableOpacity> */}
           </KeyboardAvoidingView>
         </ImageBackground>
-
       </View>
     );
   }
 }
 
-const mapStateToProps = state => {
-  const { login } = state;
-  return { login };
-};
-
-const mapDispatchToProps = dispatch => ({
-  loginAction: data => dispatch(loginAction(data)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginScreen);
-
-
-
-const win = Dimensions.get('window');
+const win = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    margin: 0,
+    padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
   logo: {
-    width: 360,
-    marginTop: 0,
-    marginBottom: 90
-  },
-  Row: {
-    height: 40,
-    marginTop: -25,
+    resizeMode: 'contain',
+    width: 200,
   },
   Col: {
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20
+    marginTop: 20,
   },
   background: {
-    width: '100%',
-    height: '100%',
+    resizeMode: 'contain',
+    width: win.width,
+    height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -3,
-
   },
   text: {
-    color: '#fff',
     fontSize: 10,
     marginTop: 50,
-    color: '#f8f8f8'
+    color: '#f8f8f8',
   },
   textsign: {
     color: '#fff',
     fontSize: 13,
     marginTop: 60,
-    textAlign: 'center'
+    textAlign: 'center',
   },
-  itemContainer: {
+  inputTextContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
-    alignSelf: 'stretch',
+    maxWidth: '100%',
+    paddingRight: '5%',
+    paddingLeft: '5%',
+    marginRight: '8%',
+    marginLeft: '8%',
+    marginBottom: '10%',
+    backgroundColor: 'rgba(74, 74, 74, 0.1)',
+    borderRadius: 10,
   },
   itemIconImage: {
     resizeMode: 'contain',
-    width: 30,
-    height: 30,
-    marginLeft: 30,
-    marginTop: -20
-  },
-  itemGoogleImage: {
-    resizeMode: 'contain',
-    width: 30,
-    height: 30,
-  },
-  IconImage: {
-    resizeMode: 'contain',
-    width: 30,
-    height: 30,
-  },
-  TextInput: {
-    fontSize: 18,
-    alignSelf: 'stretch',
-    width: 380,
-    height: 40,
-    marginBottom: 20,
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 0.7,
-    fontStyle: 'italic',
-    marginLeft: 15
-  },
-  button: {
-    alignSelf: 'center',
     alignItems: 'center',
-    borderRadius: 40,
-    width: 230,
-    height: 50,
+    width: 30,
+    height: 30,
     padding: 10,
-    backgroundColor: '#fff',
-    marginTop: 40
   },
-  buttonGoogle: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderRadius: 40,
-    width: 230,
-    height: 50,
-    padding: 10,
-    backgroundColor: 'red',
-    marginTop: 20
+  textInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    color: '#424242',
+    width: '80%',
   },
-  textbutton: {
-    fontSize: 20,
-    color: '#129cd8',
-    fontWeight: '700',
-    textAlign: 'center'
-  },
-  textbuttonGoogle: {
-    fontSize: 20,
-    color: '#fff',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginLeft: 20
-  }
 });
+
+export default LoginScreen;
