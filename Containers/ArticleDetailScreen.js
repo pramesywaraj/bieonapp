@@ -1,19 +1,13 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Image,
-  Text,
-  FlatList,
-  View,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, Image, Text, ScrollView, View} from 'react-native';
 import Config from 'react-native-config';
+import moment from 'moment';
 
 export default function ArticleDetailScreen({navigation}) {
   const {article} = navigation.state.params;
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image
         style={[styles.headingImage]}
         resizeMode="stretch"
@@ -22,9 +16,13 @@ export default function ArticleDetailScreen({navigation}) {
         }}
       />
       <View style={styles.articleContainer}>
-        <Text>{article.description}</Text>
+        <Text style={styles.articleTitle}>{article.title}</Text>
+        <Text style={styles.articleDate}>
+          {moment(article.create_at).format('Do MMMM YYYY')}
+        </Text>
+        <Text style={styles.articleText}>{article.description}</Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -36,16 +34,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(77,77,77,0.5)',
     top: 0,
     width: '100%',
-    height: '40%',
+    height: '30%',
   },
   articleContainer: {
     height: '100%',
     width: '100%',
     backgroundColor: 'white',
+    padding: '2%',
   },
-  homeScreenTitle: {
+  articleTitle: {
     fontWeight: 'bold',
     fontSize: 20,
-    margin: '5%',
+  },
+  articleDate: {
+    fontWeight: '200',
+    fontSize: 13,
+    color: 'rgb(156, 156, 156)',
+  },
+  articleText: {
+    paddingTop: '5%',
+    paddingBottom: '5%',
   },
 });

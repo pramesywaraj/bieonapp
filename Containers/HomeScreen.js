@@ -9,6 +9,7 @@ import {
   FlatList,
   View,
   Dimensions,
+  Alert,
 } from 'react-native';
 
 import Article from '../Components/Articles/Article';
@@ -30,19 +31,29 @@ export default class HomeScreen extends Component {
     this.fetchArticles();
   }
 
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
   async fetchArticles() {
-    axios
-      .get(`${Config.API_URL}/article/list`)
-      .then(response => {
-        const {articles} = response.data.data;
-        this.setState({articles: articles, refreshing: false});
-      })
-      .catch(function(error) {
-        this.setState({
-          refreshing: false,
-        });
-        console.log('error in HomeScreen', error);
+    try {
+      const {data} = await axios.get(`${Config.API_URL}/article/list`);
+
+      const {articles} = data.data;
+      this.setState({articles: articles, refreshing: false});
+    } catch (err) {
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Terjadi kesalahan pada server, silahkan refresh dan coba kembali.',
+      );
+      this.setState({
+        ...this.state.articles,
+        refreshing: false,
       });
+      console.log('Terjadi kesalahan pada bagian HomeScreen', err);
+    }
   }
 
   handleRefresh() {
