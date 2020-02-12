@@ -29,6 +29,7 @@ export default function ArticleDetailScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: '100%',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
@@ -45,6 +46,7 @@ const styles = StyleSheet.create({
   articleTitle: {
     fontWeight: 'bold',
     fontSize: 20,
+    height: 'auto',
   },
   articleDate: {
     fontWeight: '200',
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     color: 'rgb(156, 156, 156)',
   },
   articleText: {
-    paddingTop: '5%',
-    paddingBottom: '5%',
+    marginTop: '5%',
+    marginBottom: '5%',
   },
 });
