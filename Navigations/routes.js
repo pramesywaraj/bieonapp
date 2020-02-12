@@ -11,6 +11,7 @@ import LoginScreen from '../Containers/LoginScreen';
 // import RegisterScreen from '../Containers/RegisterScreen';
 import EditProfileScreen from '../Containers/EditProfileScreen';
 import HomeScreen from '../Containers/HomeScreen';
+import ArticleDetailScreen from '../Containers/ArticleDetailScreen';
 // import ForgetPasswordScreen from '../Containers/ForgetPasswordScreen';
 import SettingScreen from '../Containers/SettingScreen';
 import DeviceInfoScreen from '../Containers/DeviceInfoScreen';
@@ -30,6 +31,12 @@ import ContainDetailIodiumScreen from '../Containers/ContainDetailIodiumScreen';
 const HomeNavigator = createStackNavigator({
   HomeScreen: {
     screen: HomeScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ArticleDetailScreen: {
+    screen: ArticleDetailScreen,
     navigationOptions: {
       headerShown: false,
     },

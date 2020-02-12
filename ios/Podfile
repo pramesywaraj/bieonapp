@@ -38,6 +38,8 @@ target 'BieonApp' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'EscPos', :path => '../node_modules/@leesiongchan/react-native-esc-pos'
+
   target 'BieonAppTests' do
     inherit! :search_paths
     # Pods for testing
