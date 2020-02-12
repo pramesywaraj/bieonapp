@@ -4,13 +4,38 @@ import {
   View,
   Text,
   Image,
-  Dimensions,
+  Alert,
   TouchableOpacity,
 } from 'react-native';
-import {Header} from 'react-native-elements';
 import {Col, Row, Grid} from 'react-native-easy-grid';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export default class SettingScreen extends Component {
+class SettingScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.logout = this.logout.bind(this);
+  }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
+  async logout() {
+    const {navigate} = this.props.navigation;
+
+    try {
+      await AsyncStorage.removeItem('@userData');
+      await AsyncStorage.removeItem('@userAuth');
+      this.onAlert('Logout', 'Anda telah keluar dari aplikasi');
+      navigate('Auth');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return (
@@ -70,7 +95,7 @@ export default class SettingScreen extends Component {
               <View style={[styles.Border]}></View>
               <TouchableOpacity
                 style={[styles.buttonGoogle]}
-                onPress={() => navigate('LoginScreen')}>
+                onPress={this.logout}>
                 <Row>
                   <Image
                     style={styles.itemIconImage}
@@ -86,6 +111,7 @@ export default class SettingScreen extends Component {
     );
   }
 }
+export default SettingScreen;
 
 const styles = StyleSheet.create({
   container: {

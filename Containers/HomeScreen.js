@@ -1,192 +1,146 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import Config from 'react-native-config';
 
 import {
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
+  FlatList,
   View,
   Dimensions,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
+  Alert,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
-import loginAction from '../Redux/Actions/login';
-import ApiAxios from '../Services/ApiAxios';
+
+import Article from '../Components/Articles/Article';
 
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listArticle: [],
+      articles: [],
+      refreshing: true,
     };
+
+    this.fetchArticles = this.fetchArticles.bind(this);
+    this.handleRefresh = this.handleRefresh.bind(this);
+    this.renderSeparator = this.renderSeparator.bind(this);
   }
+
   componentDidMount() {
-    console.log('homey');
-    this.getArticle();
+    this.fetchArticles();
   }
-  async getArticle() {
-    axios
-      .get('https://bieonbe.defuture.tech/article/list')
-      .then(response => {
-        // handle success
-        console.log('all article', response.data);
-      })
-      .catch(function(error) {
-        // handle error
-        console.log('er', error);
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
+  async fetchArticles() {
+    try {
+      const {data} = await axios.get(`${Config.API_URL}/article/list`);
+
+      const {articles} = data.data;
+      this.setState({articles: articles, refreshing: false});
+    } catch (err) {
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Terjadi kesalahan pada server, silahkan refresh dan coba kembali.',
+      );
+      this.setState({
+        ...this.state.articles,
+        refreshing: false,
       });
+      console.log('Terjadi kesalahan pada bagian HomeScreen', err);
+    }
   }
-  render() {
+
+  handleRefresh() {
+    this.setState(
+      {
+        ...this.state.articles,
+        refreshing: true,
+      },
+      () => this.fetchArticles(),
+    );
+  }
+
+  goToArticleDetail(item) {
     const {navigate} = this.props.navigation;
+    navigate('ArticleDetailScreen', {article: item});
+  }
+
+  renderSeparator = () => {
     return (
-      <Grid>
-        <Row size={13}>
-          <ScrollView>
-            <Row style={[styles.Col1]}>
-              <Image
-                style={[styles.TopPic]}
-                source={require('../assets/car.png')}></Image>
-            </Row>
-            <Text style={[styles.text]}>HEADLINE</Text>
-            <Row style={[styles.Col]}>
-              <Image
-                style={[styles.BottomPic]}
-                source={require('../assets/photo.jpg')}></Image>
-              <Col>
-                <Text style={[styles.textSource]}>Source</Text>
-                <Text style={[styles.textTitle]}>
-                  Lorem Ipsum Dolor Sir Amet
-                </Text>
-                <Row>
-                  <Text style={[styles.textCategory]}>Category</Text>
-                  <Text style={[styles.textTime]}>Time</Text>
-                  <Text style={[styles.Icon]}>Icon</Text>
-                </Row>
-              </Col>
-            </Row>
-            <View style={[styles.Border]}></View>
-            <Row style={[styles.Col]}>
-              <Image
-                style={[styles.BottomPic]}
-                source={require('../assets/photo.jpg')}></Image>
-              <Col>
-                <Text style={[styles.textSource]}>Source</Text>
-                <Text style={[styles.textTitle]}>
-                  Lorem Ipsum Dolor Sir Amet
-                </Text>
-                <Row>
-                  <Text style={[styles.textCategory]}>Category</Text>
-                  <Text style={[styles.textTime]}>Time</Text>
-                  <Text style={[styles.Icon]}>Icon</Text>
-                </Row>
-              </Col>
-            </Row>
-            <View style={[styles.Border]}></View>
-            <Row style={[styles.Col]}>
-              <Image
-                style={[styles.BottomPic]}
-                source={require('../assets/photo.jpg')}></Image>
-              <Col>
-                <Text style={[styles.textSource]}>Source</Text>
-                <Text style={[styles.textTitle]}>
-                  Lorem Ipsum Dolor Sir Amet
-                </Text>
-                <Row>
-                  <Text style={[styles.textCategory]}>Category</Text>
-                  <Text style={[styles.textTime]}>Time</Text>
-                  <Text style={[styles.Icon]}>Icon</Text>
-                </Row>
-              </Col>
-            </Row>
-            <View style={[styles.Border]}></View>
-          </ScrollView>
-        </Row>
-      </Grid>
+      <View
+        style={{
+          flex: 1.5,
+          height: 2,
+          backgroundColor: '#CED0CE',
+        }}
+      />
+    );
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Image
+          style={[styles.headingImage]}
+          resizeMode="stretch"
+          source={{
+            uri:
+              'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
+          }}
+        />
+        <View style={styles.articleContainer}>
+          <Text style={styles.homeScreenTitle}>Headline</Text>
+          <FlatList
+            data={this.state.articles}
+            renderItem={({item}) => (
+              <Article
+                onClick={this.goToArticleDetail.bind(this, item)}
+                title={item.title}
+                imageUri={item.picture}
+                createdAt={item.create_at}
+              />
+            )}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={item => item.article_id.toString()}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
+          />
+        </View>
+      </View>
     );
   }
 }
 
-const win = Dimensions.get('window');
+const deviceWindow = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  Col: {
-    height: 210,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f3f3f3',
+  container: {
+    flex: 1,
   },
-  Col1: {
-    height: 280,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#808080',
+  headingImage: {
+    backgroundColor: 'rgba(77,77,77,0.5)',
+    top: 0,
+    width: '100%',
+    height: '40%',
   },
-  text: {
+  articleContainer: {
+    marginTop: '50%',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    backgroundColor: 'white',
+  },
+  homeScreenTitle: {
     fontWeight: 'bold',
-    margin: 20,
-  },
-  TopPic: {
-    height: 300,
-    resizeMode: 'center',
-  },
-  BottomPic: {
-    width: 160,
-    height: 160,
-    margin: 10,
-    marginLeft: 20,
-  },
-  textSource: {
-    marginTop: 20,
-    margin: 10,
-    color: '#808080',
-  },
-  textTitle: {
-    margin: 10,
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 17,
-  },
-  textCategory: {
-    marginTop: 47,
-    margin: 10,
-    color: '#0000FF',
-  },
-  textTime: {
-    marginLeft: 5,
-    marginTop: 47,
-    margin: 10,
-    color: '#808080',
-  },
-  Icon: {
-    marginTop: 47,
-    margin: 10,
-    marginLeft: 25,
-    color: '#808080',
-  },
-  Border: {
-    alignSelf: 'stretch',
-    width: 500,
-    color: '#808080',
-    borderBottomColor: '#808080',
-    borderBottomWidth: 0.8,
-  },
-  itemMenuImage: {
-    resizeMode: 'contain',
-    width: 25,
-    height: 25,
-    marginTop: 3,
-  },
-  col: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f8f8f8',
-  },
-  textmenu: {
-    fontSize: 10,
-    marginTop: 5,
-    color: '#808080',
+    fontSize: 20,
+    margin: '5%',
   },
 });
