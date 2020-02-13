@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import moment from 'moment';
 import {
   TouchableHighlight,
   Platform,
@@ -17,18 +16,20 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
 import DatePicker from 'react-native-datepicker';
-import CheckBox from 'react-native-check-box';
+import Config from 'react-native-config';
 import {
   BluetoothEscposPrinter,
   BluetoothManager,
   BluetoothTscPrinter,
 } from 'react-native-bluetooth-escpos-printer';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
+import Table from '../Components/Table/Table';
 
 // Object example
 const salt = [
@@ -67,6 +68,9 @@ export default class HomeScreen extends Component {
       debugMsg: '',
       modalVisible: false,
       connected: false,
+      selectedSaltType: 'a',
+      salts_a: [],
+      salts_b: [],
     };
 
     this.openModal = this.openModal.bind(this);
@@ -76,6 +80,7 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    await this.fetchSaltData();
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
       // this._listeners.push(
@@ -144,6 +149,31 @@ export default class HomeScreen extends Component {
           },
         ),
       );
+    }
+  }
+
+  async fetchSaltData() {
+    let userData = await AsyncStorage.getItem('@userData');
+    userData = JSON.parse(userData);
+
+    try {
+      const response = await axios.get(
+        `${Config.API_URL}/salt/${this.state.selectedSaltType}/list?user_id=${userData.user_id}`,
+      );
+
+      if (this.state.selectedSaltType === 'a') {
+        const {salts_a} = response.data.data;
+        this.setState({
+          salts_a: salts_a,
+        });
+      } else if (this.state.selectedSaltType === 'b') {
+        const {salts_b} = response.data.data;
+        this.setState({
+          salts_b: salts_b,
+        });
+      }
+    } catch (err) {
+      console.log('error happened at FetchingSaltData', err);
     }
   }
 
@@ -382,6 +412,10 @@ export default class HomeScreen extends Component {
   }
 
   render() {
+    const salt_a_header = ['No', 'Date', 'NaCl', 'Whiteness', 'Water Content'];
+
+    const salt_b_header = ['No', 'Date', 'Iodium'];
+
     return (
       <View style={styles.container}>
         <BluetoothListModal
@@ -403,21 +437,22 @@ export default class HomeScreen extends Component {
             )}
           </TouchableOpacity>
         </View>
-        <View>
+        <View style={styles.tableContainer}>
           <ScrollView>
-            <Row style={[styles.ColTop]}>
-              <Row onClick={() => this.checkStatus()}>
-                {/* <CheckBox
+            {/* <View style={[styles.ColTop]}>
+              <View onClick={() => this.checkStatus()}>
+                <CheckBox
                   style={[styles.checked]}
                   isChecked={this.state.isChecked}
-                /> */}
+                />
                 <Text style={[styles.textCategory]}>No</Text>
                 <Text style={[styles.textTime]}>Date</Text>
                 <Text style={[styles.Icon]}>NaCl</Text>
                 <Text style={[styles.Icon]}>Whiteness</Text>
                 <Text style={[styles.Icon]}>Water Content</Text>
-              </Row>
-            </Row>
+              </View>
+            </View> */}
+            <Table headers={salt_a_header} />
           </ScrollView>
         </View>
 
@@ -477,5 +512,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: '2%',
     borderRadius: 20,
+  },
+  tableContainer: {
+    height: '100%',
+    padding: '5%',
   },
 });
