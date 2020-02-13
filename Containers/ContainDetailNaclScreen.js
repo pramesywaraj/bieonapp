@@ -33,19 +33,6 @@ export default class ContainDetailNaclScreen extends Component {
     this.setState({token: token});
     console.log('tokens:', this.state.token);
   }
-  // saveData() {
-  //   const sample_name = this.state.sample_name;
-  //   if (sample_name.length > 0) {
-  //     console.log('no_seri', this.state.content.no_seri);
-  //     console.log('sample_name', sample_name);
-  //     console.log('nacl', this.state.content.nacl);
-  //     console.log('whiteness', this.state.content.whiteness);
-  //     console.log('water_content', this.state.content.water_content);
-  //     console.log('battery', this.state.content.battery);
-  //   } else {
-  //     alert('You must be fill sample name.');
-  //   }
-  // }
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
       {text: 'Ok', onPress: () => console.log('Pressed')},
