@@ -28,10 +28,8 @@ export default class ContainDetailNaclScreen extends Component {
       token: '',
     };
   }
-  async componentDidMount() {
-    const token = await AsyncStorage.getItem('@userAuth');
-    this.setState({token: token});
-    console.log('tokens:', this.state.token);
+  componentDidMount() {
+    console.log('ContainDetailNaclScreen');
   }
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
@@ -42,17 +40,6 @@ export default class ContainDetailNaclScreen extends Component {
   async saveData() {
     try {
       const {navigate} = this.props.navigation;
-      let datainput = {
-        device_id: this.state.content.no_seri,
-        nacl: this.state.content.nacl,
-        whiteness: this.state.content.whiteness,
-        water_content: this.state.content.water_content,
-        company_id: 1,
-        latitude: 0.0,
-        longitude: 0.0,
-        status_battery: this.state.content.battery,
-        sample_name: this.state.sample_name,
-      };
       console.log('tes', datainput);
       let response = await axios.post(
         `${Config.API_URL}/salt/a/input`,
