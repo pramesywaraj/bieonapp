@@ -97,33 +97,6 @@ export default class ContainDetailNaclScreen extends Component {
       );
       console.log('Terjadi kesalahan pada bagian konten', err);
     }
-    // axios
-    //   .post(
-    //     `${Config.API_URL}/salt/a/input`,
-    //     {
-    //       device_id: this.state.content.no_seri,
-    //       nacl: this.state.content.nacl,
-    //       whiteness: this.state.content.whiteness,
-    //       water_content: this.state.content.water_content,
-    //       company_id: 1,
-    //       latitude: 0.0,
-    //       longitude: 0.0,
-    //       status_battery: this.state.content.battery,
-    //       sample_name: this.state.sample_name,
-    //     },
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         token: await AsyncStorage.getItem('@userAuth'),
-    //       },
-    //     },
-    //   )
-    //   .then(function(response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function(error) {
-    //     console.log('iyaeror', error);
-    //   });
   }
   render() {
     const {navigate} = this.props.navigation;
