@@ -29,6 +29,9 @@ import {
   BluetoothTscPrinter,
 } from 'react-native-bluetooth-escpos-printer';
 
+import BluetoothListModal from '../Components/Modal/BluetoothListModal';
+
+// Object example
 const salt = [
   {
     no_seri: 'BIEON-010001',
@@ -66,7 +69,12 @@ export default class HomeScreen extends Component {
       modalVisible: false,
       connected: false,
     };
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this._connect = this._connect.bind(this);
   }
+
   componentDidMount() {
     //alert(BluetoothManager)
     BluetoothManager.isBluetoothEnabled().then(
@@ -151,8 +159,13 @@ export default class HomeScreen extends Component {
       );
     }
   }
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+
+  openModal() {
+    this.setState({modalVisible: true});
+  }
+
+  closeModal() {
+    this.setState({modalVisible: false});
   }
 
   _deviceAlreadPaired(rsp) {
@@ -204,57 +217,6 @@ export default class HomeScreen extends Component {
     }
   }
 
-  _renderRow(rows) {
-    let items = [];
-    for (let i in rows) {
-      let row = rows[i];
-      if (row.address) {
-        items.push(
-          <View>
-            <View style={[styles.BorderTop]}></View>
-            <TouchableOpacity
-              key={new Date().getTime() + i}
-              stlye={styles.wtf}
-              onPress={() => {
-                this.setState({
-                  loading: true,
-                });
-                this.setState({modalVisible: false, connected: true});
-                BluetoothManager.connect(row.address).then(
-                  s => {
-                    this.setState({
-                      loading: false,
-                      boundAddress: row.address,
-                      name: row.name || 'UNKNOWN',
-                    });
-                  },
-                  e => {
-                    this.setState({
-                      loading: false,
-                    });
-                    alert(e);
-                  },
-                );
-              }}>
-              {/* <View> */}
-              {/* <View style={[styles.BorderTop]}></View> */}
-              {/* <TouchableOpacity onPress={() => this.connect(val.address)}> */}
-              {/* <View style={styles.itemContainer}> */}
-              <Text style={styles.itemText}>{row.name || 'UNKNOWN'}</Text>
-
-              {/* </View> */}
-              {/* </TouchableOpacity> */}
-
-              {/* </View> */}
-              {/* <Text style={styles.name}>{row.name || "UNKNOWN"}</Text><Text
-                        style={styles.address}>{row.address}</Text> */}
-            </TouchableOpacity>
-          </View>,
-        );
-      }
-    }
-    return items;
-  }
   checkStatus() {
     this.setState({
       isChecked: !this.state.isChecked,
@@ -262,107 +224,182 @@ export default class HomeScreen extends Component {
     console.log('check?', this.state.isChecked);
   }
 
+  _scan() {
+    this.openModal();
+    this.setState({
+      loading: true,
+    });
+    BluetoothManager.scanDevices().then(
+      s => {
+        var ss = s;
+        var found = ss.found;
+        try {
+          found = JSON.parse(found); //@FIX_it: the parse action too weired..
+        } catch (e) {
+          //ignore
+        }
+        var fds = this.state.foundDs;
+        if (found && found.length) {
+          fds = found;
+        }
+        this.setState({
+          foundDs: fds,
+          loading: false,
+        });
+      },
+      er => {
+        this.setState({
+          loading: false,
+        });
+        alert('error' + JSON.stringify(er));
+      },
+    );
+  }
+
+  _connect(item) {
+    this.setState({
+      loading: true,
+    });
+    this.setState({modalVisible: false, connected: true});
+    BluetoothManager.connect(item.address).then(
+      s => {
+        this.setState({
+          loading: false,
+          boundAddress: item.address,
+          name: item.name || 'UNKNOWN',
+        });
+      },
+      e => {
+        this.setState({
+          loading: false,
+        });
+      },
+    );
+  }
+
+  onPrint() {
+    try {
+      this.state.salt.map(sal => {
+        BluetoothEscposPrinter.printerInit();
+        BluetoothEscposPrinter.printerLeftSpace(0);
+
+        BluetoothEscposPrinter.printerAlign(
+          BluetoothEscposPrinter.ALIGN.CENTER,
+        );
+        BluetoothEscposPrinter.setBlob(0);
+        BluetoothEscposPrinter.printText('Measurement Result\r\n', {
+          encoding: 'GBK',
+          codepage: 0,
+          widthtimes: 1,
+          heigthtimes: 1,
+          fonttype: 1,
+        });
+        BluetoothEscposPrinter.printText('\r\n\r\n', {});
+
+        let columnWidths = [14, 1, 17];
+        BluetoothEscposPrinter.printColumn(
+          columnWidths,
+          [
+            BluetoothEscposPrinter.ALIGN.LEFT,
+            BluetoothEscposPrinter.ALIGN.CENTER,
+            BluetoothEscposPrinter.ALIGN.RIGHT,
+          ],
+          ['No.Seri', ':', sal.no_seri],
+          {},
+        );
+        BluetoothEscposPrinter.printColumn(
+          columnWidths,
+          [
+            BluetoothEscposPrinter.ALIGN.LEFT,
+            BluetoothEscposPrinter.ALIGN.CENTER,
+            BluetoothEscposPrinter.ALIGN.RIGHT,
+          ],
+          ['Operator', ':', 'Ichsan'],
+          {},
+        );
+        BluetoothEscposPrinter.printColumn(
+          columnWidths,
+          [
+            BluetoothEscposPrinter.ALIGN.LEFT,
+            BluetoothEscposPrinter.ALIGN.CENTER,
+            BluetoothEscposPrinter.ALIGN.RIGHT,
+          ],
+          ['Hari/Tanggal', ':', 'Selasa,13/04/19'],
+          {},
+        );
+        BluetoothEscposPrinter.printColumn(
+          columnWidths,
+          [
+            BluetoothEscposPrinter.ALIGN.LEFT,
+            BluetoothEscposPrinter.ALIGN.CENTER,
+            BluetoothEscposPrinter.ALIGN.RIGHT,
+          ],
+          ['Sample', ':', 'Refina'],
+          {},
+        );
+        BluetoothEscposPrinter.printText('\r\n', {});
+
+        BluetoothEscposPrinter.printColumn(
+          columnWidths,
+          [
+            BluetoothEscposPrinter.ALIGN.LEFT,
+            BluetoothEscposPrinter.ALIGN.CENTER,
+            BluetoothEscposPrinter.ALIGN.RIGHT,
+          ],
+          ['NaCl', ':', '98.5%'],
+          {},
+        );
+        BluetoothEscposPrinter.printColumn(
+          columnWidths,
+          [
+            BluetoothEscposPrinter.ALIGN.LEFT,
+            BluetoothEscposPrinter.ALIGN.CENTER,
+            BluetoothEscposPrinter.ALIGN.RIGHT,
+          ],
+          ['Whiteness', ':', '97.6%'],
+          {},
+        );
+        BluetoothEscposPrinter.printColumn(
+          columnWidths,
+          [
+            BluetoothEscposPrinter.ALIGN.LEFT,
+            BluetoothEscposPrinter.ALIGN.CENTER,
+            BluetoothEscposPrinter.ALIGN.RIGHT,
+          ],
+          ['Water Content', ':', '2.8%'],
+          {},
+        );
+        BluetoothEscposPrinter.printText('\r\n', {});
+        BluetoothEscposPrinter.printText(
+          '================================\r\n',
+          {},
+        );
+
+        BluetoothEscposPrinter.printerAlign(
+          BluetoothEscposPrinter.ALIGN.CENTER,
+        );
+        BluetoothEscposPrinter.printPic(base64PngLogo, {
+          width: 220,
+          left: 60,
+        });
+        BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
+      });
+    } catch (e) {
+      alert(e.message || 'ERROR');
+    }
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     // const { salt } = this.state.salt
     return (
       <Grid>
-        <Modal
-          animationType="slide"
-          transparent={false}
+        <BluetoothListModal
           visible={this.state.modalVisible}
-          onRequestClose={() => {
-            this.setState({modalVisible: false});
-          }}>
-          <Text style={[styles.textbuttonGoogle]}>Selected a Device</Text>
-          <Text style={[styles.textbuttontitle]}>
-            You must be paired with your device to see it in the list. Pull to
-            refresh the list. If device not found, click “Search Device”
-          </Text>
-          <ScrollView>
-            <View>{this._renderRow(this.state.pairedDs)}</View>
-          </ScrollView>
-        </Modal>
-        {/* <Text  style={styles.title}>Connected:<Text style={{color:"blue"}}>{!this.state.name ? 'No Devices' : this.state.name}</Text></Text> */}
-        {/* <ScrollView style={styles.container}>
-                    <Text style={styles.title}>Blutooth Opended:{this.state.bleOpend?"true":"false"} <Text>Open BLE Before Scanning</Text> </Text>
-                    <View>
-                    
-                        <Button style={styles.scanner} disabled={this.state.loading || !this.state.bleOpend} onPress={()=>{
-                            this._scan();
-                        }} title="Scan"/>
-                    </View>
-                    <Text  style={styles.title}>Found(tap to connect):</Text>
-                    {this.state.loading ? (<ActivityIndicator animating={true}/>) : null}
-                    <View style={{flex:1,flexDirection:"column"}}>
-                    {
-                        this._renderRow(this.state.foundDs)
-                    }
-                    </View>
-                    <Text  style={styles.title}>Paired:</Text>
-                    {this.state.loading ? (<ActivityIndicator animating={true}/>) : null}
-                    <View style={{flex:1,flexDirection:"column"}}>
-                    {
-                        this._renderRow(this.state.pairedDs)
-                    }
-                    <Text>{''}</Text>
-                    <Button disabled={this.state.loading || this.state.boundAddress.length <= 0}
-                            title="Print Receipt" onPress={async () => {
-                        try {
-                            await BluetoothEscposPrinter.printerInit();
-                            await BluetoothEscposPrinter.printerLeftSpace(0);
-
-                            await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.CENTER);
-                            await BluetoothEscposPrinter.setBlob(0);
-                            await  BluetoothEscposPrinter.printText("Measurement Result\r\n", {
-                                encoding: 'GBK',
-                                codepage: 0,
-                                widthtimes: 1,
-                                heigthtimes: 1,
-                                fonttype: 1
-                            });
-                            await BluetoothEscposPrinter.printText("\r\n\r\n", {});
-
-                            let columnWidths = [14, 1, 17];
-                            await BluetoothEscposPrinter.printColumn(columnWidths,
-                                [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.CENTER, BluetoothEscposPrinter.ALIGN.RIGHT],
-                                ["No.Seri", ':', 'BIEON-010001'], {});
-                            await BluetoothEscposPrinter.printColumn(columnWidths,
-                                [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.CENTER, BluetoothEscposPrinter.ALIGN.RIGHT],
-                                ["Operator", ':', 'Ichsan'], {});
-                            await BluetoothEscposPrinter.printColumn(columnWidths,
-                                [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.CENTER, BluetoothEscposPrinter.ALIGN.RIGHT],
-                                ["Hari/Tanggal", ':', 'Selasa,13/04/19'], {});
-                            await BluetoothEscposPrinter.printColumn(columnWidths,
-                                [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.CENTER, BluetoothEscposPrinter.ALIGN.RIGHT],
-                                ["Sample", ':', 'Refina'], {});
-                            await BluetoothEscposPrinter.printText("\r\n", {});
-
-                            await BluetoothEscposPrinter.printColumn(columnWidths,
-                                [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.CENTER, BluetoothEscposPrinter.ALIGN.RIGHT],
-                                ["NaCl", ':', '98.5%'], {});
-                            await BluetoothEscposPrinter.printColumn(columnWidths,
-                                [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.CENTER, BluetoothEscposPrinter.ALIGN.RIGHT],
-                                ["Whiteness", ':', '97.6%'], {});
-                            await BluetoothEscposPrinter.printColumn(columnWidths,
-                                [BluetoothEscposPrinter.ALIGN.LEFT, BluetoothEscposPrinter.ALIGN.CENTER, BluetoothEscposPrinter.ALIGN.RIGHT],
-                                ["Water Content", ':', '2.8%'], {});
-                            await BluetoothEscposPrinter.printText("\r\n", {});
-                            await  BluetoothEscposPrinter.printText("================================\r\n", {});
-
-                            await BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.CENTER);
-                            await BluetoothEscposPrinter.printPic(base64PngLogo, {width: 220, left: 60});
-                            await BluetoothEscposPrinter.printText("\r\n\r\n\r\n", {});
-
-                        } catch (e) {
-                            alert(e.message || "ERROR");
-                        }
-                    }}/>
-                    </View>
-
-                
-                </ScrollView> */}
-
+          onClose={this.closeModal}
+          deviceItems={this.state.pairedDs}
+          onConnect={this._connect}
+        />
         <Row size={13}>
           <ScrollView>
             {/* turn on bluetooth */}
@@ -426,17 +463,15 @@ export default class HomeScreen extends Component {
                 {this.state.connected ? (
                   <Image
                     style={[styles.logo]}
-                    source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
+                    source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+                  />
                 ) : (
                   <Image
                     style={[styles.logo]}
-                    source={require('../assets/icons/retrievedata/bluetoothgray.png')}></Image>
+                    source={require('../assets/icons/retrievedata/bluetoothgray.png')}
+                  />
                 )}
               </TouchableOpacity>
-              {/* <TouchableOpacity style={[styles.button]} onPress={() => navigate('PopUpBluetoothScreen',{idPrint:"idPrint"})}>
-                               <Image style={[styles.logo]} source={require('../assets/icons/retrievedata/bluetoothgray.png')}></Image>
-                                </TouchableOpacity> */}
-
               <DatePicker
                 style={[styles.startDate]}
                 date={this.state.date}
@@ -505,19 +540,6 @@ export default class HomeScreen extends Component {
               </Row>
             </Row>
             <View style={[styles.Border]}></View>
-            {/* {this.state.salt.map(sal =>(
-                            <Row>
-                            <CheckBox style={[styles.checked]} onClick={()=>this.checkStatus()}
-                                isChecked={this.state.isChecked}
-                            />
-
-                                <Text style={[styles.textCategory]}>{sal.no}</Text>
-                                <Text style={[styles.textTime]}>{sal.date}</Text>
-                                <Text style={[styles.Icon]}>{sal.NaCl}</Text>
-                                <Text style={[styles.Icon]}>{sal.Whiteness}</Text>
-                                <Text style={[styles.Icon]}>{sal.WaterContent}</Text>
-                            </Row>
-                        ))} */}
           </ScrollView>
           <Col style={[styles.menubottomShare]}>
             <TouchableHighlight onPress={() => alert('image clicked')}>
@@ -538,156 +560,15 @@ export default class HomeScreen extends Component {
               disabled={
                 this.state.loading || this.state.boundAddress.length <= 0
               }
-              onPress={async () => {
-                try {
-                  this.state.salt.map(sal => {
-                    BluetoothEscposPrinter.printerInit();
-                    BluetoothEscposPrinter.printerLeftSpace(0);
-
-                    BluetoothEscposPrinter.printerAlign(
-                      BluetoothEscposPrinter.ALIGN.CENTER,
-                    );
-                    BluetoothEscposPrinter.setBlob(0);
-                    BluetoothEscposPrinter.printText('Measurement Result\r\n', {
-                      encoding: 'GBK',
-                      codepage: 0,
-                      widthtimes: 1,
-                      heigthtimes: 1,
-                      fonttype: 1,
-                    });
-                    BluetoothEscposPrinter.printText('\r\n\r\n', {});
-
-                    let columnWidths = [14, 1, 17];
-                    BluetoothEscposPrinter.printColumn(
-                      columnWidths,
-                      [
-                        BluetoothEscposPrinter.ALIGN.LEFT,
-                        BluetoothEscposPrinter.ALIGN.CENTER,
-                        BluetoothEscposPrinter.ALIGN.RIGHT,
-                      ],
-                      ['No.Seri', ':', sal.no_seri],
-                      {},
-                    );
-                    BluetoothEscposPrinter.printColumn(
-                      columnWidths,
-                      [
-                        BluetoothEscposPrinter.ALIGN.LEFT,
-                        BluetoothEscposPrinter.ALIGN.CENTER,
-                        BluetoothEscposPrinter.ALIGN.RIGHT,
-                      ],
-                      ['Operator', ':', 'Ichsan'],
-                      {},
-                    );
-                    BluetoothEscposPrinter.printColumn(
-                      columnWidths,
-                      [
-                        BluetoothEscposPrinter.ALIGN.LEFT,
-                        BluetoothEscposPrinter.ALIGN.CENTER,
-                        BluetoothEscposPrinter.ALIGN.RIGHT,
-                      ],
-                      ['Hari/Tanggal', ':', 'Selasa,13/04/19'],
-                      {},
-                    );
-                    BluetoothEscposPrinter.printColumn(
-                      columnWidths,
-                      [
-                        BluetoothEscposPrinter.ALIGN.LEFT,
-                        BluetoothEscposPrinter.ALIGN.CENTER,
-                        BluetoothEscposPrinter.ALIGN.RIGHT,
-                      ],
-                      ['Sample', ':', 'Refina'],
-                      {},
-                    );
-                    BluetoothEscposPrinter.printText('\r\n', {});
-
-                    BluetoothEscposPrinter.printColumn(
-                      columnWidths,
-                      [
-                        BluetoothEscposPrinter.ALIGN.LEFT,
-                        BluetoothEscposPrinter.ALIGN.CENTER,
-                        BluetoothEscposPrinter.ALIGN.RIGHT,
-                      ],
-                      ['NaCl', ':', '98.5%'],
-                      {},
-                    );
-                    BluetoothEscposPrinter.printColumn(
-                      columnWidths,
-                      [
-                        BluetoothEscposPrinter.ALIGN.LEFT,
-                        BluetoothEscposPrinter.ALIGN.CENTER,
-                        BluetoothEscposPrinter.ALIGN.RIGHT,
-                      ],
-                      ['Whiteness', ':', '97.6%'],
-                      {},
-                    );
-                    BluetoothEscposPrinter.printColumn(
-                      columnWidths,
-                      [
-                        BluetoothEscposPrinter.ALIGN.LEFT,
-                        BluetoothEscposPrinter.ALIGN.CENTER,
-                        BluetoothEscposPrinter.ALIGN.RIGHT,
-                      ],
-                      ['Water Content', ':', '2.8%'],
-                      {},
-                    );
-                    BluetoothEscposPrinter.printText('\r\n', {});
-                    BluetoothEscposPrinter.printText(
-                      '================================\r\n',
-                      {},
-                    );
-
-                    BluetoothEscposPrinter.printerAlign(
-                      BluetoothEscposPrinter.ALIGN.CENTER,
-                    );
-                    BluetoothEscposPrinter.printPic(base64PngLogo, {
-                      width: 220,
-                      left: 60,
-                    });
-                    BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
-                  });
-                } catch (e) {
-                  alert(e.message || 'ERROR');
-                }
-              }}>
+              onPress={() => this.onPrint}>
               <Image
                 style={[styles.logoShare]}
-                source={require('../assets/icons/viewdata/print.png')}></Image>
+                source={require('../assets/icons/viewdata/print.png')}
+              />
             </TouchableHighlight>
           </Col>
         </Row>
       </Grid>
-    );
-  }
-
-  _scan() {
-    this.setModalVisible(true);
-    this.setState({
-      loading: true,
-    });
-    BluetoothManager.scanDevices().then(
-      s => {
-        var ss = s;
-        var found = ss.found;
-        try {
-          found = JSON.parse(found); //@FIX_it: the parse action too weired..
-        } catch (e) {
-          //ignore
-        }
-        var fds = this.state.foundDs;
-        if (found && found.length) {
-          fds = found;
-        }
-        this.setState({
-          foundDs: fds,
-          loading: false,
-        });
-      },
-      er => {
-        this.setState({
-          loading: false,
-        });
-        alert('error' + JSON.stringify(er));
-      },
     );
   }
 }
@@ -892,20 +773,5 @@ const styles = StyleSheet.create({
     marginLeft: 13,
     fontSize: 18,
     textAlign: 'center',
-  },
-  textbuttonGoogle: {
-    fontSize: 17,
-    color: '#129cd8',
-    fontWeight: '700',
-    textAlign: 'center',
-    margin: 20,
-  },
-  textbuttontitle: {
-    fontSize: 13,
-    color: 'red',
-    fontWeight: '600',
-    textAlign: 'center',
-    margin: 20,
-    marginTop: -10,
   },
 });
