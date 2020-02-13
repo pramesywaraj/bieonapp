@@ -1,22 +1,18 @@
 import React, {Component} from 'react';
 import moment from 'moment';
 import {
-  Modal,
   TouchableHighlight,
-  ActivityIndicator,
   Platform,
   DeviceEventEmitter,
   NativeEventEmitter,
   ToastAndroid,
   StyleSheet,
-  Switch,
   Button,
   Image,
   ImageBackground,
   Text,
   View,
   Dimensions,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   Alert,
@@ -29,6 +25,7 @@ import {
   BluetoothManager,
   BluetoothTscPrinter,
 } from 'react-native-bluetooth-escpos-printer';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
@@ -75,19 +72,20 @@ export default class HomeScreen extends Component {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this._connect = this._connect.bind(this);
+    this._scan = this._scan.bind(this);
   }
 
   async componentDidMount() {
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
-      this._listeners.push(
-        bluetoothManagerEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-          rsp => {
-            this._deviceAlreadPaired(rsp);
-          },
-        ),
-      );
+      // this._listeners.push(
+      //   bluetoothManagerEmitter.addListener(
+      //     BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+      //     rsp => {
+      //       this._deviceAlreadPaired(rsp);
+      //     },
+      //   ),
+      // );
       this._listeners.push(
         bluetoothManagerEmitter.addListener(
           BluetoothManager.EVENT_DEVICE_FOUND,
@@ -222,9 +220,13 @@ export default class HomeScreen extends Component {
 
   async _scan() {
     const scanDevices = async () => {
-      let availableDevice = [];
       const bluetoothResponse = await BluetoothManager.scanDevices();
       await this._deviceFoundEvent(bluetoothResponse);
+
+      this.setState({
+        loading: false,
+      });
+
       this.openModal();
     };
 
@@ -237,17 +239,9 @@ export default class HomeScreen extends Component {
 
       if (isBluetoothEnabled) {
         await scanDevices();
-
-        this.setState({
-          loading: false,
-        });
       } else {
         await BluetoothManager.enableBluetooth();
         await scanDevices();
-
-        this.setState({
-          loading: false,
-        });
       }
     } catch (err) {
       console.log(err);
@@ -389,7 +383,7 @@ export default class HomeScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <BluetoothListModal
           visible={this.state.modalVisible}
           onClose={this.closeModal}
@@ -397,23 +391,15 @@ export default class HomeScreen extends Component {
           onConnect={this._connect}
         />
         <LoadingModal visible={this.state.loading} />
-        <View>
-          <Text style={[styles.deviceTitle]}>
+        <View style={styles.header}>
+          <Text style={styles.deviceStatus}>
             {!this.state.name ? 'Disconnect' : this.state.name}
           </Text>
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => this._scan()}>
+          <TouchableOpacity style={styles.bluetoothButton} onPress={this._scan}>
             {this.state.connected ? (
-              <Image
-                style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
-              />
+              <Icon name="bluetooth" color="#129cd8" size={25} />
             ) : (
-              <Image
-                style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothgray.png')}
-              />
+              <Icon name="bluetooth" color="#9c9c9c" size={25} />
             )}
           </TouchableOpacity>
         </View>
@@ -433,7 +419,9 @@ export default class HomeScreen extends Component {
               </Row>
             </Row>
           </ScrollView>
-          <View style={[styles.menubottomShare]}>
+        </View>
+
+        {/* <View style={[styles.menubottomShare]}>
             <TouchableHighlight onPress={() => alert('image clicked')}>
               <Image
                 style={[styles.logoShare]}
@@ -458,8 +446,7 @@ export default class HomeScreen extends Component {
                 source={require('../assets/icons/viewdata/print.png')}
               />
             </TouchableHighlight>
-          </View>
-        </View>
+          </View> */}
       </View>
     );
   }
@@ -468,202 +455,27 @@ export default class HomeScreen extends Component {
 const win = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  Col: {
-    height: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f3f3f3',
+  container: {
+    flex: 1,
   },
-  ColTop: {
-    height: 140,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f3f3f3',
-  },
-  Col1: {
-    height: 150,
-    alignItems: 'center',
-    justifyContent: 'center',
+  header: {
     backgroundColor: '#129cd8',
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: 20,
-  },
-  text: {
-    fontWeight: 'bold',
-    margin: 20,
-  },
-  TopPic: {
-    height: 300,
-    resizeMode: 'center',
-  },
-  BottomPic: {
-    width: 160,
-    height: 160,
-    margin: 10,
-    marginLeft: 20,
-  },
-  textSource: {
-    marginTop: 20,
-    margin: 10,
-    color: '#808080',
-  },
-  textTitle: {
-    margin: 10,
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 17,
-  },
-  textCategory: {
-    margin: 10,
-    color: '#129cd8',
-    fontWeight: 'bold',
-  },
-  deviceTitle: {
-    position: 'absolute',
-    color: '#fff',
-    top: 10,
-    fontWeight: 'bold',
-    fontSize: 30,
-  },
-  textTime: {
-    marginLeft: 5,
-    margin: 10,
-    color: '#129cd8',
-    fontWeight: 'bold',
-  },
-  Icon: {
-    margin: 10,
-    marginLeft: 10,
-    color: '#129cd8',
-    fontWeight: 'bold',
-  },
-  Border: {
     width: '100%',
-    color: '#808080',
-    borderBottomColor: '#808080',
-    borderBottomWidth: 0.8,
-    marginTop: -30,
-  },
-  itemMenuImage: {
-    resizeMode: 'contain',
-    width: 25,
-    height: 25,
-    marginTop: 3,
-  },
-  col: {
+    height: '10%',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f8f8f8',
-  },
-  textmenu: {
-    fontSize: 10,
-    marginTop: 5,
-    color: '#808080',
-  },
-  startDate: {
-    width: 200,
-    position: 'absolute',
-    left: -10,
-    top: 80,
-  },
-  endDate: {
-    width: 200,
-    position: 'absolute',
-    right: 25,
-    top: 80,
-  },
-  until: {
-    color: '#fff',
-    fontSize: 40,
-    left: 140,
-    marginTop: 40,
-  },
-  checked: {
-    padding: 10,
-  },
-  logo: {
-    width: 45,
-    height: 45,
-  },
-  logoShare: {
-    width: 40,
-    height: 40,
-    left: 50,
-    top: 25,
-  },
-  logoSync: {
-    width: 45,
-    height: 45,
-    left: 180,
-    top: -20,
-  },
-  logoPrint: {
-    width: 40,
-    height: 40,
-    left: 300,
-    bottom: 60,
-    zIndex: 15,
-  },
-  menubottomShare: {
-    backgroundColor: '#129cd8',
-    zIndex: 11,
-    position: 'absolute',
-    bottom: 0,
-    width: 600,
-    height: 80,
-  },
-  menubottomSync: {
-    backgroundColor: '#129cd8',
-    zIndex: 11,
-    position: 'absolute',
-    bottom: 0,
-    left: 130,
-    width: 600,
-    height: 80,
-  },
-  menubottomPrint: {
-    backgroundColor: '#129cd8',
-    zIndex: 11,
-    position: 'absolute',
-    bottom: 0,
-    left: 250,
-    width: 600,
-    height: 80,
-  },
-  button: {
-    marginTop: 40,
-    marginBottom: 120,
-    marginRight: -320,
-  },
-  switch: {
-    position: 'absolute',
-    top: 45,
-    left: 40,
-    zIndex: 10,
-  },
-  scanner: {
-    width: 70,
-  },
-  BorderTop: {
-    textAlign: 'center',
-    width: 500,
-    color: '#808080',
-    borderBottomColor: '#808080',
-    borderBottomWidth: 4,
-    marginBottom: 20,
-    marginTop: 20,
-  },
-  itemContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 30,
-    marginBottom: 30,
+    paddingRight: '5%',
+    paddingLeft: '5%',
   },
-  itemText: {
-    color: '#000',
-    marginLeft: 13,
-    fontSize: 18,
-    textAlign: 'center',
+  deviceStatus: {
+    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 20,
+  },
+  bluetoothButton: {
+    marginLeft: 'auto',
+    backgroundColor: 'white',
+    padding: '2%',
+    borderRadius: 20,
   },
 });
