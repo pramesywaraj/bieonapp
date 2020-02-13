@@ -41,9 +41,6 @@ export default class HomeScreen extends Component {
   async componentDidMount() {
     this.fetchArticles();
     this.fetchBanner();
-    const token = await AsyncStorage.getItem('@userAuth');
-    this.setState({token: token});
-    console.log('token:', this.state.token);
   }
 
   onAlert = (title, message) => {
@@ -55,8 +52,7 @@ export default class HomeScreen extends Component {
     try {
       let response = await axios.get(`${Config.API_URL}/banner`, {
         headers: {
-          token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6ImFkbWluQGJpZW9uLmNvbSIsInJvbGVfaWQiOjEsImNvbXBhbnlfaWQiOjAsImV4cCI6MTU4MTkyMDU0NH0.hIISIjHOJraIJXntPmsfvTsvbEcundw7x1F_BGAhJ4I',
+          token: await AsyncStorage.getItem('@userAuth'),
         },
       });
       const banner = response.data.data;

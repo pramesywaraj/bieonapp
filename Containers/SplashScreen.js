@@ -24,7 +24,7 @@ export default class SplashScreen extends Component {
     // Preload data from an external API
     // Preload data using AsyncStorage
     const data = await this.performTimeConsumingTask();
-    const authToken = JSON.parse(await AsyncStorage.getItem('@userAuth'));
+    const authToken = await AsyncStorage.getItem('@userAuth');
 
     if (authToken && data !== null) {
       navigate('HomeScreen');
@@ -40,7 +40,8 @@ export default class SplashScreen extends Component {
           source={require('../assets/background/3.png')}>
           <Image
             style={[styles.logo]}
-            source={require('../assets/logo/settingwhite.png')}></Image>
+            source={require('../assets/logo/settingwhite.png')}
+          />
         </ImageBackground>
       </View>
     );
