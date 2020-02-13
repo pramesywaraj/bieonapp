@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
   ScrollView,
   View,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import {BluetoothManager} from 'react-native-bluetooth-escpos-printer';
 
 import Modal from 'react-native-modal';
 
@@ -39,10 +39,14 @@ export default function BluetoothListModal({
       <View style={styles.modalLayout}>
         <Text style={styles.modalTitle}>Select a Device</Text>
         <Text style={styles.warning}>
-          You must be paired with your device to see it in the list.
+          Make sure the bluetooth of the device enabled.
         </Text>
         <ScrollView contentContainerStyle={styles.deviceListContainer}>
-          <DeviceRows items={deviceItems} onConnect={onConnect} />
+          {deviceItems.length > 0 ? (
+            <DeviceRows items={deviceItems} onConnect={onConnect} />
+          ) : (
+            <Text style={styles.noDeviceFound}>No device found.</Text>
+          )}
         </ScrollView>
       </View>
     </Modal>
@@ -63,6 +67,13 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#129cd8',
     fontWeight: '700',
+    textAlign: 'center',
+    margin: '3%',
+  },
+  noDeviceFound: {
+    fontSize: 13,
+    color: 'rgba(97,97,97,0.5)',
+    fontWeight: '600',
     textAlign: 'center',
     margin: '3%',
   },

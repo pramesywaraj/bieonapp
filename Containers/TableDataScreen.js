@@ -19,6 +19,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import DatePicker from 'react-native-datepicker';
@@ -30,6 +31,7 @@ import {
 } from 'react-native-bluetooth-escpos-printer';
 
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
+import LoadingModal from '../Components/Modal/LoadingModal';
 
 // Object example
 const salt = [
@@ -62,8 +64,8 @@ export default class HomeScreen extends Component {
       devices: null,
       pairedDs: [],
       foundDs: [],
-      bleOpend: false,
-      loading: true,
+      // bleOpend: false,
+      loading: false,
       boundAddress: '',
       debugMsg: '',
       modalVisible: false,
@@ -75,20 +77,7 @@ export default class HomeScreen extends Component {
     this._connect = this._connect.bind(this);
   }
 
-  componentDidMount() {
-    //alert(BluetoothManager)
-    BluetoothManager.isBluetoothEnabled().then(
-      enabled => {
-        this.setState({
-          bleOpend: Boolean(enabled),
-          loading: false,
-        });
-      },
-      err => {
-        err;
-      },
-    );
-
+  async componentDidMount() {
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
       this._listeners.push(
@@ -119,14 +108,14 @@ export default class HomeScreen extends Component {
         ),
       );
     } else if (Platform.OS === 'android') {
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-          rsp => {
-            this._deviceAlreadPaired(rsp);
-          },
-        ),
-      );
+      // this._listeners.push(
+      //   DeviceEventEmitter.addListener(
+      //     BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+      //     rsp => {
+      //       this._deviceAlreadyPaired(rsp);
+      //     },
+      //   ),
+      // );
       this._listeners.push(
         DeviceEventEmitter.addListener(
           BluetoothManager.EVENT_DEVICE_FOUND,
@@ -160,6 +149,12 @@ export default class HomeScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this._listeners.map(listener => {
+      listener.remove();
+    });
+  }
+
   openModal() {
     this.setState({modalVisible: true});
   }
@@ -168,9 +163,9 @@ export default class HomeScreen extends Component {
     this.setState({modalVisible: false});
   }
 
-  _deviceAlreadPaired(rsp) {
+  _deviceAlreadyPaired(rsp) {
     var ds = null;
-    if (typeof rsp.devices == 'object') {
+    if (typeof rsp.devices === 'object') {
       ds = rsp.devices;
     } else {
       try {
@@ -182,6 +177,7 @@ export default class HomeScreen extends Component {
       pared = pared.concat(ds || []);
       this.setState({
         pairedDs: pared,
+        loading: false,
       });
     }
   }
@@ -190,27 +186,27 @@ export default class HomeScreen extends Component {
     //alert(JSON.stringify(rsp))
     var r = null;
     try {
-      if (typeof rsp.device == 'object') {
+      if (typeof rsp.device === 'object') {
         r = rsp.device;
       } else {
         r = JSON.parse(rsp.device);
       }
     } catch (e) {
-      //alert(e.message);
-      //ignore
+      console.log('Error detected in TableDataScreen');
     }
-    //alert('f')
+
     if (r) {
       let found = this.state.foundDs || [];
       if (found.findIndex) {
         let duplicated = found.findIndex(function(x) {
-          return x.address == r.address;
+          return x.address === r.address;
         });
-        //CHECK DEPLICATED HERE...
-        if (duplicated == -1) {
+
+        if (duplicated === -1) {
           found.push(r);
           this.setState({
             foundDs: found,
+            loading: false,
           });
         }
       }
@@ -224,36 +220,38 @@ export default class HomeScreen extends Component {
     console.log('check?', this.state.isChecked);
   }
 
-  _scan() {
-    this.openModal();
-    this.setState({
-      loading: true,
-    });
-    BluetoothManager.scanDevices().then(
-      s => {
-        var ss = s;
-        var found = ss.found;
-        try {
-          found = JSON.parse(found); //@FIX_it: the parse action too weired..
-        } catch (e) {
-          //ignore
-        }
-        var fds = this.state.foundDs;
-        if (found && found.length) {
-          fds = found;
-        }
-        this.setState({
-          foundDs: fds,
-          loading: false,
-        });
-      },
-      er => {
+  async _scan() {
+    const scanDevices = async () => {
+      let availableDevice = [];
+      const bluetoothResponse = await BluetoothManager.scanDevices();
+      await this._deviceFoundEvent(bluetoothResponse);
+      this.openModal();
+    };
+
+    try {
+      const isBluetoothEnabled = await BluetoothManager.isBluetoothEnabled();
+
+      this.setState({
+        loading: true,
+      });
+
+      if (isBluetoothEnabled) {
+        await scanDevices();
+
         this.setState({
           loading: false,
         });
-        alert('error' + JSON.stringify(er));
-      },
-    );
+      } else {
+        await BluetoothManager.enableBluetooth();
+        await scanDevices();
+
+        this.setState({
+          loading: false,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   _connect(item) {
@@ -390,148 +388,43 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
-    // const { salt } = this.state.salt
     return (
-      <Grid>
+      <View>
         <BluetoothListModal
           visible={this.state.modalVisible}
           onClose={this.closeModal}
-          deviceItems={this.state.pairedDs}
+          deviceItems={this.state.foundDs}
           onConnect={this._connect}
         />
-        <Row size={13}>
+        <LoadingModal visible={this.state.loading} />
+        <View>
+          <Text style={[styles.deviceTitle]}>
+            {!this.state.name ? 'Disconnect' : this.state.name}
+          </Text>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => this._scan()}>
+            {this.state.connected ? (
+              <Image
+                style={[styles.logo]}
+                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+              />
+            ) : (
+              <Image
+                style={[styles.logo]}
+                source={require('../assets/icons/retrievedata/bluetoothgray.png')}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+        <View>
           <ScrollView>
-            {/* turn on bluetooth */}
-            <Switch
-              style={[styles.switch]}
-              value={this.state.bleOpend}
-              onValueChange={v => {
-                this.setState({loading: true});
-                if (!v) {
-                  BluetoothManager.disableBluetooth().then(
-                    () => {
-                      this.setState({
-                        bleOpend: false,
-                        connected: false,
-                        loading: false,
-                        foundDs: [],
-                        pairedDs: [],
-                      });
-                    },
-                    err => {
-                      alert(err);
-                    },
-                  );
-                } else {
-                  BluetoothManager.enableBluetooth().then(
-                    r => {
-                      var paired = [];
-                      if (r && r.length > 0) {
-                        for (var i = 0; i < r.length; i++) {
-                          try {
-                            paired.push(JSON.parse(r[i]));
-                          } catch (e) {
-                            //ignore
-                          }
-                        }
-                      }
-                      this.setState({
-                        bleOpend: true,
-                        loading: false,
-                        pairedDs: paired,
-                      });
-                    },
-                    err => {
-                      this.setState({
-                        loading: false,
-                      });
-                      alert(err);
-                    },
-                  );
-                }
-              }}
-            />
-
-            <Row style={[styles.Col1]}>
-              <Text style={[styles.deviceTitle]}>
-                {!this.state.name ? 'Disconnect' : this.state.name}
-              </Text>
-              <TouchableOpacity
-                style={[styles.button]}
-                onPress={() => this._scan()}>
-                {this.state.connected ? (
-                  <Image
-                    style={[styles.logo]}
-                    source={require('../assets/icons/retrievedata/bluetoothblue.png')}
-                  />
-                ) : (
-                  <Image
-                    style={[styles.logo]}
-                    source={require('../assets/icons/retrievedata/bluetoothgray.png')}
-                  />
-                )}
-              </TouchableOpacity>
-              <DatePicker
-                style={[styles.startDate]}
-                date={this.state.date}
-                mode="date"
-                placeholder="select date"
-                format="ddd, DD-MMM-YYYY"
-                minDate="2016-05-01"
-                maxDate="2030-06-01"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    marginLeft: 36,
-                  },
-                  // ... You can check the source to find the other keys.
-                }}
-                onDateChange={date => {
-                  this.setState({date: date});
-                }}
-              />
-              <Text style={[styles.until]}>-</Text>
-              <DatePicker
-                style={[styles.endDate]}
-                date={this.state.date}
-                mode="date"
-                placeholder="select date"
-                format="ddd, DD-MMM-YYYY"
-                minDate="2016-05-01"
-                maxDate="2030-06-01"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: 0,
-                    top: 4,
-                    marginLeft: 0,
-                  },
-                  dateInput: {
-                    marginLeft: 36,
-                  },
-                  // ... You can check the source to find the other keys.
-                }}
-                onDateChange={date => {
-                  this.setState({date: date});
-                }}
-              />
-            </Row>
             <Row style={[styles.ColTop]}>
               <Row onClick={() => this.checkStatus()}>
-                <CheckBox
+                {/* <CheckBox
                   style={[styles.checked]}
                   isChecked={this.state.isChecked}
-                />
+                /> */}
                 <Text style={[styles.textCategory]}>No</Text>
                 <Text style={[styles.textTime]}>Date</Text>
                 <Text style={[styles.Icon]}>NaCl</Text>
@@ -539,23 +432,22 @@ export default class HomeScreen extends Component {
                 <Text style={[styles.Icon]}>Water Content</Text>
               </Row>
             </Row>
-            <View style={[styles.Border]}></View>
           </ScrollView>
-          <Col style={[styles.menubottomShare]}>
+          <View style={[styles.menubottomShare]}>
             <TouchableHighlight onPress={() => alert('image clicked')}>
               <Image
                 style={[styles.logoShare]}
                 source={require('../assets/icons/viewdata/share.png')}></Image>
             </TouchableHighlight>
-          </Col>
-          <Col style={[styles.menubottomSync]}>
+          </View>
+          <View style={[styles.menubottomSync]}>
             <TouchableHighlight onPress={() => alert('image clicked')}>
               <Image
                 style={[styles.logoShare]}
                 source={require('../assets/icons/viewdata/sync.png')}></Image>
             </TouchableHighlight>
-          </Col>
-          <Col style={[styles.menubottomPrint]}>
+          </View>
+          <View style={[styles.menubottomPrint]}>
             <TouchableHighlight
               disabled={
                 this.state.loading || this.state.boundAddress.length <= 0
@@ -566,9 +458,9 @@ export default class HomeScreen extends Component {
                 source={require('../assets/icons/viewdata/print.png')}
               />
             </TouchableHighlight>
-          </Col>
-        </Row>
-      </Grid>
+          </View>
+        </View>
+      </View>
     );
   }
 }
