@@ -70,12 +70,14 @@ export default class HomeScreen extends Component {
       selectedSaltType: 'a',
       salts_a: [],
       salts_b: [],
+      printedSalt: [],
     };
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this._connect = this._connect.bind(this);
     this._scan = this._scan.bind(this);
+    this.onChangeCheckElement = this.onChangeCheckElement.bind(this);
   }
 
   async componentDidMount() {
@@ -162,11 +164,17 @@ export default class HomeScreen extends Component {
 
       if (this.state.selectedSaltType === 'a') {
         const {salts_a} = response.data.data;
+        salts_a.forEach(item => {
+          item.isChecked = false;
+        });
         this.setState({
           salts_a: salts_a,
         });
       } else if (this.state.selectedSaltType === 'b') {
         const {salts_b} = response.data.data;
+        salts_b.forEach(item => {
+          item.isChecked = false;
+        });
         this.setState({
           salts_b: salts_b,
         });
@@ -240,11 +248,27 @@ export default class HomeScreen extends Component {
     }
   }
 
-  checkStatus() {
-    this.setState({
-      isChecked: !this.state.isChecked,
-    });
-    console.log('check?', this.state.isChecked);
+  onChangeCheckElement(elementIndex) {
+    let tempSalts =
+      this.state.selectedSaltType === 'a'
+        ? this.state.salts_a
+        : this.state.salts_b;
+
+    let foundIndex = tempSalts.findIndex(
+      (salt, index) => index === elementIndex,
+    );
+
+    tempSalts[foundIndex].isChecked = !tempSalts[foundIndex].isChecked;
+
+    if (this.state.selectedSaltType === 'a') {
+      this.setState({
+        salts_a: tempSalts,
+      });
+    } else if (this.state.selectedSaltType === 'b') {
+      this.setState({
+        salts_b: tempSalts,
+      });
+    }
   }
 
   async _scan() {
@@ -444,7 +468,11 @@ export default class HomeScreen extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.tableContainer}>
-          <NaclTable headers={salt_a_header} data={this.state.salts_a} />
+          <NaclTable
+            headers={salt_a_header}
+            data={this.state.salts_a}
+            onSelectElement={this.onChangeCheckElement}
+          />
         </View>
 
         {/* <View style={[styles.menubottomShare]}>

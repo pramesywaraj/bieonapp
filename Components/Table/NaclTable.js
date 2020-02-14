@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import CheckBox from 'react-native-check-box';
 
@@ -10,19 +10,51 @@ import {
   Cell,
 } from 'react-native-table-component';
 
-export default function NaclTable({headers, data}) {
+const CheckingBox = ({onSelect, selected}) => (
+  <CheckBox style={styles.checkBox} isChecked={selected} onClick={onSelect} />
+);
+
+export default function NaclTable({headers, data, select, onSelectElement}) {
+  useEffect(() => {
+    headers.unshift(
+      <Cell
+        data={
+          <CheckingBox
+            selected={select}
+            onSelect={() => console.log('selected')}
+          />
+        }
+        style={styles.cell}
+      />,
+    );
+
+    return function clean() {
+      headers.shift();
+    };
+  }, []);
+
   return (
     <Table>
-      <Row
-        data={headers}
-        flexArr={[1, 1, 1, 1, 2, 2]}
-        style={styles.header}
-        textStyle={styles.headerText}
-      />
+      <TableWrapper style={styles.header}>
+        <Row
+          data={headers}
+          flexArr={[1, 1, 1, 1, 2, 2]}
+          textStyle={styles.headerText}
+        />
+      </TableWrapper>
+
       <ScrollView>
         {data.map((item, index) => (
           <TableWrapper key={index} style={styles.tableRow}>
-            <Cell data={''} style={styles.cell} />
+            <Cell
+              data={
+                <CheckingBox
+                  selected={item.isChecked}
+                  onSelect={() => onSelectElement(index)}
+                />
+              }
+              style={styles.cell}
+            />
             <Cell
               data={index + 1}
               textStyle={styles.text}
@@ -92,5 +124,9 @@ const styles = StyleSheet.create({
   },
   cell2: {
     flex: 2,
+  },
+  checkBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
