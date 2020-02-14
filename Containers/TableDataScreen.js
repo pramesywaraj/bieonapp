@@ -29,6 +29,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
 import NaclTable from '../Components/Table/NaclTable';
+import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
 
 // Object example
 const salt = [
@@ -435,16 +436,7 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    const salt_a_header = [
-      '',
-      'No',
-      'Date',
-      'NaCl',
-      'Whiteness',
-      'Water Content',
-    ];
-
-    const salt_b_header = ['', 'No', 'Date', 'Iodium'];
+    const salt_b_header = ['No', 'Date', 'Iodium'];
 
     return (
       <View style={styles.container}>
@@ -469,10 +461,12 @@ export default class HomeScreen extends Component {
         </View>
         <View style={styles.tableContainer}>
           <NaclTable
-            headers={salt_a_header}
             data={this.state.salts_a}
             onSelectElement={this.onChangeCheckElement}
           />
+        </View>
+        <View>
+          <TableDataToolbar />
         </View>
 
         {/* <View style={[styles.menubottomShare]}>
@@ -533,8 +527,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   tableContainer: {
-    height: '80%',
+    height: '70%',
     margin: '5%',
-    marginBottom: '40%',
   },
 });

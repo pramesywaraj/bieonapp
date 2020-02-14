@@ -1,88 +1,93 @@
-import React, {useEffect} from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import CheckBox from 'react-native-check-box';
-
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-  Cell,
-} from 'react-native-table-component';
+import moment from 'moment';
+import {Table, TableWrapper, Row, Cell} from 'react-native-table-component';
 
 const CheckingBox = ({onSelect, selected}) => (
-  <CheckBox style={styles.checkBox} isChecked={selected} onClick={onSelect} />
+  <CheckBox
+    style={styles.checkBox}
+    checkBoxColor={'#129cd8'}
+    isChecked={selected}
+    onClick={onSelect}
+  />
 );
 
-export default function NaclTable({headers, data, select, onSelectElement}) {
-  useEffect(() => {
-    headers.unshift(
-      <Cell
-        data={
-          <CheckingBox
-            selected={select}
-            onSelect={() => console.log('selected')}
-          />
-        }
-        style={styles.cell}
-      />,
-    );
+export default function NaclTable({data, select, onSelectElement}) {
+  const [loading, setLoading] = useState(true);
+  const salt_a_header = [
+    <CheckingBox
+      checkBoxColor={'#129cd8'}
+      selected={select}
+      onSelect={() => console.log('selected')}
+    />,
+    'No',
+    'Date',
+    'NaCl',
+    'Whiteness',
+    'Water Content',
+  ];
 
-    return function clean() {
-      headers.shift();
-    };
-  }, []);
+  useEffect(() => {
+    setLoading(false);
+  }, [data]);
 
   return (
     <Table>
       <TableWrapper style={styles.header}>
         <Row
-          data={headers}
+          data={salt_a_header}
           flexArr={[1, 1, 1, 1, 2, 2]}
           textStyle={styles.headerText}
         />
       </TableWrapper>
 
-      <ScrollView>
-        {data.map((item, index) => (
-          <TableWrapper key={index} style={styles.tableRow}>
-            <Cell
-              data={
-                <CheckingBox
-                  selected={item.isChecked}
-                  onSelect={() => onSelectElement(index)}
-                />
-              }
-              style={styles.cell}
-            />
-            <Cell
-              data={index + 1}
-              textStyle={styles.text}
-              style={styles.cell}
-            />
-            <Cell
-              data={item.create_at}
-              textStyle={styles.text}
-              style={styles.cell}
-            />
-            <Cell
-              data={item.nacl}
-              textStyle={styles.text}
-              style={styles.cell}
-            />
-            <Cell
-              data={item.whiteness}
-              textStyle={styles.text}
-              style={styles.cell2}
-            />
-            <Cell
-              data={item.water_content}
-              textStyle={styles.text}
-              style={styles.cell2}
-            />
-          </TableWrapper>
-        ))}
-      </ScrollView>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator />
+        </View>
+      ) : (
+        <ScrollView>
+          {data.map((item, index) => (
+            <TableWrapper key={index} style={styles.tableRow}>
+              <Cell
+                data={
+                  <CheckingBox
+                    selected={item.isChecked}
+                    onSelect={() => onSelectElement(index)}
+                  />
+                }
+                style={styles.cell}
+              />
+              <Cell
+                data={index + 1}
+                textStyle={styles.text}
+                style={styles.cell}
+              />
+              <Cell
+                data={moment(item.create_at).format('DD-MM-YYYY')}
+                textStyle={styles.text}
+                style={styles.cell}
+              />
+              <Cell
+                data={item.nacl}
+                textStyle={styles.text}
+                style={styles.cell}
+              />
+              <Cell
+                data={item.whiteness}
+                textStyle={styles.text}
+                style={styles.cell2}
+              />
+              <Cell
+                data={item.water_content}
+                textStyle={styles.text}
+                style={styles.cell2}
+              />
+            </TableWrapper>
+          ))}
+        </ScrollView>
+      )}
     </Table>
   );
 }
@@ -126,6 +131,10 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   checkBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingContainer: {
     justifyContent: 'center',
     alignItems: 'center',
   },
