@@ -13,7 +13,6 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  ScrollView,
   Alert,
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
@@ -29,7 +28,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
-import Table from '../Components/Table/Table';
+import NaclTable from '../Components/Table/NaclTable';
 
 // Object example
 const salt = [
@@ -412,9 +411,16 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    const salt_a_header = ['No', 'Date', 'NaCl', 'Whiteness', 'Water Content'];
+    const salt_a_header = [
+      '',
+      'No',
+      'Date',
+      'NaCl',
+      'Whiteness',
+      'Water Content',
+    ];
 
-    const salt_b_header = ['No', 'Date', 'Iodium'];
+    const salt_b_header = ['', 'No', 'Date', 'Iodium'];
 
     return (
       <View style={styles.container}>
@@ -438,22 +444,7 @@ export default class HomeScreen extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.tableContainer}>
-          <ScrollView>
-            {/* <View style={[styles.ColTop]}>
-              <View onClick={() => this.checkStatus()}>
-                <CheckBox
-                  style={[styles.checked]}
-                  isChecked={this.state.isChecked}
-                />
-                <Text style={[styles.textCategory]}>No</Text>
-                <Text style={[styles.textTime]}>Date</Text>
-                <Text style={[styles.Icon]}>NaCl</Text>
-                <Text style={[styles.Icon]}>Whiteness</Text>
-                <Text style={[styles.Icon]}>Water Content</Text>
-              </View>
-            </View> */}
-            <Table headers={salt_a_header} />
-          </ScrollView>
+          <NaclTable headers={salt_a_header} data={this.state.salts_a} />
         </View>
 
         {/* <View style={[styles.menubottomShare]}>
@@ -514,7 +505,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   tableContainer: {
-    height: '100%',
-    padding: '5%',
+    height: '80%',
+    margin: '5%',
+    marginBottom: '40%',
   },
 });
