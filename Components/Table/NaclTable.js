@@ -13,13 +13,22 @@ const CheckingBox = ({onSelect, selected}) => (
   />
 );
 
-export default function NaclTable({data, select, onSelectElement}) {
+export default function NaclTable({
+  data,
+  select,
+  onSelectElement,
+  onSelectAll,
+}) {
   const [loading, setLoading] = useState(true);
+  const [selectAll, setSelectAll] = useState(false);
   const salt_a_header = [
     <CheckingBox
       checkBoxColor={'#129cd8'}
-      selected={select}
-      onSelect={() => console.log('selected')}
+      selected={selectAll}
+      onSelect={() => {
+        setSelectAll(!selectAll);
+        onSelectAll();
+      }}
     />,
     'No',
     'Date',
