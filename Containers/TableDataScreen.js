@@ -81,6 +81,7 @@ export default class HomeScreen extends Component {
     this.onChangeCheckElement = this.onChangeCheckElement.bind(this);
 
     this.onPrint = this.onPrint.bind(this);
+    this.onRefreshData = this.onRefreshData.bind(this);
   }
 
   async componentDidMount() {
@@ -193,6 +194,20 @@ export default class HomeScreen extends Component {
     } catch (err) {
       console.log('error happened at FetchingSaltData', err);
     }
+  }
+
+  async onRefreshData() {
+    if (this.state.selectedSaltType === 'a') {
+      await this.setState({
+        salts_a: [],
+      });
+    } else if (this.state.selectedSaltType === 'b') {
+      await this.setState({
+        salts_b: [],
+      });
+    }
+
+    this.fetchSaltData();
   }
 
   componentWillUnmount() {
@@ -479,7 +494,7 @@ export default class HomeScreen extends Component {
         <View>
           <TableDataToolbar
             onShare={() => console.log('share')}
-            onRefresh={() => console.log('Refreshed')}
+            onRefresh={this.onRefreshData}
             onPrint={this.onPrint}
           />
         </View>

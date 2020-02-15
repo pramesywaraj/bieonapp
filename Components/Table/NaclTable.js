@@ -29,7 +29,13 @@ export default function NaclTable({data, select, onSelectElement}) {
   ];
 
   useEffect(() => {
-    setLoading(false);
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    } else if (loading === false) {
+      setLoading(true);
+    }
   }, [data]);
 
   return (
@@ -44,7 +50,7 @@ export default function NaclTable({data, select, onSelectElement}) {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator />
+          <ActivityIndicator size="large" color="#129cd8" />
         </View>
       ) : (
         <ScrollView>
@@ -137,5 +143,6 @@ const styles = StyleSheet.create({
   loadingContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    height: '50%',
   },
 });
