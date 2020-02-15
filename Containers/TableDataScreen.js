@@ -79,20 +79,22 @@ export default class HomeScreen extends Component {
     this._connect = this._connect.bind(this);
     this._scan = this._scan.bind(this);
     this.onChangeCheckElement = this.onChangeCheckElement.bind(this);
+
+    this.onPrint = this.onPrint.bind(this);
   }
 
   async componentDidMount() {
     await this.fetchSaltData();
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
-      // this._listeners.push(
-      //   bluetoothManagerEmitter.addListener(
-      //     BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-      //     rsp => {
-      //       this._deviceAlreadPaired(rsp);
-      //     },
-      //   ),
-      // );
+      this._listeners.push(
+        bluetoothManagerEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+          rsp => {
+            this._deviceAlreadPaired(rsp);
+          },
+        ),
+      );
       this._listeners.push(
         bluetoothManagerEmitter.addListener(
           BluetoothManager.EVENT_DEVICE_FOUND,
@@ -113,17 +115,25 @@ export default class HomeScreen extends Component {
         ),
       );
     } else if (Platform.OS === 'android') {
-      // this._listeners.push(
-      //   DeviceEventEmitter.addListener(
-      //     BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-      //     rsp => {
-      //       this._deviceAlreadyPaired(rsp);
-      //     },
-      //   ),
-      // );
+      this._listeners.push(
+        DeviceEventEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+          rsp => {
+            this._deviceAlreadyPaired(rsp);
+          },
+        ),
+      );
       this._listeners.push(
         DeviceEventEmitter.addListener(
           BluetoothManager.EVENT_DEVICE_FOUND,
+          rsp => {
+            this._deviceFoundEvent(rsp);
+          },
+        ),
+      );
+      this._listeners.push(
+        DeviceEventEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_DISCOVER_DONE,
           rsp => {
             this._deviceFoundEvent(rsp);
           },
@@ -199,21 +209,20 @@ export default class HomeScreen extends Component {
     this.setState({modalVisible: false});
   }
 
-  _deviceAlreadyPaired(rsp) {
-    var ds = null;
-    if (typeof rsp.devices === 'object') {
-      ds = rsp.devices;
+  _deviceAlreadyPaired(response) {
+    var temp = null;
+    if (typeof response.devices === 'object') {
+      temp = response.devices;
     } else {
       try {
-        ds = JSON.parse(rsp.devices);
+        temp = JSON.parse(response.devices);
       } catch (e) {}
     }
-    if (ds && ds.length) {
-      let pared = this.state.pairedDs;
-      pared = pared.concat(ds || []);
+    if (temp && temp.length) {
+      // let paired = this.state.pairedDs;
+      // paired = paired.concat(temp || []);
       this.setState({
-        pairedDs: pared,
-        loading: false,
+        pairedDs: temp,
       });
     }
   }
@@ -242,7 +251,6 @@ export default class HomeScreen extends Component {
           found.push(r);
           this.setState({
             foundDs: found,
-            loading: false,
           });
         }
       }
@@ -276,6 +284,8 @@ export default class HomeScreen extends Component {
     const scanDevices = async () => {
       const bluetoothResponse = await BluetoothManager.scanDevices();
       await this._deviceFoundEvent(bluetoothResponse);
+
+      console.log(bluetoothResponse);
 
       this.setState({
         loading: false,
@@ -443,7 +453,8 @@ export default class HomeScreen extends Component {
         <BluetoothListModal
           visible={this.state.modalVisible}
           onClose={this.closeModal}
-          deviceItems={this.state.foundDs}
+          newDevices={this.state.foundDs}
+          alreadyPairedDevices={this.state.pairedDs}
           onConnect={this._connect}
         />
         <LoadingModal visible={this.state.loading} />
@@ -466,42 +477,16 @@ export default class HomeScreen extends Component {
           />
         </View>
         <View>
-          <TableDataToolbar />
+          <TableDataToolbar
+            onShare={() => console.log('share')}
+            onRefresh={() => console.log('Refreshed')}
+            onPrint={this.onPrint}
+          />
         </View>
-
-        {/* <View style={[styles.menubottomShare]}>
-            <TouchableHighlight onPress={() => alert('image clicked')}>
-              <Image
-                style={[styles.logoShare]}
-                source={require('../assets/icons/viewdata/share.png')}></Image>
-            </TouchableHighlight>
-          </View>
-          <View style={[styles.menubottomSync]}>
-            <TouchableHighlight onPress={() => alert('image clicked')}>
-              <Image
-                style={[styles.logoShare]}
-                source={require('../assets/icons/viewdata/sync.png')}></Image>
-            </TouchableHighlight>
-          </View>
-          <View style={[styles.menubottomPrint]}>
-            <TouchableHighlight
-              disabled={
-                this.state.loading || this.state.boundAddress.length <= 0
-              }
-              onPress={() => this.onPrint}>
-              <Image
-                style={[styles.logoShare]}
-                source={require('../assets/icons/viewdata/print.png')}
-              />
-            </TouchableHighlight>
-          </View> */}
       </View>
     );
   }
 }
-
-const win = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

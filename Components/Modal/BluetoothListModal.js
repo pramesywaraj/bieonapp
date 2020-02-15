@@ -12,10 +12,8 @@ import Modal from 'react-native-modal';
 
 function DeviceRows({items, onConnect}) {
   const itemCollection = items.map((item, index) => (
-    <View style={styles.deviceItem}>
-      <TouchableOpacity
-        key={new Date().getTime() + index}
-        onPress={() => onConnect(item)}>
+    <View style={styles.deviceItem} key={item.address}>
+      <TouchableOpacity onPress={() => onConnect(item)}>
         <Text style={styles.deviceText}>{item.name || 'UNKNOWN'}</Text>
       </TouchableOpacity>
     </View>
@@ -27,7 +25,8 @@ function DeviceRows({items, onConnect}) {
 export default function BluetoothListModal({
   visible,
   onClose,
-  deviceItems,
+  newDevices,
+  alreadyPairedDevices,
   onConnect,
 }) {
   return (
@@ -37,13 +36,22 @@ export default function BluetoothListModal({
       isVisible={visible}
       onRequestClose={onClose}>
       <View style={styles.modalLayout}>
-        <Text style={styles.modalTitle}>Select a Device</Text>
+        <Text style={styles.modalTitle}>Connect to A New Device</Text>
+
+        <ScrollView contentContainerStyle={styles.deviceListContainer}>
+          {newDevices.length > 0 ? (
+            <DeviceRows items={newDevices} onConnect={onConnect} />
+          ) : (
+            <Text style={styles.noDeviceFound}>No new device found.</Text>
+          )}
+        </ScrollView>
+        <Text style={styles.modalTitle}>Already Paired Device</Text>
         <Text style={styles.warning}>
           Make sure the bluetooth of the device enabled.
         </Text>
         <ScrollView contentContainerStyle={styles.deviceListContainer}>
-          {deviceItems.length > 0 ? (
-            <DeviceRows items={deviceItems} onConnect={onConnect} />
+          {alreadyPairedDevices.length > 0 ? (
+            <DeviceRows items={alreadyPairedDevices} onConnect={onConnect} />
           ) : (
             <Text style={styles.noDeviceFound}>No device found.</Text>
           )}
