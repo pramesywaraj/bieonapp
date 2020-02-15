@@ -40,7 +40,6 @@ export default class ContainDetailNaclScreen extends Component {
   async saveData() {
     try {
       const {navigate} = this.props.navigation;
-      console.log('tes', datainput);
       let response = await axios.post(
         `${Config.API_URL}/salt/a/input`,
         {
