@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  ProgressBarAndroid,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import BluetoothSerial, {
@@ -26,6 +27,7 @@ export default class ContainScreen extends Component {
       devices: [],
       scanning: false,
       processing: false,
+      progressbar: false,
     };
   }
 
@@ -355,6 +357,7 @@ export default class ContainScreen extends Component {
   write = async (id, message) => {
     try {
       // for data1
+      this.setState({progressbar: true});
       if (message === 'Data1') {
         BluetoothSerial.device(id).write(message);
         let data = await BluetoothSerial.readFromDevice();
@@ -436,14 +439,15 @@ export default class ContainScreen extends Component {
                 style={styles.itemIconImage}
                 source={require('../assets/icons/retrievedata/device.png')}
               />
-              <Text style={styles.itemText}>BIEON-001</Text>
+              <Text style={styles.itemText}>Save Data</Text>
             </View>
             <TouchableOpacity
               style={[styles.button]}
               onPress={() => navigate('PopUpBluetoothScreen')}>
               <Image
                 style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
+                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.buttonGoogle]}
@@ -456,6 +460,7 @@ export default class ContainScreen extends Component {
               <Row>
                 <Col
                   size={4}
+                  // eslint-disable-next-line react-native/no-inline-styles
                   style={{
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -465,6 +470,7 @@ export default class ContainScreen extends Component {
                   </Text>
                 </Col>
                 <Col
+                  // eslint-disable-next-line react-native/no-inline-styles
                   style={{
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -546,9 +552,13 @@ const win = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f3f3f3',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  progressbar: {
+    zIndex: 10,
+    top: 100,
   },
   logo: {
     width: 45,
@@ -560,7 +570,6 @@ const styles = StyleSheet.create({
     marginRight: -320,
   },
   text: {
-    color: '#fff',
     fontSize: 16,
     marginTop: 15,
     margin: 15,
@@ -614,7 +623,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: 330,
     height: 100,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     marginBottom: 30,
   },
   textbuttonGoogle: {
@@ -644,7 +653,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: '#129cd8',
-    marginLeft: 13,
+    marginLeft: 3,
     fontSize: 25,
     fontWeight: '700',
   },

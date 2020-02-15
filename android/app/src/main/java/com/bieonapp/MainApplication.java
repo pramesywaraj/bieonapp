@@ -1,9 +1,10 @@
-package com.bieonapp;
+package com.Bieon;
 
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import cn.jystudio.bluetooth.RNBluetoothEscposPrinterPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.nuttawutmalee.RCTBluetoothSerial.RCTBluetoothSerialPackage;

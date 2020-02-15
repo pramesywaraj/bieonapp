@@ -3,7 +3,6 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'react-native-banner-carousel';
-
 import {
   StyleSheet,
   Image,

@@ -82,7 +82,7 @@ class SettingScreen extends Component {
               <View style={[styles.Border]}></View>
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate('');
+                  this.props.navigation.navigate('HelpFeedbackScreen');
                 }}>
                 <View style={styles.itemContainer}>
                   <Image

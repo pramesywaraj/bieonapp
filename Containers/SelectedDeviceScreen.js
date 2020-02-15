@@ -291,7 +291,7 @@ export default class SelectedDeviceScreen extends Component {
 
       console.log('connect' + connected.address);
 
-      if (connected.address != '') {
+      if (connected.address !== '') {
         alert(`Connected to device ${connected.name}<${connected.id}>`);
         if (connected.name === 'idPrint') {
           this.props.navigation.navigate('TableDataScreen', {

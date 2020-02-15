@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
+import Geolocation from 'react-native-geolocation-service';
+
 import {Col, Row, Grid} from 'react-native-easy-grid';
 
 export default class DeviceInfoScreen extends Component {
@@ -17,7 +19,24 @@ export default class DeviceInfoScreen extends Component {
     super(props);
     this.state = {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
+      latitude: 0,
+      longitude: 0,
     };
+  }
+  componentDidMount() {
+    Geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      error => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
   }
   render() {
     const {navigate} = this.props.navigation;
@@ -71,7 +90,9 @@ export default class DeviceInfoScreen extends Component {
                     editable={false}
                     style={[styles.TextInput]}
                     placeholder="Location"
-                    underlineColorAndroid={'transparent'}></TextInput>
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.latitude},{this.state.longitude}
+                  </TextInput>
                 </Col>
               </Row>
             </View>
