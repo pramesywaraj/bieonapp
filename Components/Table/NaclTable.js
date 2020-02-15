@@ -62,7 +62,7 @@ export default function NaclTable({
           <ActivityIndicator size="large" color="#129cd8" />
         </View>
       ) : (
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
           {data.map((item, index) => (
             <TableWrapper key={index} style={styles.tableRow}>
               <Cell
@@ -108,11 +108,6 @@ export default function NaclTable({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   tableRow: {
     flexDirection: 'row',
     backgroundColor: 'rgb(237, 237, 237)',
@@ -153,5 +148,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '50%',
+  },
+  scrollViewContainer: {
+    height: 'auto',
   },
 });

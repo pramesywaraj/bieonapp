@@ -53,7 +53,7 @@ const printSaltA = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['No.Seri', ':', data.no_seri],
+        ['No.Seri', ':', data.device_id],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -165,7 +165,7 @@ const printSaltB = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['No.Seri', ':', data.no_seri],
+        ['No.Seri', ':', data.device_id],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -353,7 +353,7 @@ export default class HomeScreen extends Component {
 
     try {
       const response = await axios.get(
-        `${Config.API_URL}/salt/${this.state.selectedSaltType}/list?user_id=${userData.user_id}`,
+        `${Config.API_URL}/salt/${this.state.selectedSaltType}/list?max_per_page=100&user_id=${userData.user_id}`,
       );
 
       if (this.state.selectedSaltType === 'a') {
@@ -361,6 +361,8 @@ export default class HomeScreen extends Component {
         salts_a.forEach(item => {
           item.isChecked = false;
         });
+
+        console.log(salts_a);
         this.setState({
           salts_a: salts_a,
         });
@@ -618,7 +620,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    flexGrow: 1,
+    flex: 1,
+    height: 'auto',
+    maxHeight: '100%',
   },
   header: {
     backgroundColor: '#129cd8',
