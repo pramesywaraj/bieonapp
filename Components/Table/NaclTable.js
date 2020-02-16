@@ -13,13 +13,22 @@ const CheckingBox = ({onSelect, selected}) => (
   />
 );
 
-export default function NaclTable({data, select, onSelectElement}) {
+export default function NaclTable({
+  data,
+  select,
+  onSelectElement,
+  onSelectAll,
+}) {
   const [loading, setLoading] = useState(true);
+  const [selectAll, setSelectAll] = useState(false);
   const salt_a_header = [
     <CheckingBox
       checkBoxColor={'#129cd8'}
-      selected={select}
-      onSelect={() => console.log('selected')}
+      selected={selectAll}
+      onSelect={() => {
+        setSelectAll(!selectAll);
+        onSelectAll();
+      }}
     />,
     'No',
     'Date',
@@ -29,7 +38,13 @@ export default function NaclTable({data, select, onSelectElement}) {
   ];
 
   useEffect(() => {
-    setLoading(false);
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    } else if (loading === false) {
+      setLoading(true);
+    }
   }, [data]);
   return (
     <Table>
@@ -43,7 +58,7 @@ export default function NaclTable({data, select, onSelectElement}) {
 
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator />
+          <ActivityIndicator size="large" color="#129cd8" />
         </View>
       ) : (
         <ScrollView>
@@ -136,5 +151,6 @@ const styles = StyleSheet.create({
   loadingContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    height: '50%',
   },
 });
