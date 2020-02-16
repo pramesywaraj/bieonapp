@@ -13,7 +13,7 @@ const CheckingBox = ({onSelect, selected}) => (
   />
 );
 
-export default function NaclTable({data, onSelectElement, onSelectAll}) {
+export default function IodiumTable({data, onSelectElement, onSelectAll}) {
   const [loading, setLoading] = useState(true);
   const [selectAll, setSelectAll] = useState(false);
   const salt_a_header = [
@@ -27,9 +27,7 @@ export default function NaclTable({data, onSelectElement, onSelectAll}) {
     />,
     'No',
     'Date',
-    'NaCl',
-    'Whiteness',
-    'Water Content',
+    'Iodium',
   ];
 
   useEffect(() => {
@@ -47,7 +45,7 @@ export default function NaclTable({data, onSelectElement, onSelectAll}) {
       <TableWrapper style={styles.header}>
         <Row
           data={salt_a_header}
-          flexArr={[1, 1, 1, 1, 2, 2]}
+          flexArr={[1, 1, 1, 2]}
           textStyle={styles.headerText}
         />
       </TableWrapper>
@@ -80,17 +78,7 @@ export default function NaclTable({data, onSelectElement, onSelectAll}) {
                 style={styles.cell}
               />
               <Cell
-                data={item.nacl}
-                textStyle={styles.text}
-                style={styles.cell}
-              />
-              <Cell
-                data={item.whiteness}
-                textStyle={styles.text}
-                style={styles.cell2}
-              />
-              <Cell
-                data={item.water_content}
+                data={item.iodium}
                 textStyle={styles.text}
                 style={styles.cell2}
               />

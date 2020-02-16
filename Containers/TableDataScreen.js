@@ -22,10 +22,11 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
-
+import SegmentedControlTab from 'react-native-segmented-control-tab';
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
 import NaclTable from '../Components/Table/NaclTable';
+import IodiumTable from '../Components/Table/IodiumTable';
 import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
 
 const printSaltA = (saltDatas, userOperator) => {
@@ -250,7 +251,7 @@ export default class HomeScreen extends Component {
       debugMsg: '',
       modalVisible: false,
       connected: false,
-      selectedSaltType: 'a',
+      selectedSaltType: 0,
       salts_a: [],
       salts_b: [],
       printedSalt: [],
@@ -264,6 +265,7 @@ export default class HomeScreen extends Component {
     this.onCheckAll = this.onCheckAll.bind(this);
     this.onPrint = this.onPrint.bind(this);
     this.onRefreshData = this.onRefreshData.bind(this);
+    this.handleSegmentChange = this.handleSegmentChange.bind(this);
   }
 
   async componentDidMount() {
@@ -353,20 +355,21 @@ export default class HomeScreen extends Component {
 
     try {
       const response = await axios.get(
-        `${Config.API_URL}/salt/${this.state.selectedSaltType}/list?max_per_page=100&user_id=${userData.user_id}`,
+        `${Config.API_URL}/salt/${
+          this.state.selectedSaltType === 0 ? 'a' : 'b'
+        }/list?max_per_page=100&user_id=${userData.user_id}`,
       );
 
-      if (this.state.selectedSaltType === 'a') {
+      if (this.state.selectedSaltType === 0) {
         const {salts_a} = response.data.data;
         salts_a.forEach(item => {
           item.isChecked = false;
         });
 
-        console.log(salts_a);
         this.setState({
           salts_a: salts_a,
         });
-      } else if (this.state.selectedSaltType === 'b') {
+      } else if (this.state.selectedSaltType === 1) {
         const {salts_b} = response.data.data;
         salts_b.forEach(item => {
           item.isChecked = false;
@@ -381,11 +384,11 @@ export default class HomeScreen extends Component {
   }
 
   async onRefreshData() {
-    if (this.state.selectedSaltType === 'a') {
+    if (this.state.selectedSaltType === 0) {
       await this.setState({
         salts_a: [],
       });
-    } else if (this.state.selectedSaltType === 'b') {
+    } else if (this.state.selectedSaltType === 1) {
       await this.setState({
         salts_b: [],
       });
@@ -458,17 +461,17 @@ export default class HomeScreen extends Component {
 
   onCheckAll() {
     let tempSalts =
-      this.state.selectedSaltType === 'a'
+      this.state.selectedSaltType === 0
         ? this.state.salts_a
         : this.state.salts_b;
 
     tempSalts.forEach(item => (item.isChecked = !item.isChecked));
 
-    if (this.state.selectedSaltType === 'a') {
+    if (this.state.selectedSaltType === 0) {
       this.setState({
         salts_a: tempSalts,
       });
-    } else if (this.state.selectedSaltType === 'b') {
+    } else if (this.state.selectedSaltType === 1) {
       this.setState({
         salts_b: tempSalts,
       });
@@ -477,7 +480,7 @@ export default class HomeScreen extends Component {
 
   onChangeCheckElement(elementIndex) {
     let tempSalts =
-      this.state.selectedSaltType === 'a'
+      this.state.selectedSaltType === 0
         ? this.state.salts_a
         : this.state.salts_b;
 
@@ -487,11 +490,11 @@ export default class HomeScreen extends Component {
 
     tempSalts[foundIndex].isChecked = !tempSalts[foundIndex].isChecked;
 
-    if (this.state.selectedSaltType === 'a') {
+    if (this.state.selectedSaltType === 0) {
       this.setState({
         salts_a: tempSalts,
       });
-    } else if (this.state.selectedSaltType === 'b') {
+    } else if (this.state.selectedSaltType === 1) {
       this.setState({
         salts_b: tempSalts,
       });
@@ -502,8 +505,6 @@ export default class HomeScreen extends Component {
     const scanDevices = async () => {
       const bluetoothResponse = await BluetoothManager.scanDevices();
       await this._deviceFoundEvent(bluetoothResponse);
-
-      console.log(bluetoothResponse);
 
       this.setState({
         loading: false,
@@ -553,13 +554,13 @@ export default class HomeScreen extends Component {
 
   async onPrint() {
     let operator = await AsyncStorage.getItem('@userData');
-    if (this.state.selectedSaltType === 'a') {
+    if (this.state.selectedSaltType === 0) {
       let selectedData = this.state.salts_a.filter(
         data => data.isChecked === true,
       );
 
       printSaltA(selectedData, operator.fullname);
-    } else if (this.state.selectedSaltType === 'b') {
+    } else if (this.state.selectedSaltType === 1) {
       let selectedData = this.state.salts_b.filter(
         data => data.isChecked === true,
       );
@@ -568,9 +569,13 @@ export default class HomeScreen extends Component {
     }
   }
 
-  render() {
-    const salt_b_header = ['No', 'Date', 'Iodium'];
+  handleSegmentChange(index) {
+    this.setState({
+      selectedSaltType: index,
+    });
+  }
 
+  render() {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollView}>
@@ -596,12 +601,38 @@ export default class HomeScreen extends Component {
               )}
             </TouchableOpacity>
           </View>
-          <View style={styles.tableContainer}>
-            <NaclTable
-              data={this.state.salts_a}
-              onSelectAll={this.onCheckAll}
-              onSelectElement={this.onChangeCheckElement}
+          <View>
+            <SegmentedControlTab
+              values={['Nacl', 'Iodium']}
+              selectedIndex={this.state.selectedSaltType}
+              onTabPress={this.handleSegmentChange}
+              borderRadius={0}
+              tabsContainerStyle={styles.segmentContainer}
+              tabStyle={{
+                backgroundColor: 'white',
+                borderWidth: 0,
+                borderColor: 'transparent',
+              }}
+              activeTabStyle={{backgroundColor: '#129cd8', marginTop: 2}}
+              tabTextStyle={{color: '#129cd8', fontWeight: 'bold'}}
+              activeTabTextStyle={{color: 'white'}}
             />
+          </View>
+          <View style={styles.tableContainer}>
+            {this.state.selectedSaltType === 0 && (
+              <NaclTable
+                data={this.state.salts_a}
+                onSelectAll={this.onCheckAll}
+                onSelectElement={this.onChangeCheckElement}
+              />
+            )}
+            {this.state.selectedSaltType === 1 && (
+              <IodiumTable
+                data={this.state.salts_b}
+                onSelectAll={this.onCheckAll}
+                onSelectElement={this.onChangeCheckElement}
+              />
+            )}
           </View>
           <View>
             <TableDataToolbar
@@ -620,18 +651,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    flex: 1,
     height: 'auto',
     maxHeight: '100%',
+    paddingBottom: '10%',
   },
   header: {
     backgroundColor: '#129cd8',
     width: '100%',
     height: '10%',
     alignItems: 'center',
-    flexDirection: 'row',
     paddingRight: '5%',
     paddingLeft: '5%',
+    flexDirection: 'row',
   },
   deviceStatus: {
     fontWeight: 'bold',
@@ -647,5 +678,10 @@ const styles = StyleSheet.create({
   tableContainer: {
     height: '70%',
     margin: '5%',
+  },
+  segmentContainer: {
+    height: 'auto',
+    padding: '2%',
+    borderRadius: 20,
   },
 });
