@@ -260,11 +260,17 @@ export default class HomeScreen extends Component {
     this._connect = this._connect.bind(this);
     this._scan = this._scan.bind(this);
     this.onChangeCheckElement = this.onChangeCheckElement.bind(this);
+    this.onChangeCheckElementFilteredData = this.onChangeCheckElementFilteredData.bind(
+      this,
+    );
     this.onCheckAll = this.onCheckAll.bind(this);
+    this.onCheckAllFilteredData = this.onCheckAllFilteredData.bind(this);
     this.onPrint = this.onPrint.bind(this);
     this.onRefreshData = this.onRefreshData.bind(this);
     this.handleSegmentChange = this.handleSegmentChange.bind(this);
     this.handleFilterModal = this.handleFilterModal.bind(this);
+    this.onApplyFilter = this.onApplyFilter.bind(this);
+    this.onRemoveFilter = this.onRemoveFilter.bind(this);
   }
 
   async componentDidMount() {
@@ -595,6 +601,8 @@ export default class HomeScreen extends Component {
   handleSegmentChange(index) {
     this.setState({
       selectedSaltType: index,
+      filter: false,
+      filteredData: [],
     });
   }
 
@@ -605,6 +613,34 @@ export default class HomeScreen extends Component {
   }
 
   handleRemoveFilter() {
+    this.setState({
+      filter: false,
+      filteredData: [],
+      modalVisibleFilter: false,
+    });
+  }
+
+  async onApplyFilter(startDate, endDate) {
+    let arrayOfData =
+      this.state.selectedSaltType === 0
+        ? this.state.salts_a
+        : this.state.salts_b;
+
+
+    arrayOfData = await arrayOfData.filter(
+      item =>
+        Date.parse(item.create_at) <= Date.parse(endDate) &&
+        Date.parse(item.create_at) >= Date.parse(startDate),
+    );
+
+    this.setState({
+      filter: true,
+      filteredData: arrayOfData,
+      modalVisibleFilter: false,
+    });
+  }
+
+  onRemoveFilter() {
     this.setState({
       filter: false,
       filteredData: [],
@@ -624,6 +660,8 @@ export default class HomeScreen extends Component {
             onConnect={this._connect}
           />
           <DateFilterModal
+            onApplyFilter={this.onApplyFilter}
+            onRemoveFilter={this.onRemoveFilter}
             visible={this.state.modalVisibleFilter}
             onClose={this.handleFilterModal}
           />
@@ -654,14 +692,30 @@ export default class HomeScreen extends Component {
           <View style={styles.tableContainer}>
             {this.state.selectedSaltType === 0 && (
               <NaclTable
-                data={this.state.salts_a}
-                onSelectAll={this.onCheckAll}
-                onSelectElement={this.onChangeCheckElement}
+                data={
+                  this.state.filter
+                    ? this.state.filteredData
+                    : this.state.salts_a
+                }
+                onSelectAll={
+                  this.state.filter
+                    ? this.onCheckAllFilteredData
+                    : this.onCheckAll
+                }
+                onSelectElement={
+                  this.state.filter
+                    ? this.onChangeCheckElementFilteredData
+                    : this.onChangeCheckElement
+                }
               />
             )}
             {this.state.selectedSaltType === 1 && (
               <IodiumTable
-                data={this.state.salts_b}
+                data={
+                  this.state.filter
+                    ? this.state.filteredData
+                    : this.state.salts_b
+                }
                 onSelectAll={this.onCheckAll}
                 onSelectElement={this.onChangeCheckElement}
               />

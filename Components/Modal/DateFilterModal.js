@@ -9,8 +9,8 @@ import DatePickerButton from '../Buttons/DatePickerButton';
 export default function DateFilterModal({
   visible,
   onClose,
-  startDate,
-  endDate,
+  onApplyFilter,
+  onRemoveFilter,
 }) {
   const [start, setStartDate] = useState(new Date());
   const [end, setEndDate] = useState(new Date());
@@ -66,13 +66,13 @@ export default function DateFilterModal({
         </View>
         <View style={styles.buttonContainer}>
           <SmallButton
-            action={() => console.log('Enter')}
+            action={() => onApplyFilter(start, end)}
             textColor={'white'}
             buttonColor={'#129cd8'}
             label={'Apply Filter'}
           />
           <SmallButton
-            action={() => console.log('Enter')}
+            action={() => onRemoveFilter(start, end)}
             textColor={'rgb(99, 99, 99)'}
             buttonColor={'rgb(209, 209, 209)'}
             label={'Remove Filter'}
@@ -85,7 +85,7 @@ export default function DateFilterModal({
           timeZoneOffsetInMinutes={0}
           value={start}
           mode={'date'}
-          display="spinner"
+          display="default"
           onChange={onChangeStartDate}
         />
       )}
