@@ -369,6 +369,11 @@ export default class HomeScreen extends Component {
         `${Config.API_URL}/salt/${
           this.state.selectedSaltType === 0 ? 'a' : 'b'
         }/list?max_per_page=100&user_id=${userData.user_id}`,
+        {
+          headers: {
+            token: await AsyncStorage.getItem('@userAuth'),
+          },
+        },
       );
 
       if (this.state.selectedSaltType === 0) {
@@ -649,7 +654,7 @@ export default class HomeScreen extends Component {
           </View>
           <View>
             <TableDataToolbar
-              onShare={() => console.log('share')}
+              // onShare={() => console.log('share')}
               onRefresh={this.onRefreshData}
               onPrint={this.onPrint}
             />
