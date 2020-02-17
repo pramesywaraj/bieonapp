@@ -33,14 +33,12 @@ export default function NaclTable({data, onSelectElement, onSelectAll}) {
   ];
 
   useEffect(() => {
-    if (loading) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-    } else if (loading === false) {
-      setLoading(true);
-    }
-  }, [data]);
+    console.log('render');
+    setTimeout(() => {
+      setLoading(!loading);
+    }, 2000);
+  }, []);
+
   return (
     <Table>
       <TableWrapper style={styles.header}>

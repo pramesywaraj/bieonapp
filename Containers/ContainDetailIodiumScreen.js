@@ -179,7 +179,7 @@ const win = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f3f3f3',
@@ -199,15 +199,14 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginRight: -320,
   },
-  text: {
-    color: '#fff',
-    fontSize: 16,
-    marginTop: 15,
-    margin: 15,
-    textAlign: 'justify',
-    color: '#000',
-    fontWeight: '600',
-  },
+  // text: {
+  //   fontSize: 16,
+  //   marginTop: 15,
+  //   margin: 15,
+  //   textAlign: 'justify',
+  //   color: '#000',
+  //   fontWeight: '600',
+  // },
   itemMenuImage: {
     resizeMode: 'contain',
     width: 25,

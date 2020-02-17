@@ -28,7 +28,7 @@ export default function Article({onClick, title, imageUri, createdAt}) {
           <View style={styles.date}>
             <Text style={styles.dateText}>Terbit tanggal</Text>
             <Text style={styles.dateText}>
-              {moment(createdAt).format('Do MMMM YYYY')}
+              {moment(createdAt).format('DD/MMM/YYYY')}
             </Text>
           </View>
         </View>

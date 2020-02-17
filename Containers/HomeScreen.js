@@ -71,7 +71,11 @@ export default class HomeScreen extends Component {
   }
   async fetchArticles() {
     try {
-      const {data} = await axios.get(`${Config.API_URL}/article/list`);
+      const {data} = await axios.get(`${Config.API_URL}/article/list`, {
+        headers: {
+          token: await AsyncStorage.getItem('@userAuth'),
+        },
+      });
 
       const {articles} = data.data;
       this.setState({articles: articles, refreshing: false});
@@ -95,6 +99,7 @@ export default class HomeScreen extends Component {
         refreshing: true,
       },
       () => this.fetchArticles(),
+      this.fetchBanner(),
     );
   }
 

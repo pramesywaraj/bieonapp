@@ -3,15 +3,13 @@ import {TouchableNativeFeedback, View, Text, StyleSheet} from 'react-native';
 
 // import {vw} from 'react-native-viewport-units';
 
-export default function AppsButton({action, label, textColor, buttonColor}) {
+export default function DatePickerButton({action, label}) {
   return (
     <TouchableNativeFeedback
       onPress={action}
       background={TouchableNativeFeedback.SelectableBackground()}>
-      <View style={[buttonStyle.button, {backgroundColor: buttonColor}]}>
-        <Text style={[buttonStyle.textbutton, {color: textColor}]}>
-          {label}
-        </Text>
+      <View style={buttonStyle.button}>
+        <Text style={buttonStyle.textbutton}>{label}</Text>
       </View>
     </TouchableNativeFeedback>
   );
@@ -21,17 +19,19 @@ const buttonStyle = StyleSheet.create({
   button: {
     alignSelf: 'center',
     alignItems: 'center',
-    borderRadius: 15,
+    borderRadius: 5,
     height: 'auto',
     paddingTop: 15,
     paddingBottom: 15,
-    paddingRight: '25%',
-    paddingLeft: '25%',
+    paddingRight: '10%',
+    paddingLeft: '10%',
     width: '100%',
+    backgroundColor: 'rgb(237, 237, 237)',
+    color: 'rgb(128, 128, 128)',
   },
 
   textbutton: {
-    fontSize: 17,
+    fontSize: 13,
     fontWeight: '700',
     textAlign: 'center',
   },

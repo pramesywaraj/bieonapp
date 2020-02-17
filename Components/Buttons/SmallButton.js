@@ -3,7 +3,7 @@ import {TouchableNativeFeedback, View, Text, StyleSheet} from 'react-native';
 
 // import {vw} from 'react-native-viewport-units';
 
-export default function AppsButton({action, label, textColor, buttonColor}) {
+export default function SmallButton({action, label, textColor, buttonColor}) {
   return (
     <TouchableNativeFeedback
       onPress={action}
@@ -25,13 +25,14 @@ const buttonStyle = StyleSheet.create({
     height: 'auto',
     paddingTop: 15,
     paddingBottom: 15,
-    paddingRight: '25%',
-    paddingLeft: '25%',
-    width: '100%',
+    paddingRight: '8%',
+    paddingLeft: '8%',
+    marginLeft: '2%',
+    marginRight: '2%',
   },
 
   textbutton: {
-    fontSize: 17,
+    fontSize: 14,
     fontWeight: '700',
     textAlign: 'center',
   },
