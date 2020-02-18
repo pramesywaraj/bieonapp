@@ -31,14 +31,10 @@ export default function IodiumTable({data, onSelectElement, onSelectAll}) {
   ];
 
   useEffect(() => {
-    if (loading) {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-    } else if (loading === false) {
-      setLoading(true);
-    }
-  }, [data]);
+    setTimeout(() => {
+      setLoading(!loading);
+    }, 2000);
+  }, []);
 
   return (
     <Table>

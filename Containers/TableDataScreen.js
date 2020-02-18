@@ -1,35 +1,29 @@
 import React, {Component} from 'react';
 import {
-  TouchableHighlight,
   Platform,
   DeviceEventEmitter,
   NativeEventEmitter,
   ToastAndroid,
   StyleSheet,
   ScrollView,
-  Text,
   View,
-  TouchableOpacity,
 } from 'react-native';
-import DatePicker from 'react-native-datepicker';
-import CheckBox from 'react-native-check-box';
-
 import Config from 'react-native-config';
 import {
   BluetoothEscposPrinter,
   BluetoothManager,
-  BluetoothTscPrinter,
 } from 'react-native-bluetooth-escpos-printer';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
+import DateFilterModal from '../Components/Modal/DateFilterModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
 import NaclTable from '../Components/Table/NaclTable';
 import IodiumTable from '../Components/Table/IodiumTable';
 import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
+import TableDataHeader from '../Components/Toolbar/TableDataHeader';
 
 const printSaltA = (saltDatas, userOperator) => {
   console.log('salt', saltDatas);
@@ -248,12 +242,10 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: '2019-01-01',
-      isChecked: false,
       devices: null,
+      deviceName: '',
       pairedDs: [],
       foundDs: [],
-      // bleOpend: false,
       loading: false,
       boundAddress: '',
       debugMsg: '',
@@ -263,7 +255,9 @@ export default class HomeScreen extends Component {
       salts_a: [],
       salts_b: [],
       printedSalt: [],
-      operator: '',
+      filteredData: [],
+      filter: false,
+      modalVisibleFilter: false,
     };
 
     this.openModal = this.openModal.bind(this);
@@ -271,10 +265,17 @@ export default class HomeScreen extends Component {
     this._connect = this._connect.bind(this);
     this._scan = this._scan.bind(this);
     this.onChangeCheckElement = this.onChangeCheckElement.bind(this);
+    this.onChangeCheckElementFilteredData = this.onChangeCheckElementFilteredData.bind(
+      this,
+    );
     this.onCheckAll = this.onCheckAll.bind(this);
+    this.onCheckAllFilteredData = this.onCheckAllFilteredData.bind(this);
     this.onPrint = this.onPrint.bind(this);
     this.onRefreshData = this.onRefreshData.bind(this);
     this.handleSegmentChange = this.handleSegmentChange.bind(this);
+    this.handleFilterModal = this.handleFilterModal.bind(this);
+    this.onApplyFilter = this.onApplyFilter.bind(this);
+    this.onRemoveFilter = this.onRemoveFilter.bind(this);
   }
 
   async componentDidMount() {
@@ -304,7 +305,7 @@ export default class HomeScreen extends Component {
           BluetoothManager.EVENT_CONNECTION_LOST,
           () => {
             this.setState({
-              name: '',
+              deviceName: '',
               boundAddress: '',
             });
           },
@@ -340,7 +341,7 @@ export default class HomeScreen extends Component {
           BluetoothManager.EVENT_CONNECTION_LOST,
           () => {
             this.setState({
-              name: '',
+              deviceName: '',
               boundAddress: '',
             });
           },
@@ -360,15 +361,25 @@ export default class HomeScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    console.log('unmount');
+    this._listeners.map(listener => {
+      listener.remove();
+    });
+  }
+
   async fetchSaltData() {
     let userData = await AsyncStorage.getItem('@userData');
+    let userToken = await AsyncStorage.getItem('@userAuth');
     userData = JSON.parse(userData);
+    userToken = JSON.parse(userToken);
 
     try {
       const response = await axios.get(
         `${Config.API_URL}/salt/${
           this.state.selectedSaltType === 0 ? 'a' : 'b'
         }/list?max_per_page=100&user_id=${userData.user_id}`,
+        {headers: {token: userToken}},
       );
 
       if (this.state.selectedSaltType === 0) {
@@ -406,12 +417,6 @@ export default class HomeScreen extends Component {
     }
 
     this.fetchSaltData();
-  }
-
-  componentWillUnmount() {
-    this._listeners.map(listener => {
-      listener.remove();
-    });
   }
 
   openModal() {
@@ -470,6 +475,7 @@ export default class HomeScreen extends Component {
     }
   }
 
+  // For the normal data //////////////////////////////
   onCheckAll() {
     let tempSalts =
       this.state.selectedSaltType === 0
@@ -512,6 +518,26 @@ export default class HomeScreen extends Component {
     }
   }
 
+  // For the filtered Data //////////////////////////////
+  onCheckAllFilteredData() {
+    let tempSalts = this.state.filteredData;
+    tempSalts.forEach(item => (item.isChecked = !item.isChecked));
+    this.setState({
+      filteredData: tempSalts,
+    });
+  }
+
+  onChangeCheckElementFilteredData(elementIndex) {
+    let tempSalts = this.state.filteredData;
+    let foundIndex = tempSalts.findIndex(
+      (salt, index) => index === elementIndex,
+    );
+    tempSalts[foundIndex].isChecked = !tempSalts[foundIndex].isChecked;
+    this.setState({
+      filteredData: tempSalts,
+    });
+  }
+
   async _scan() {
     const scanDevices = async () => {
       const bluetoothResponse = await BluetoothManager.scanDevices();
@@ -552,7 +578,7 @@ export default class HomeScreen extends Component {
         this.setState({
           loading: false,
           boundAddress: item.address,
-          name: item.name || 'UNKNOWN',
+          deviceName: item.name || 'UNKNOWN',
         });
       },
       e => {
@@ -563,28 +589,69 @@ export default class HomeScreen extends Component {
     );
   }
 
-  onPrint() {
-    let fullname = JSON.parse(this.state.operator).fullname;
-    console.log('fullname', fullname);
-    console.log('type:', this.state.selectedSaltType);
-    if (this.state.selectedSaltType === 0) {
-      let selectedData = this.state.salts_a.filter(
-        data => data.isChecked === true,
-      );
-      console.log('selectedData', selectedData);
-      printSaltA(selectedData, fullname);
-    } else if (this.state.selectedSaltType === 1) {
-      let selectedData = this.state.salts_b.filter(
-        data => data.isChecked === true,
-      );
-      printSaltB(selectedData, fullname);
-    }
+  async onPrint() {
+    let operator = await AsyncStorage.getItem('@userData');
+    let printedData = this.state.filter
+      ? this.state.filteredData
+      : this.state.selectedSaltType === 0
+      ? this.state.salts_a
+      : this.state.salts_b;
+
+    let selectedData = printedData.filter(data => data.isChecked === true);
+
+    // Check the selected type
+    this.state.selectedSaltType === 0
+      ? printSaltA(selectedData, operator)
+      : printSaltB(selectedData, operator);
   }
 
   handleSegmentChange(index) {
     this.onRefreshData();
     this.setState({
       selectedSaltType: index,
+      filter: false,
+      filteredData: [],
+    });
+  }
+
+  handleFilterModal() {
+    this.setState({
+      modalVisibleFilter: !this.state.modalVisibleFilter,
+    });
+  }
+
+  handleRemoveFilter() {
+    this.setState({
+      filter: false,
+      filteredData: [],
+      modalVisibleFilter: false,
+    });
+  }
+
+  async onApplyFilter(startDate, endDate) {
+    let arrayOfData =
+      this.state.selectedSaltType === 0
+        ? this.state.salts_a
+        : this.state.salts_b;
+
+    arrayOfData = await arrayOfData.filter(
+      item =>
+        Date.parse(item.create_at) <= Date.parse(endDate) &&
+        Date.parse(item.create_at) >= Date.parse(startDate),
+    );
+
+    this.setState({
+      filter: true,
+      filteredData: arrayOfData,
+      modalVisibleFilter: false,
+    });
+  }
+
+  onRemoveFilter() {
+    this.setState({
+      filter: false,
+      filteredData: [],
+      modalVisibleFilter: false,
     });
   }
 
@@ -599,21 +666,19 @@ export default class HomeScreen extends Component {
             alreadyPairedDevices={this.state.pairedDs}
             onConnect={this._connect}
           />
+          <DateFilterModal
+            onApplyFilter={this.onApplyFilter}
+            onRemoveFilter={this.onRemoveFilter}
+            visible={this.state.modalVisibleFilter}
+            onClose={this.handleFilterModal}
+          />
           <LoadingModal visible={this.state.loading} />
-          <View style={styles.header}>
-            <Text style={styles.deviceStatus}>
-              {!this.state.name ? 'Disconnect' : this.state.name}
-            </Text>
-            <TouchableOpacity
-              style={styles.bluetoothButton}
-              onPress={this._scan}>
-              {this.state.connected ? (
-                <Icon name="bluetooth" color="#129cd8" size={25} />
-              ) : (
-                <Icon name="bluetooth" color="#9c9c9c" size={25} />
-              )}
-            </TouchableOpacity>
-          </View>
+          <TableDataHeader
+            deviceName={this.state.deviceName}
+            onScan={this._scan}
+            onFilterModal={this.handleFilterModal}
+            isConnected={this.state.connected}
+          />
           <View>
             <SegmentedControlTab
               values={['Nacl', 'Iodium']}
@@ -634,14 +699,30 @@ export default class HomeScreen extends Component {
           <View style={styles.tableContainer}>
             {this.state.selectedSaltType === 0 && (
               <NaclTable
-                data={this.state.salts_a}
-                onSelectAll={this.onCheckAll}
-                onSelectElement={this.onChangeCheckElement}
+                data={
+                  this.state.filter
+                    ? this.state.filteredData
+                    : this.state.salts_a
+                }
+                onSelectAll={
+                  this.state.filter
+                    ? this.onCheckAllFilteredData
+                    : this.onCheckAll
+                }
+                onSelectElement={
+                  this.state.filter
+                    ? this.onChangeCheckElementFilteredData
+                    : this.onChangeCheckElement
+                }
               />
             )}
             {this.state.selectedSaltType === 1 && (
               <IodiumTable
-                data={this.state.salts_b}
+                data={
+                  this.state.filter
+                    ? this.state.filteredData
+                    : this.state.salts_b
+                }
                 onSelectAll={this.onCheckAll}
                 onSelectElement={this.onChangeCheckElement}
               />
@@ -652,6 +733,7 @@ export default class HomeScreen extends Component {
               onShare={() => console.log('share')}
               onRefresh={this.onRefreshData}
               onPrint={this.onPrint}
+              onFilter={() => console.log('Filtered')}
             />
           </View>
         </ScrollView>
