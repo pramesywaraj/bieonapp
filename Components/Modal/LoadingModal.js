@@ -22,6 +22,7 @@ export default function LoadingModal({visible}) {
 
 const styles = StyleSheet.create({
   loadingLayout: {
+    height: 100,
     padding: '10%',
     borderRadius: 20,
     backgroundColor: 'white',

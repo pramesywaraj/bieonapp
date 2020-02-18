@@ -14,11 +14,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface BieonAppTests : XCTestCase
+@interface BieonTests : XCTestCase
 
 @end
 
-@implementation BieonAppTests
+@implementation BieonTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {

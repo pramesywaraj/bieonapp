@@ -1,3 +1,6 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-undef */
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -5,12 +8,16 @@ import {
   ImageBackground,
   Text,
   View,
+  Alert,
   Dimensions,
   TextInput,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
+import Config from 'react-native-config';
 
 export default class ContainDetailNaclScreen extends Component {
   constructor(props) {
@@ -18,19 +25,50 @@ export default class ContainDetailNaclScreen extends Component {
     this.state = {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       sample_name: '',
+      token: '',
     };
   }
-  saveData() {
-    const sample_name = this.state.sample_name;
-    if (sample_name.length > 0) {
-      console.log('no_seri', this.state.content.no_seri);
-      console.log('sample_name', sample_name);
-      console.log('nacl', this.state.content.nacl);
-      console.log('whiteness', this.state.content.whiteness);
-      console.log('water_content', this.state.content.water_content);
-      console.log('battery', this.state.content.battery);
-    } else {
-      alert('You must be fill sample name.');
+  componentDidMount() {
+    console.log('ContainDetailNaclScreen');
+  }
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
+  async saveData() {
+    try {
+      const {navigate} = this.props.navigation;
+      let response = await axios.post(
+        `${Config.API_URL}/salt/a/input`,
+        {
+          device_id: this.state.content.no_seri,
+          nacl: this.state.content.nacl,
+          whiteness: this.state.content.whiteness,
+          water_content: this.state.content.water_content,
+          company_id: 1,
+          latitude: 0.0,
+          longitude: 0.0,
+          status_battery: parseInt(this.state.content.battery),
+          sample_name: this.state.sample_name,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            token: await AsyncStorage.getItem('@userAuth'),
+          },
+        },
+      );
+      this.onAlert('Berhasil', 'Anda berhasil menyimpan data.');
+      navigate('ContainScreen');
+      console.log('what?', response);
+    } catch (err) {
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika menyimpan data, silahkan coba lagi.',
+      );
+      console.log('Terjadi kesalahan pada bagian konten', err);
     }
   }
   render() {
@@ -51,13 +89,15 @@ export default class ContainDetailNaclScreen extends Component {
             <View style={[styles.button]}>
               <Image
                 style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
+                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+              />
             </View>
 
             <View style={[styles.buttonGoogle]}>
               <Image
                 style={[styles.logosearch]}
-                source={require('../assets/icons/retrievedata/searchgray.png')}></Image>
+                source={require('../assets/icons/retrievedata/searchgray.png')}
+              />
               <Col
                 style={{
                   alignItems: 'center',
@@ -89,7 +129,7 @@ export default class ContainDetailNaclScreen extends Component {
                         </Text>
                       </Col>
                     </Row>
-                    <View style={[styles.Border]}></View>
+                    <View style={[styles.Border]} />
                     <Row
                       style={{
                         marginTop: -10,
@@ -114,7 +154,7 @@ export default class ContainDetailNaclScreen extends Component {
                         </Text>
                       </Col>
                     </Row>
-                    <View style={[styles.Border]}></View>
+                    <View style={[styles.Border]} />
                     <Row
                       style={{
                         marginTop: -10,
@@ -136,14 +176,14 @@ export default class ContainDetailNaclScreen extends Component {
                         </Text>
                       </Col>
                     </Row>
-                    <View style={[styles.BorderBottom]}></View>
+                    <View style={[styles.BorderBottom]} />
                     <Row>
                       <Image
                         style={styles.itemIconContain}
                         source={require('../assets/icons/retrievedata/sample.png')}
                       />
                       <Col>
-                        <Text style={styles.text}>Sample Name</Text>
+                        <Text style={styles.text}>Sample Name*</Text>
                         <TextInput
                           required
                           style={[styles.TextInput]}
@@ -151,7 +191,8 @@ export default class ContainDetailNaclScreen extends Component {
                           underlineColorAndroid={'transparent'}
                           onChangeText={sample_name =>
                             this.setState({sample_name})
-                          }></TextInput>
+                          }
+                        />
                       </Col>
                     </Row>
                   </View>
@@ -186,7 +227,6 @@ const win = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f3f3f3',
@@ -205,15 +245,6 @@ const styles = StyleSheet.create({
     marginTop: -60,
     marginBottom: 0,
     marginRight: -320,
-  },
-  text: {
-    color: '#fff',
-    fontSize: 16,
-    marginTop: 15,
-    margin: 15,
-    textAlign: 'justify',
-    color: '#000',
-    fontWeight: '600',
   },
   itemMenuImage: {
     resizeMode: 'contain',

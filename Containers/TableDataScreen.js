@@ -26,6 +26,8 @@ import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
 import TableDataHeader from '../Components/Toolbar/TableDataHeader';
 
 const printSaltA = (saltDatas, userOperator) => {
+  console.log('salt', saltDatas);
+  console.log('operator', userOperator);
   try {
     saltDatas.map(data => {
       BluetoothEscposPrinter.printerInit();
@@ -60,7 +62,7 @@ const printSaltA = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Operator', ':', userOperator],
+        ['Operator', ':', userOperator.toString()],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -73,7 +75,9 @@ const printSaltA = (saltDatas, userOperator) => {
         [
           'Hari/Tanggal',
           ':',
-          moment(data.create_at).format('dddd, Do/MM/YYYY'),
+          moment(data.create_at)
+            .format('ddd,DD/MM/YYYY')
+            .toString(),
         ],
         {},
       );
@@ -84,7 +88,7 @@ const printSaltA = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Sample', ':', data.sample_name],
+        ['Sample', ':', data.sample_name.toString()],
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
@@ -96,7 +100,7 @@ const printSaltA = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['NaCl', ':', data.nacl],
+        ['NaCl', ':', data.nacl.toString()],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -106,7 +110,7 @@ const printSaltA = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Whiteness', ':', data.whiteness],
+        ['Whiteness', ':', data.whiteness.toString()],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -116,7 +120,7 @@ const printSaltA = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Water Content', ':', data.water_content],
+        ['Water Content', ':', data.water_content.toString()],
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
@@ -172,7 +176,7 @@ const printSaltB = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Operator', ':', userOperator],
+        ['Operator', ':', userOperator.toString()],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -185,7 +189,9 @@ const printSaltB = (saltDatas, userOperator) => {
         [
           'Hari/Tanggal',
           ':',
-          moment(data.create_at).format('dddd, Do/MM/YYYY'),
+          moment(data.create_at)
+            .format('ddd,DD/MM/YYYY')
+            .toString(),
         ],
         {},
       );
@@ -196,7 +202,7 @@ const printSaltB = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Sample', ':', data.sample_name],
+        ['Sample', ':', data.sample_name.toString()],
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
@@ -208,7 +214,7 @@ const printSaltB = (saltDatas, userOperator) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['NaCl', ':', data.iodium],
+        ['Iodium', ':', data.iodium.toString()],
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
@@ -273,6 +279,8 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
+    this.setState({operator: await AsyncStorage.getItem('@userData')});
+    console.log(this.state.operator);
     await this.fetchSaltData();
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
@@ -598,6 +606,7 @@ export default class HomeScreen extends Component {
   }
 
   handleSegmentChange(index) {
+    this.onRefreshData();
     this.setState({
       selectedSaltType: index,
       filter: false,
@@ -757,7 +766,7 @@ const styles = StyleSheet.create({
   },
   bluetoothButton: {
     marginLeft: 'auto',
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     padding: '2%',
     borderRadius: 20,
   },

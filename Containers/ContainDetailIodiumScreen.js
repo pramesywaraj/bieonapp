@@ -1,7 +1,9 @@
+/* eslint-disable no-dupe-class-members */
 import React, {Component} from 'react';
 import {
   StyleSheet,
   Image,
+  Alert,
   Text,
   View,
   Dimensions,
@@ -9,6 +11,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
+import Config from 'react-native-config';
 
 export default class ContainDetailIoduiScreen extends Component {
   constructor(props) {
@@ -16,17 +21,45 @@ export default class ContainDetailIoduiScreen extends Component {
     this.state = {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       sample_name: '',
+      token: '',
     };
   }
-  saveData() {
-    const sample_name = this.state.sample_name;
-    if (sample_name.length > 0) {
-      console.log('no_seri', this.state.content.no_seri);
-      console.log('sample_name', sample_name);
-      console.log('iodium', this.state.content.iodium);
-      console.log('battery', this.state.content.battery);
-    } else {
-      alert('You must be fill sample name.');
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
+  async saveData() {
+    try {
+      const {navigate} = this.props.navigation;
+      let response = await axios.post(
+        `${Config.API_URL}/salt/b/input`,
+        {
+          device_id: this.state.content.no_seri,
+          iodium: this.state.content.iodium,
+          company_id: 1,
+          latitude: 0.0,
+          longitude: 0.0,
+          status_battery: parseInt(this.state.content.battery),
+          sample_name: this.state.sample_name,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            token: await AsyncStorage.getItem('@userAuth'),
+          },
+        },
+      );
+      this.onAlert('Berhasil', 'Anda berhasil menyimpan data.');
+      navigate('ContainScreen');
+      console.log('what?', response);
+    } catch (err) {
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika menyimpan data, silahkan coba lagi.',
+      );
+      console.log('Terjadi kesalahan pada bagian konten', err);
     }
   }
   render() {

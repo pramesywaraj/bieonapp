@@ -400,31 +400,31 @@ export default class ScanningDeviceScreen extends Component {
                 </Text>
                 <ScrollView>
                   <View>
-                    <View style={[styles.BorderTop]}></View>
+                    <View style={[styles.BorderTop]} />
                     <TouchableOpacity>
                       <View style={styles.itemContainer}>
                         <Text style={styles.itemText}>Unpaired 1</Text>
                       </View>
                     </TouchableOpacity>
-                    <View style={[styles.Border]}></View>
+                    <View style={[styles.Border]} />
                     <TouchableOpacity>
                       <View style={styles.itemContainer}>
                         <Text style={styles.itemText}>Unpaired 2</Text>
                       </View>
                     </TouchableOpacity>
-                    <View style={[styles.Border]}></View>
+                    <View style={[styles.Border]} />
                     <TouchableOpacity>
                       <View style={styles.itemContainer}>
                         <Text style={styles.itemText}>Unpaired 3</Text>
                       </View>
                     </TouchableOpacity>
-                    <View style={[styles.Border]}></View>
+                    <View style={[styles.Border]} />
                     <TouchableOpacity>
                       <View style={styles.itemContainer}>
                         <Text style={styles.itemText}>Unpaired 4</Text>
                       </View>
                     </TouchableOpacity>
-                    <View style={[styles.Border]}></View>
+                    <View style={[styles.Border]} />
                     <TouchableOpacity>
                       <View style={styles.itemContainer}>
                         <Text style={styles.itemText}>Unpaired 5</Text>
@@ -453,10 +453,9 @@ const win = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#f3f3f3',
+    justifyContent: 'center',
   },
   logo: {
     width: 45,
@@ -473,7 +472,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     margin: 15,
     textAlign: 'justify',
-    color: '#000',
     fontWeight: '600',
   },
   itemMenuImage: {
