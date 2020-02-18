@@ -26,8 +26,6 @@ import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
 import TableDataHeader from '../Components/Toolbar/TableDataHeader';
 
 const printSaltA = (saltDatas, userOperator) => {
-  console.log('salt', saltDatas);
-  console.log('operator', userOperator);
   try {
     saltDatas.map(data => {
       BluetoothEscposPrinter.printerInit();
@@ -279,8 +277,6 @@ export default class HomeScreen extends Component {
   }
 
   async componentDidMount() {
-    this.setState({operator: await AsyncStorage.getItem('@userData')});
-    console.log(this.state.operator);
     await this.fetchSaltData();
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
@@ -601,8 +597,8 @@ export default class HomeScreen extends Component {
 
     // Check the selected type
     this.state.selectedSaltType === 0
-      ? printSaltA(selectedData, operator)
-      : printSaltB(selectedData, operator);
+      ? printSaltA(selectedData, operator.fullname)
+      : printSaltB(selectedData, operator.fullname);
   }
 
   handleSegmentChange(index) {
