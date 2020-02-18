@@ -372,7 +372,7 @@ export default class HomeScreen extends Component {
     let userData = await AsyncStorage.getItem('@userData');
     let userToken = await AsyncStorage.getItem('@userAuth');
     userData = JSON.parse(userData);
-    userToken = JSON.parse(userToken);
+    userToken = userToken;
 
     try {
       const response = await axios.get(
@@ -633,7 +633,6 @@ export default class HomeScreen extends Component {
       this.state.selectedSaltType === 0
         ? this.state.salts_a
         : this.state.salts_b;
-
     arrayOfData = await arrayOfData.filter(
       item =>
         Date.parse(item.create_at) <= Date.parse(endDate) &&
@@ -730,7 +729,7 @@ export default class HomeScreen extends Component {
           </View>
           <View>
             <TableDataToolbar
-              onShare={() => console.log('share')}
+              // onShare={() => console.log('share')}
               onRefresh={this.onRefreshData}
               onPrint={this.onPrint}
               onFilter={() => console.log('Filtered')}

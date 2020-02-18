@@ -91,11 +91,11 @@ export default class EditProfileScreen extends Component {
                   this.state.currentUser.picture_user,
               }}
             />
-            <Icon
+            {/* <Icon
               name="user-edit"
               style={styles.userEdit}
               onPress={() => this.changeLogo()}
-            />
+            /> */}
             {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
             <Text style={[styles.textTitle]}>
               {this.state.currentUser.fullname}
