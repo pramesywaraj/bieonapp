@@ -39,21 +39,21 @@ class SettingScreen extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Grid style={{marginTop: 80}}>
+      <Grid>
+        <View style={styles.topheader}>
+          <Image
+            style={styles.gear}
+            source={require('../assets/icons/setting/settingtransparan.png')}
+          />
+          <Text style={styles.titlesetting}>Settings</Text>
+          {/* <Image
+            style={styles.icontop}
+            source={require('../assets/logo/settingwhite.png')}
+          /> */}
+        </View>
         <Row size={13}>
           <View style={styles.container}>
             <View style={styles.menuContainer}>
-              {/* <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate("DeviceInfoScreen");
-                }}
-              >
-                <View style={styles.itemContainer}>
-                  <Image style={styles.itemIconImage} source={require('../assets/icons/setting/device.png')} />
-                  <Text style={styles.itemText}>Device Info</Text>
-                </View>
-              </TouchableOpacity> */}
-              <View style={[styles.Border]}></View>
               <TouchableOpacity
                 onPress={() => {
                   this.props.navigation.navigate('PrivacyPolicyScreen');
@@ -82,7 +82,7 @@ class SettingScreen extends Component {
               <View style={[styles.Border]}></View>
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate('');
+                  this.props.navigation.navigate('HelpFeedbackScreen');
                 }}>
                 <View style={styles.itemContainer}>
                   <Image
@@ -174,5 +174,34 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 5,
     color: '#808080',
+  },
+  topheader: {
+    height: 150,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    position: 'absolute',
+    top: 0,
+    backgroundColor: '#129cd8',
+    width: 420,
+  },
+  gear: {
+    width: 120,
+    height: 120,
+  },
+  titlesetting: {
+    fontSize: 25,
+    color: '#ffffff',
+    top: 20,
+    left: 20,
+    position: 'absolute',
+    textAlign: 'justify',
+    borderStyle: 'solid',
+  },
+  icontop: {
+    zIndex: 10,
+    width: 150,
+    top: 20,
+    right: 50,
+    position: 'absolute',
   },
 });

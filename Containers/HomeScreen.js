@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import Config from 'react-native-config';
-
+import AsyncStorage from '@react-native-community/async-storage';
+import Carousel from 'react-native-banner-carousel';
 import {
   StyleSheet,
   Image,
@@ -13,13 +14,22 @@ import {
 } from 'react-native';
 
 import Article from '../Components/Articles/Article';
+const BannerWidth = Dimensions.get('window').width;
+const BannerHeight = 260;
 
+const images = [
+  'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
+  'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
+  'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
+];
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       articles: [],
       refreshing: true,
+      token: '',
+      banner: [],
     };
 
     this.fetchArticles = this.fetchArticles.bind(this);
@@ -27,8 +37,9 @@ export default class HomeScreen extends Component {
     this.renderSeparator = this.renderSeparator.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.fetchArticles();
+    this.fetchBanner();
   }
 
   onAlert = (title, message) => {
@@ -36,7 +47,28 @@ export default class HomeScreen extends Component {
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
-
+  async fetchBanner() {
+    try {
+      let response = await axios.get(`${Config.API_URL}/banner`, {
+        headers: {
+          token: await AsyncStorage.getItem('@userAuth'),
+        },
+      });
+      const banner = response.data.data;
+      console.log('banners', banner.banners);
+      this.setState({banner: banner.banners, refreshing: false});
+    } catch (err) {
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Terjadi kesalahan pada server, silahkan refresh dan coba kembali.',
+      );
+      this.setState({
+        ...this.state.banner,
+        refreshing: false,
+      });
+      console.log('Terjadi kesalahan pada bagian HomeScreen', err);
+    }
+  }
   async fetchArticles() {
     try {
       const {data} = await axios.get(`${Config.API_URL}/article/list`);
@@ -82,18 +114,33 @@ export default class HomeScreen extends Component {
       />
     );
   };
-
+  renderPage(image, index) {
+    return (
+      <View key={index}>
+        <Image
+          style={{width: BannerWidth, height: BannerHeight}}
+          source={{uri: image}}
+        />
+      </View>
+    );
+  }
   render() {
     return (
       <View style={styles.container}>
-        <Image
-          style={[styles.headingImage]}
-          resizeMode="stretch"
-          source={{
-            uri:
-              'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
-          }}
-        />
+        <Carousel
+          autoplay
+          autoplayTimeout={5000}
+          loop
+          index={0}
+          pageSize={BannerWidth}>
+          {this.state.banner.map((bann, index) =>
+            this.renderPage(
+              'https://bieonbe.defuture.tech/' + bann.picture,
+              index,
+            ),
+          )}
+        </Carousel>
+
         <View style={styles.articleContainer}>
           <Text style={styles.homeScreenTitle}>Headline</Text>
           <FlatList

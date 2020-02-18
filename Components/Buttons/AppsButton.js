@@ -23,12 +23,15 @@ const buttonStyle = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 15,
     height: 'auto',
-    padding: 15,
-    width: 200,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingRight: '25%',
+    paddingLeft: '25%',
+    width: '100%',
   },
 
   textbutton: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: '700',
     textAlign: 'center',
   },

@@ -9,12 +9,66 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Button,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import {Dropdown} from 'react-native-material-dropdown';
-
+import axios from 'axios';
+import Config from 'react-native-config';
+import AsyncStorage from '@react-native-community/async-storage';
+import ImagePicker from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 export default class EditProfileScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      articles: [],
+      refreshing: true,
+      token: '',
+      banner: [],
+      currentUser: [],
+      gender: 0,
+    };
+  }
+  async componentDidMount() {
+    this.setState({
+      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
+    });
+    console.log('user', this.state.currentUser);
+    if (this.state.currentUser.gender === 0) {
+      this.setState({gender: 'Female'});
+    } else {
+      this.setState({gender: 'Male'});
+    }
+  }
+  changeLogo = () => {
+    console.log('click');
+    const options = {
+      noData: true,
+    };
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.uri) {
+        // this.setState({photo: response});
+        console.log('respo', response);
+        axios
+          .post(
+            'http://bieonbe.defuture.tech/upload-image/user',
+            response.uri,
+            {
+              headers: {'content-type': 'multipart/form-data'},
+            },
+          )
+          .then(response2 => {
+            console.log('lol', response2.data.data);
+            // this.setState({picture: response.data.data});
+          })
+          .catch(function(error) {
+            console.log('er', error);
+          });
+      }
+    });
+  };
   render() {
     let data = [
       {
@@ -31,10 +85,22 @@ export default class EditProfileScreen extends Component {
           <View style={styles.container}>
             <Image
               style={styles.avatarImage}
-              source={require('../assets/icons/editprofile/UserIcon.png')}
+              source={{
+                uri:
+                  'http://bieonbe.defuture.tech/' +
+                  this.state.currentUser.picture_user,
+              }}
             />
-            <Text style={[styles.textTitle]}>Guntur Putra</Text>
-            <View style={styles.itemContainer}>
+            <Icon
+              name="user-edit"
+              style={styles.userEdit}
+              onPress={() => this.changeLogo()}
+            />
+            {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
+            <Text style={[styles.textTitle]}>
+              {this.state.currentUser.fullname}
+            </Text>
+            {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -43,9 +109,12 @@ export default class EditProfileScreen extends Component {
                 <Col>
                   <Text style={styles.text}>Identity Number</Text>
                   <TextInput
+                    editable={false}
                     style={[styles.TextInput]}
                     placeholder="Identity Number"
-                    underlineColorAndroid={'transparent'}></TextInput>
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.currentUser.nik}
+                  </TextInput>
                 </Col>
               </Row>
             </View>
@@ -58,12 +127,13 @@ export default class EditProfileScreen extends Component {
                 <Col>
                   <Text style={styles.text}>Address</Text>
                   <TextInput
+                    editable={false}
                     style={[styles.TextInput]}
                     placeholder="Address"
                     underlineColorAndroid={'transparent'}></TextInput>
                 </Col>
               </Row>
-            </View>
+            </View> */}
             <View style={styles.itemContainer}>
               <Row>
                 <Image
@@ -76,7 +146,9 @@ export default class EditProfileScreen extends Component {
                     editable={false}
                     style={[styles.TextInput]}
                     placeholder="Email"
-                    underlineColorAndroid={'transparent'}></TextInput>
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.currentUser.email}
+                  </TextInput>
                 </Col>
               </Row>
             </View>
@@ -89,13 +161,34 @@ export default class EditProfileScreen extends Component {
                 <Col>
                   <Text style={styles.text}>Phone Number</Text>
                   <TextInput
+                    editable={false}
                     style={[styles.TextInput]}
                     placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}></TextInput>
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.currentUser.phone_number}
+                  </TextInput>
                 </Col>
               </Row>
             </View>
             <View style={styles.itemContainer}>
+              <Row>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/gender.png')}
+                />
+                <Col>
+                  <Text style={styles.text}>Gender</Text>
+                  <TextInput
+                    editable={false}
+                    style={[styles.TextInput]}
+                    placeholder="Phone Number"
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.gender}
+                  </TextInput>
+                </Col>
+              </Row>
+            </View>
+            {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -114,7 +207,7 @@ export default class EditProfileScreen extends Component {
                     placeholder="Gender"></Dropdown>
                 </Col>
               </Row>
-            </View>
+            </View> */}
             <View style={styles.itemContainer}>
               <Row>
                 <Image
@@ -127,7 +220,9 @@ export default class EditProfileScreen extends Component {
                     editable={false}
                     style={[styles.TextInput]}
                     placeholder="Position"
-                    underlineColorAndroid={'transparent'}></TextInput>
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.currentUser.position}
+                  </TextInput>
                 </Col>
               </Row>
             </View>
@@ -143,15 +238,17 @@ export default class EditProfileScreen extends Component {
                     editable={false}
                     style={[styles.TextInput]}
                     placeholder="Company/Institution"
-                    underlineColorAndroid={'transparent'}></TextInput>
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.currentUser.email}
+                  </TextInput>
                 </Col>
               </Row>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[styles.button]}
               onPress={() => navigate('EditProfileScreen')}>
               <Text style={[styles.textbutton]}>SAVE</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </Row>
       </Grid>
@@ -172,7 +269,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     alignSelf: 'stretch',
     width: 320,
-    height: 40,
+    height: 50,
     marginBottom: -10,
     color: '#000',
     borderBottomColor: '#000',
@@ -220,24 +317,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   avatarImage: {
-    borderRadius: 400,
+    borderRadius: 600,
     resizeMode: 'contain',
     width: 110,
-    height: 180,
-  },
-  textTitle: {
-    margin: 10,
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 17,
-    marginTop: 15,
-    marginBottom: 20,
-  },
-  avatarImage: {
-    borderRadius: 400,
-    resizeMode: 'contain',
-    width: 110,
-    height: 120,
+    height: 110,
     marginTop: -20,
   },
   textTitle: {
@@ -263,5 +346,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 5,
     color: '#808080',
+  },
+  userEdit: {
+    fontSize: 20,
+    top: -20,
+    right: -60,
+    color: '#129cd8',
+    zIndex: 15,
   },
 });

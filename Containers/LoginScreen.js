@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -37,8 +38,10 @@ class LoginScreen extends Component {
     const {navigate} = this.props.navigation;
 
     try {
+      console.log('data:', data);
+      console.log('token:', token);
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
-      await AsyncStorage.setItem('@userAuth', JSON.stringify(token));
+      await AsyncStorage.setItem('@userAuth', token);
 
       navigate('HomeScreen');
     } catch (err) {
@@ -115,9 +118,8 @@ class LoginScreen extends Component {
                 value={this.state.email}
                 underlineColorAndroid="transparent"
                 placeholder={'Email'}
-                onChangeText={email =>
-                  this.setState({email: email})
-                }></TextInput>
+                onChangeText={email => this.setState({email: email})}
+              />
             </View>
             <View style={styles.inputTextContainer}>
               <Image
@@ -130,9 +132,8 @@ class LoginScreen extends Component {
                 value={this.state.password}
                 underlineColorAndroid={'transparent'}
                 placeholder={'Password'}
-                onChangeText={password =>
-                  this.setState({password: password})
-                }></TextInput>
+                onChangeText={password => this.setState({password: password})}
+              />
             </View>
             <AppsButton
               action={this.onPressLogin}

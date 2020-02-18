@@ -291,7 +291,7 @@ export default class SelectedDeviceScreen extends Component {
 
       console.log('connect' + connected.address);
 
-      if (connected.address != '') {
+      if (connected.address !== '') {
         alert(`Connected to device ${connected.name}<${connected.id}>`);
         if (connected.name === 'idPrint') {
           this.props.navigation.navigate('TableDataScreen', {
@@ -373,6 +373,7 @@ export default class SelectedDeviceScreen extends Component {
   writePackets = async (id, message, packetSize = 64) => {
     try {
       const device = BluetoothSerial.device(id);
+      // eslint-disable-next-line no-undef
       const toWrite = iconv.encode(message, 'cp852');
       const writePromises = [];
       const packetCount = Math.ceil(toWrite.length / packetSize);
@@ -400,7 +401,8 @@ export default class SelectedDeviceScreen extends Component {
             <View style={[styles.button]}>
               <Image
                 style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
+                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+              />
             </View>
             <View style={[styles.buttonGoogle]}>
               <Col
@@ -418,7 +420,7 @@ export default class SelectedDeviceScreen extends Component {
                   <View>
                     {this.state.devices.map((val, i) => (
                       <View>
-                        <View style={[styles.BorderTop]}></View>
+                        <View style={[styles.BorderTop]} />
                         <TouchableOpacity
                           onPress={() => this.connect(val.address)}>
                           <View style={styles.itemContainer}>
@@ -451,6 +453,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    // eslint-disable-next-line no-dupe-keys
     backgroundColor: '#f3f3f3',
   },
   logo: {
@@ -468,6 +471,8 @@ const styles = StyleSheet.create({
     marginTop: 15,
     margin: 15,
     textAlign: 'justify',
+    // eslint-disable-next-line no-dupe-keys
+    color: '#000',
     fontWeight: '600',
   },
   itemMenuImage: {

@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* BieonAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BieonAppTests.m */; };
-		05AEAE9E67F4B4E895FE6863 /* libPods-BieonApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BF37319AA206494FFB40F1D /* libPods-BieonApp.a */; };
+		00E356F31AD99517003FC87E /* BieonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BieonTests.m */; };
+		05AEAE9E67F4B4E895FE6863 /* libPods-Bieon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BF37319AA206494FFB40F1D /* libPods-Bieon.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -16,10 +16,10 @@
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2DCD954D1E0B4F2C00145EB5 /* BieonAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BieonAppTests.m */; };
-		4D736D2CE86EBD8BD09932DD /* libPods-BieonApp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF5DF288B9B972FBFB8CF5 /* libPods-BieonApp-tvOSTests.a */; };
-		681041207C6E5366BF1A3D46 /* libPods-BieonApp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A43D4D536F72602533DDC721 /* libPods-BieonApp-tvOS.a */; };
-		BCAD086471CADFE1BDA25097 /* libPods-BieonAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D755311E9F5D8ED7CA237C0 /* libPods-BieonAppTests.a */; };
+		2DCD954D1E0B4F2C00145EB5 /* BieonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BieonTests.m */; };
+		4D736D2CE86EBD8BD09932DD /* libPods-Bieon-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5FF5DF288B9B972FBFB8CF5 /* libPods-Bieon-tvOSTests.a */; };
+		681041207C6E5366BF1A3D46 /* libPods-Bieon-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A43D4D536F72602533DDC721 /* libPods-Bieon-tvOS.a */; };
+		BCAD086471CADFE1BDA25097 /* libPods-BieonTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D755311E9F5D8ED7CA237C0 /* libPods-BieonTests.a */; };
 		7FB40FC8F0F74F06B0C89CE1 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8616EAC9529442092C3862C /* AntDesign.ttf */; };
 		E032145E3FC84AAE9214CEFD /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 944C4846226E4E83A2E78BDD /* Entypo.ttf */; };
 		F49EA147D802423FA4CFC6F1 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8607B5EA9C604362B584EA5A /* EvilIcons.ttf */; };
@@ -46,43 +46,43 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = BieonApp;
+			remoteInfo = Bieon;
 		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "BieonApp-tvOS";
+			remoteInfo = "Bieon-tvOS";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* BieonAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BieonAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* BieonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BieonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* BieonAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BieonAppTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* BieonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BieonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = BieonApp/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = BieonApp/AppDelegate.m; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* BieonTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BieonTests.m; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Bieon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bieon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Bieon/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Bieon/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = BieonApp/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = BieonApp/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = BieonApp/main.m; sourceTree = "<group>"; };
-		1D9770BE8CE0AEC023F0391B /* Pods-BieonAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonAppTests.debug.xcconfig"; path = "Target Support Files/Pods-BieonAppTests/Pods-BieonAppTests.debug.xcconfig"; sourceTree = "<group>"; };
-		1EB13B669EA1F3C9A024718B /* Pods-BieonApp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonApp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-BieonApp-tvOSTests/Pods-BieonApp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* BieonApp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BieonApp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* BieonApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BieonApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3BF37319AA206494FFB40F1D /* libPods-BieonApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BieonApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D755311E9F5D8ED7CA237C0 /* libPods-BieonAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BieonAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B0A0A5BB4E3AF177EEB4537 /* Pods-BieonApp-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonApp-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-BieonApp-tvOSTests/Pods-BieonApp-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		51008496D28576709BE5C864 /* Pods-BieonApp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonApp-tvOS.release.xcconfig"; path = "Target Support Files/Pods-BieonApp-tvOS/Pods-BieonApp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		528258C1C2DA1EE919779E9D /* Pods-BieonApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonApp.release.xcconfig"; path = "Target Support Files/Pods-BieonApp/Pods-BieonApp.release.xcconfig"; sourceTree = "<group>"; };
-		7C4743077F4DCBEE427966AC /* Pods-BieonApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonApp.debug.xcconfig"; path = "Target Support Files/Pods-BieonApp/Pods-BieonApp.debug.xcconfig"; sourceTree = "<group>"; };
-		8F40C01B2A7427ECDFA30477 /* Pods-BieonApp-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonApp-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-BieonApp-tvOS/Pods-BieonApp-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		9D661992E7D73FA6E70DD704 /* Pods-BieonAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonAppTests.release.xcconfig"; path = "Target Support Files/Pods-BieonAppTests/Pods-BieonAppTests.release.xcconfig"; sourceTree = "<group>"; };
-		A43D4D536F72602533DDC721 /* libPods-BieonApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BieonApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		D5FF5DF288B9B972FBFB8CF5 /* libPods-BieonApp-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BieonApp-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Bieon/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Bieon/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Bieon/main.m; sourceTree = "<group>"; };
+		1D9770BE8CE0AEC023F0391B /* Pods-BieonTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonTests.debug.xcconfig"; path = "Target Support Files/Pods-BieonTests/Pods-BieonTests.debug.xcconfig"; sourceTree = "<group>"; };
+		1EB13B669EA1F3C9A024718B /* Pods-Bieon-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bieon-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Bieon-tvOSTests/Pods-Bieon-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		2D02E47B1E0B4A5D006451C7 /* Bieon-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bieon-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* Bieon-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Bieon-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BF37319AA206494FFB40F1D /* libPods-Bieon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bieon.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D755311E9F5D8ED7CA237C0 /* libPods-BieonTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BieonTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B0A0A5BB4E3AF177EEB4537 /* Pods-Bieon-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bieon-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Bieon-tvOSTests/Pods-Bieon-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		51008496D28576709BE5C864 /* Pods-Bieon-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bieon-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Bieon-tvOS/Pods-Bieon-tvOS.release.xcconfig"; sourceTree = "<group>"; };
+		528258C1C2DA1EE919779E9D /* Pods-Bieon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bieon.release.xcconfig"; path = "Target Support Files/Pods-Bieon/Pods-Bieon.release.xcconfig"; sourceTree = "<group>"; };
+		7C4743077F4DCBEE427966AC /* Pods-Bieon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bieon.debug.xcconfig"; path = "Target Support Files/Pods-Bieon/Pods-Bieon.debug.xcconfig"; sourceTree = "<group>"; };
+		8F40C01B2A7427ECDFA30477 /* Pods-Bieon-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bieon-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Bieon-tvOS/Pods-Bieon-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		9D661992E7D73FA6E70DD704 /* Pods-BieonTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BieonTests.release.xcconfig"; path = "Target Support Files/Pods-BieonTests/Pods-BieonTests.release.xcconfig"; sourceTree = "<group>"; };
+		A43D4D536F72602533DDC721 /* libPods-Bieon-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bieon-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5FF5DF288B9B972FBFB8CF5 /* libPods-Bieon-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bieon-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		E8616EAC9529442092C3862C /* AntDesign.ttf */ = {isa = PBXFileReference; name = "AntDesign.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
@@ -112,7 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCAD086471CADFE1BDA25097 /* libPods-BieonAppTests.a in Frameworks */,
+				BCAD086471CADFE1BDA25097 /* libPods-BieonTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +120,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05AEAE9E67F4B4E895FE6863 /* libPods-BieonApp.a in Frameworks */,
+				05AEAE9E67F4B4E895FE6863 /* libPods-Bieon.a in Frameworks */,
 				7F223C4327FA432EBF792A2C /* libRCTBluetoothSerial.a in Frameworks */,
 				365EAF5A36054F2B982431E8 /* libRNBluetoothEscposPrinter.a in Frameworks */,
 			);
@@ -130,7 +130,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				681041207C6E5366BF1A3D46 /* libPods-BieonApp-tvOS.a in Frameworks */,
+				681041207C6E5366BF1A3D46 /* libPods-Bieon-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,20 +138,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D736D2CE86EBD8BD09932DD /* libPods-BieonApp-tvOSTests.a in Frameworks */,
+				4D736D2CE86EBD8BD09932DD /* libPods-Bieon-tvOSTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* BieonAppTests */ = {
+		00E356EF1AD99517003FC87E /* BieonTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* BieonAppTests.m */,
+				00E356F21AD99517003FC87E /* BieonTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = BieonAppTests;
+			path = BieonTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -162,7 +162,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* BieonApp */ = {
+		13B07FAE1A68108700A75B9A /* Bieon */ = {
 			isa = PBXGroup;
 			children = (
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -173,7 +173,7 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = BieonApp;
+			name = Bieon;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -181,10 +181,10 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				3BF37319AA206494FFB40F1D /* libPods-BieonApp.a */,
-				A43D4D536F72602533DDC721 /* libPods-BieonApp-tvOS.a */,
-				D5FF5DF288B9B972FBFB8CF5 /* libPods-BieonApp-tvOSTests.a */,
-				3D755311E9F5D8ED7CA237C0 /* libPods-BieonAppTests.a */,
+				3BF37319AA206494FFB40F1D /* libPods-Bieon.a */,
+				A43D4D536F72602533DDC721 /* libPods-Bieon-tvOS.a */,
+				D5FF5DF288B9B972FBFB8CF5 /* libPods-Bieon-tvOSTests.a */,
+				3D755311E9F5D8ED7CA237C0 /* libPods-BieonTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -192,14 +192,14 @@
 		7719937E0308BC3D1CE50B68 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				7C4743077F4DCBEE427966AC /* Pods-BieonApp.debug.xcconfig */,
-				528258C1C2DA1EE919779E9D /* Pods-BieonApp.release.xcconfig */,
-				8F40C01B2A7427ECDFA30477 /* Pods-BieonApp-tvOS.debug.xcconfig */,
-				51008496D28576709BE5C864 /* Pods-BieonApp-tvOS.release.xcconfig */,
-				4B0A0A5BB4E3AF177EEB4537 /* Pods-BieonApp-tvOSTests.debug.xcconfig */,
-				1EB13B669EA1F3C9A024718B /* Pods-BieonApp-tvOSTests.release.xcconfig */,
-				1D9770BE8CE0AEC023F0391B /* Pods-BieonAppTests.debug.xcconfig */,
-				9D661992E7D73FA6E70DD704 /* Pods-BieonAppTests.release.xcconfig */,
+				7C4743077F4DCBEE427966AC /* Pods-Bieon.debug.xcconfig */,
+				528258C1C2DA1EE919779E9D /* Pods-Bieon.release.xcconfig */,
+				8F40C01B2A7427ECDFA30477 /* Pods-Bieon-tvOS.debug.xcconfig */,
+				51008496D28576709BE5C864 /* Pods-Bieon-tvOS.release.xcconfig */,
+				4B0A0A5BB4E3AF177EEB4537 /* Pods-Bieon-tvOSTests.debug.xcconfig */,
+				1EB13B669EA1F3C9A024718B /* Pods-Bieon-tvOSTests.release.xcconfig */,
+				1D9770BE8CE0AEC023F0391B /* Pods-BieonTests.debug.xcconfig */,
+				9D661992E7D73FA6E70DD704 /* Pods-BieonTests.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -217,9 +217,9 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* BieonApp */,
+				13B07FAE1A68108700A75B9A /* Bieon */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* BieonAppTests */,
+				00E356EF1AD99517003FC87E /* BieonTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				7719937E0308BC3D1CE50B68 /* Pods */,
@@ -233,10 +233,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* BieonApp.app */,
-				00E356EE1AD99517003FC87E /* BieonAppTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* BieonApp-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* BieonApp-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* Bieon.app */,
+				00E356EE1AD99517003FC87E /* BieonTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* Bieon-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* Bieon-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -268,9 +268,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* BieonAppTests */ = {
+		00E356ED1AD99517003FC87E /* BieonTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BieonAppTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BieonTests" */;
 			buildPhases = (
 				74ACE179AB272C853FD9DBD1 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -282,14 +282,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = BieonAppTests;
-			productName = BieonAppTests;
-			productReference = 00E356EE1AD99517003FC87E /* BieonAppTests.xctest */;
+			name = BieonTests;
+			productName = BieonTests;
+			productReference = 00E356EE1AD99517003FC87E /* BieonTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* BieonApp */ = {
+		13B07F861A680F5B00A75B9A /* Bieon */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BieonApp" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Bieon" */;
 			buildPhases = (
 				6664CED2FFAE06E8CA714136 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -302,14 +302,14 @@
 			);
 			dependencies = (
 			);
-			name = BieonApp;
-			productName = BieonApp;
-			productReference = 13B07F961A680F5B00A75B9A /* BieonApp.app */;
+			name = Bieon;
+			productName = Bieon;
+			productReference = 13B07F961A680F5B00A75B9A /* Bieon.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* BieonApp-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* Bieon-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "BieonApp-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Bieon-tvOS" */;
 			buildPhases = (
 				70EF0143A539C2622E28A58E /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
@@ -322,14 +322,14 @@
 			);
 			dependencies = (
 			);
-			name = "BieonApp-tvOS";
-			productName = "BieonApp-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* BieonApp-tvOS.app */;
+			name = "Bieon-tvOS";
+			productName = "Bieon-tvOS";
+			productReference = 2D02E47B1E0B4A5D006451C7 /* Bieon-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* BieonApp-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* Bieon-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "BieonApp-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Bieon-tvOSTests" */;
 			buildPhases = (
 				B8BA68EC76973626C9AAAB87 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -341,9 +341,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "BieonApp-tvOSTests";
-			productName = "BieonApp-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* BieonApp-tvOSTests.xctest */;
+			name = "Bieon-tvOSTests";
+			productName = "Bieon-tvOSTests";
+			productReference = 2D02E4901E0B4A5D006451C7 /* Bieon-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -370,7 +370,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BieonApp" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Bieon" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -383,10 +383,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* BieonApp */,
-				00E356ED1AD99517003FC87E /* BieonAppTests */,
-				2D02E47A1E0B4A5D006451C7 /* BieonApp-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* BieonApp-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* Bieon */,
+				00E356ED1AD99517003FC87E /* BieonTests */,
+				2D02E47A1E0B4A5D006451C7 /* Bieon-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* Bieon-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -485,7 +485,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BieonApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Bieon-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -507,7 +507,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BieonApp-tvOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Bieon-tvOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -529,7 +529,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BieonAppTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-BieonTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -551,7 +551,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-BieonApp-tvOSTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Bieon-tvOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -603,7 +603,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* BieonAppTests.m in Sources */,
+				00E356F31AD99517003FC87E /* BieonTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -629,7 +629,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DCD954D1E0B4F2C00145EB5 /* BieonAppTests.m in Sources */,
+				2DCD954D1E0B4F2C00145EB5 /* BieonTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -638,12 +638,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* BieonApp */;
+			target = 13B07F861A680F5B00A75B9A /* Bieon */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* BieonApp-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* Bieon-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -655,7 +655,7 @@
 				13B07FB21A68108700A75B9A /* Base */,
 			);
 			name = LaunchScreen.xib;
-			path = BieonApp;
+			path = Bieon;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -663,14 +663,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1D9770BE8CE0AEC023F0391B /* Pods-BieonAppTests.debug.xcconfig */;
+			baseConfigurationReference = 1D9770BE8CE0AEC023F0391B /* Pods-BieonTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = BieonAppTests/Info.plist;
+				INFOPLIST_FILE = BieonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -680,7 +680,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BieonApp.app/BieonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bieon.app/Bieon";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -696,11 +696,11 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D661992E7D73FA6E70DD704 /* Pods-BieonAppTests.release.xcconfig */;
+			baseConfigurationReference = 9D661992E7D73FA6E70DD704 /* Pods-BieonTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = BieonAppTests/Info.plist;
+				INFOPLIST_FILE = BieonTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -710,7 +710,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BieonApp.app/BieonApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bieon.app/Bieon";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -726,12 +726,12 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C4743077F4DCBEE427966AC /* Pods-BieonApp.debug.xcconfig */;
+			baseConfigurationReference = 7C4743077F4DCBEE427966AC /* Pods-Bieon.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				INFOPLIST_FILE = BieonApp/Info.plist;
+				INFOPLIST_FILE = Bieon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -739,7 +739,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = BieonApp;
+				PRODUCT_NAME = Bieon;
 				VERSIONING_SYSTEM = "apple-generic";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -751,11 +751,11 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 528258C1C2DA1EE919779E9D /* Pods-BieonApp.release.xcconfig */;
+			baseConfigurationReference = 528258C1C2DA1EE919779E9D /* Pods-Bieon.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = BieonApp/Info.plist;
+				INFOPLIST_FILE = Bieon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -763,7 +763,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = BieonApp;
+				PRODUCT_NAME = Bieon;
 				VERSIONING_SYSTEM = "apple-generic";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -775,7 +775,7 @@
 		};
 		2D02E4971E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8F40C01B2A7427ECDFA30477 /* Pods-BieonApp-tvOS.debug.xcconfig */;
+			baseConfigurationReference = 8F40C01B2A7427ECDFA30477 /* Pods-Bieon-tvOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -786,14 +786,14 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "BieonApp-tvOS/Info.plist";
+				INFOPLIST_FILE = "Bieon-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.BieonApp-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Bieon-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -813,7 +813,7 @@
 		};
 		2D02E4981E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 51008496D28576709BE5C864 /* Pods-BieonApp-tvOS.release.xcconfig */;
+			baseConfigurationReference = 51008496D28576709BE5C864 /* Pods-Bieon-tvOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -824,14 +824,14 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "BieonApp-tvOS/Info.plist";
+				INFOPLIST_FILE = "Bieon-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.BieonApp-tvOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Bieon-tvOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -851,7 +851,7 @@
 		};
 		2D02E4991E0B4A5E006451C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4B0A0A5BB4E3AF177EEB4537 /* Pods-BieonApp-tvOSTests.debug.xcconfig */;
+			baseConfigurationReference = 4B0A0A5BB4E3AF177EEB4537 /* Pods-Bieon-tvOSTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -861,17 +861,17 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "BieonApp-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Bieon-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.BieonApp-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Bieon-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BieonApp-tvOS.app/BieonApp-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bieon-tvOS.app/Bieon-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -888,7 +888,7 @@
 		};
 		2D02E49A1E0B4A5E006451C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1EB13B669EA1F3C9A024718B /* Pods-BieonApp-tvOSTests.release.xcconfig */;
+			baseConfigurationReference = 1EB13B669EA1F3C9A024718B /* Pods-Bieon-tvOSTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NONNULL = YES;
@@ -898,17 +898,17 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "BieonApp-tvOSTests/Info.plist";
+				INFOPLIST_FILE = "Bieon-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.BieonApp-tvOSTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.Bieon-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BieonApp-tvOS.app/BieonApp-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bieon-tvOS.app/Bieon-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1025,7 +1025,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BieonAppTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BieonTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -1034,7 +1034,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BieonApp" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Bieon" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1043,7 +1043,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "BieonApp-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Bieon-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1052,7 +1052,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "BieonApp-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "Bieon-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1061,7 +1061,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "BieonApp" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Bieon" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
