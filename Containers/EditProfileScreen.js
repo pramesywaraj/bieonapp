@@ -11,9 +11,7 @@ import {
   KeyboardAvoidingView,
   Button,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import {Col, Row, Grid} from 'react-native-easy-grid';
-import {Dropdown} from 'react-native-material-dropdown';
 import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';

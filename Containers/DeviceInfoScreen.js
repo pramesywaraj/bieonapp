@@ -54,10 +54,10 @@ export default class DeviceInfoScreen extends Component {
         `${Config.API_URL}/device/device-edit`,
         {
           main_device_id: 1,
-          device_id: 'BIEON-01001',
-          counter: 1000,
+          device_id: this.state.device_id,
+          counter: this.state.content.count,
           company_id: 1,
-          status_battery: 33,
+          status_battery: parseInt(this.state.content.battery),
           last_calibration: '2020-12-02T23:00:00+07:00',
         },
         {
@@ -67,8 +67,8 @@ export default class DeviceInfoScreen extends Component {
           },
         },
       );
-      // this.onAlert('Berhasil', 'Anda berhasil menyimpan data.');
-      // navigate('ContainScreen');
+      this.onAlert('Berhasil', 'Anda berhasil menyimpan data.');
+      navigate('ContainScreen');
       console.log('what?', response.config.data);
     } catch (err) {
       this.onAlert(
@@ -169,12 +169,12 @@ export default class DeviceInfoScreen extends Component {
                   </TextInput>
                 </Col>
               </Row>
-              <TouchableOpacity
-                style={[styles.buttonsearchLeft]}
-                onPress={() => this.saveData()}>
-                <Text style={[styles.textbuttonsearch]}>Save</Text>
-              </TouchableOpacity>
             </View>
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => this.saveData()}>
+              <Text style={[styles.textbutton]}>SAVE</Text>
+            </TouchableOpacity>
           </View>
         </Row>
       </Grid>
@@ -185,6 +185,23 @@ export default class DeviceInfoScreen extends Component {
 const win = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  textbutton: {
+    fontSize: 20,
+    color: '#fff',
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  button: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderRadius: 40,
+    width: 200,
+    height: 50,
+    padding: 10,
+    backgroundColor: '#129cd8',
+    marginTop: 25,
+    color: '#ffffff',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

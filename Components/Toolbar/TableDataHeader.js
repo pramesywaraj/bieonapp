@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function TableDataHeader({
@@ -11,16 +11,22 @@ export default function TableDataHeader({
   return (
     <View style={styles.header}>
       <Text style={styles.deviceStatus}>
-        {!deviceName ? 'Disconnect' : this.state.name}
+        {!deviceName ? 'Disconnect' : deviceName}
       </Text>
       <TouchableOpacity style={styles.filterButton} onPress={onFilterModal}>
         <Icon name="filter" color="white" size={20} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.bluetoothButton} onPress={onScan}>
         {isConnected ? (
-          <Icon name="bluetooth" color="#129cd8" size={25} />
+          <Image
+            style={[styles.logo]}
+            source={require('../../assets/icons/retrievedata/bluetoothblue.png')}
+          />
         ) : (
-          <Icon name="bluetooth" color="#9c9c9c" size={25} />
+          <Image
+            style={[styles.logo]}
+            source={require('../../assets/icons/retrievedata/bluetoothgray.png')}
+          />
         )}
       </TouchableOpacity>
     </View>
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   bluetoothButton: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     padding: '2%',
     borderRadius: 20,
   },
@@ -51,5 +57,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     padding: '2%',
     marginRight: '5%',
+  },
+  logo: {
+    width: 35,
+    height: 35,
   },
 });
