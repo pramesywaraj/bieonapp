@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
-import DropDownItem from 'react-native-drop-down-item';
+// import DropDownItem from 'react-native-drop-down-item';
+import Accordion from '@dooboo-ui/native-accordion';
 export default class HelpFeedbackScreen extends Component {
   constructor(props) {
     super(props);
@@ -126,7 +127,7 @@ export default class HelpFeedbackScreen extends Component {
               {this.state.contents
                 ? this.state.contents.map((param, i) => {
                     return (
-                      <DropDownItem
+                      <Accordion
                         key={i}
                         style={styles.dropDownItem}
                         contentVisible={false}
@@ -137,7 +138,7 @@ export default class HelpFeedbackScreen extends Component {
                             <Text
                               style={{
                                 fontSize: 18,
-                                color: 'black',
+                                color: '#129cd8',
                                 fontWeight: 'bold',
                               }}>
                               {param.title}
@@ -153,7 +154,7 @@ export default class HelpFeedbackScreen extends Component {
                           ]}>
                           {param.body}
                         </Text>
-                      </DropDownItem>
+                      </Accordion>
                     );
                   })
                 : null}

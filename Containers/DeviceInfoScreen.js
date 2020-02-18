@@ -8,9 +8,13 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import Geolocation from 'react-native-geolocation-service';
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
+import Config from 'react-native-config';
 
 import {Col, Row, Grid} from 'react-native-easy-grid';
 
@@ -35,8 +39,44 @@ export default class DeviceInfoScreen extends Component {
         // See error code charts below.
         console.log(error.code, error.message);
       },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      {enableHighAccuracy: true, timeout: 1000, maximumAge: 10000},
     );
+  }
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+  async saveData() {
+    try {
+      const {navigate} = this.props.navigation;
+      let response = await axios.patch(
+        `${Config.API_URL}/device/device-edit`,
+        {
+          main_device_id: 1,
+          device_id: 'BIEON-01001',
+          counter: 1000,
+          company_id: 1,
+          status_battery: 33,
+          last_calibration: '2020-12-02T23:00:00+07:00',
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            token: await AsyncStorage.getItem('@userAuth'),
+          },
+        },
+      );
+      // this.onAlert('Berhasil', 'Anda berhasil menyimpan data.');
+      // navigate('ContainScreen');
+      console.log('what?', response.config.data);
+    } catch (err) {
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika menyimpan data, silahkan coba lagi.',
+      );
+      console.log('Terjadi kesalahan pada bagian konten', err);
+    }
   }
   render() {
     const {navigate} = this.props.navigation;
@@ -129,6 +169,11 @@ export default class DeviceInfoScreen extends Component {
                   </TextInput>
                 </Col>
               </Row>
+              <TouchableOpacity
+                style={[styles.buttonsearchLeft]}
+                onPress={() => this.saveData()}>
+                <Text style={[styles.textbuttonsearch]}>Save</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Row>

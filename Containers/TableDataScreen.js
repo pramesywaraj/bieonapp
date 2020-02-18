@@ -257,6 +257,7 @@ export default class HomeScreen extends Component {
       salts_b: [],
       printedSalt: [],
       operator: '',
+      name: '',
     };
 
     this.openModal = this.openModal.bind(this);
@@ -371,7 +372,7 @@ export default class HomeScreen extends Component {
     let userData = await AsyncStorage.getItem('@userData');
     let userToken = await AsyncStorage.getItem('@userAuth');
     userData = JSON.parse(userData);
-    userToken = JSON.parse(userToken);
+    userToken = userToken;
 
     try {
       const response = await axios.get(
