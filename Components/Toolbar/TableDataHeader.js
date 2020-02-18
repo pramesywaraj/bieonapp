@@ -18,15 +18,9 @@ export default function TableDataHeader({
       </TouchableOpacity>
       <TouchableOpacity style={styles.bluetoothButton} onPress={onScan}>
         {isConnected ? (
-          <Image
-            style={[styles.logo]}
-            source={require('../../assets/icons/retrievedata/bluetoothblue.png')}
-          />
+          <Icon name="bluetooth" color="#129cd8" size={25} />
         ) : (
-          <Image
-            style={[styles.logo]}
-            source={require('../../assets/icons/retrievedata/bluetoothgray.png')}
-          />
+          <Icon name="bluetooth" color="#9c9c9c" size={25} />
         )}
       </TouchableOpacity>
     </View>
@@ -57,9 +51,5 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     padding: '2%',
     marginRight: '5%',
-  },
-  logo: {
-    width: 35,
-    height: 35,
   },
 });
