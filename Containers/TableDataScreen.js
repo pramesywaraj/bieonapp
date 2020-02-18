@@ -236,9 +236,8 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: '2019-01-01',
-      isChecked: false,
       devices: null,
+      deviceName: '',
       pairedDs: [],
       foundDs: [],
       loading: false,
@@ -298,7 +297,7 @@ export default class HomeScreen extends Component {
           BluetoothManager.EVENT_CONNECTION_LOST,
           () => {
             this.setState({
-              name: '',
+              deviceName: '',
               boundAddress: '',
             });
           },
@@ -334,7 +333,7 @@ export default class HomeScreen extends Component {
           BluetoothManager.EVENT_CONNECTION_LOST,
           () => {
             this.setState({
-              name: '',
+              deviceName: '',
               boundAddress: '',
             });
           },
@@ -571,7 +570,7 @@ export default class HomeScreen extends Component {
         this.setState({
           loading: false,
           boundAddress: item.address,
-          name: item.name || 'UNKNOWN',
+          deviceName: item.name || 'UNKNOWN',
         });
       },
       e => {
@@ -626,7 +625,6 @@ export default class HomeScreen extends Component {
         ? this.state.salts_a
         : this.state.salts_b;
 
-
     arrayOfData = await arrayOfData.filter(
       item =>
         Date.parse(item.create_at) <= Date.parse(endDate) &&
@@ -667,7 +665,7 @@ export default class HomeScreen extends Component {
           />
           <LoadingModal visible={this.state.loading} />
           <TableDataHeader
-            deviceName={this.state.name}
+            deviceName={this.state.deviceName}
             onScan={this._scan}
             onFilterModal={this.handleFilterModal}
             isConnected={this.state.connected}
