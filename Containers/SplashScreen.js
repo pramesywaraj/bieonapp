@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     height: 140,
   },
   background: {
-    width: win.width,
+    width: '105%',
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',

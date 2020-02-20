@@ -587,7 +587,6 @@ export default class HomeScreen extends Component {
 
   async onPrint() {
     let operator = JSON.parse(await AsyncStorage.getItem('@userData')).fullname;
-    console.log('opreator', operator);
     let printedData = this.state.filter
       ? this.state.filteredData
       : this.state.selectedSaltType === 0
