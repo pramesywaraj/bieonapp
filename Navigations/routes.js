@@ -151,7 +151,7 @@ const AppNavigator = createBottomTabNavigator(
           </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
-          <Icon name="home" size={horizontal ? 20 : 25} color={tintColor} />
+          <Icon name="home" size={horizontal ? 15 : 20} color={tintColor} />
         ),
       },
     },
@@ -164,7 +164,7 @@ const AppNavigator = createBottomTabNavigator(
           </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
-          <Icon name="weight" size={horizontal ? 20 : 25} color={tintColor} />
+          <Icon name="weight" size={horizontal ? 15 : 20} color={tintColor} />
         ),
       },
     },
@@ -177,7 +177,7 @@ const AppNavigator = createBottomTabNavigator(
           </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
-          <Icon name="table" size={horizontal ? 20 : 25} color={tintColor} />
+          <Icon name="table" size={horizontal ? 15 : 20} color={tintColor} />
         ),
       },
     },
@@ -192,7 +192,7 @@ const AppNavigator = createBottomTabNavigator(
         tabBarIcon: ({horizontal, tintColor}) => (
           <Icon
             name="user"
-            size={horizontal ? 20 : 25}
+            size={horizontal ? 15 : 20}
             color={tintColor}
             solid
           />
@@ -210,7 +210,7 @@ const AppNavigator = createBottomTabNavigator(
         tabBarIcon: ({horizontal, tintColor}) => (
           <Icon
             name="cog"
-            size={horizontal ? 20 : 25}
+            size={horizontal ? 15 : 20}
             color={tintColor}
             solid
           />
@@ -222,6 +222,11 @@ const AppNavigator = createBottomTabNavigator(
     tabBarOptions: {
       activeTintColor: '#129cd8',
       inactiveTintColor: 'gray',
+      labelPosition: 'below-icon',
+      style: {
+        overflow: 'hidden',
+      },
+      allowFontScaling: true,
     },
   },
 );
@@ -241,8 +246,8 @@ const InitialNavigator = createSwitchNavigator(
 // Styling
 const tabStyle = StyleSheet.create({
   bottomTabLabel: {
-    fontSize: 12,
     textAlign: 'center',
+    fontSize: 12,
   },
 });
 
