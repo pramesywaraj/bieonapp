@@ -552,9 +552,7 @@ export default class HomeScreen extends Component {
       this.setState({
         loading: true,
       });
-
-      console.log(isBluetoothEnabled);
-
+      
       if (isBluetoothEnabled) {
         await scanDevices();
       } else {

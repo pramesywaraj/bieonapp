@@ -15,7 +15,7 @@ export default class RetrieveDataScreen extends Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <View>
+        <View style={styles.topSection}>
           <TouchableOpacity
             style={[styles.button]}
             onPress={() =>
@@ -26,22 +26,21 @@ export default class RetrieveDataScreen extends Component {
               source={require('../assets/icons/retrievedata/bluetoothgray.png')}
             />
           </TouchableOpacity>
-          <View style={[styles.buttonGoogle]}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Image
-                style={styles.itemGoogleImage}
-                source={require('../assets/icons/retrievedata/warning.png')}
-              />
-              <Text style={[styles.textbuttonGoogle]}>No Probe Connected</Text>
-            </View>
+        </View>
+        <View style={[styles.buttonGoogle]}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              style={styles.itemGoogleImage}
+              source={require('../assets/icons/retrievedata/warning.png')}
+            />
+            <Text style={[styles.textbuttonGoogle]}>No Probe Connected</Text>
           </View>
         </View>
         <View
-          size={1.5}
           style={{
             alignItems: 'center',
             justifyContent: 'center',
@@ -64,6 +63,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f3f3f3',
+  },
+  topSection: {
+    flexDirection: 'row',
   },
   logo: {
     width: 45,
