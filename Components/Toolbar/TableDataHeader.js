@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   bluetoothButton: {
-    backgroundColor: 'transparent',
-    padding: '2%',
+    backgroundColor: 'white',
+    padding: '1%',
     borderRadius: 20,
   },
   filterButton: {

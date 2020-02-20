@@ -553,6 +553,8 @@ export default class HomeScreen extends Component {
         loading: true,
       });
 
+      console.log(isBluetoothEnabled);
+
       if (isBluetoothEnabled) {
         await scanDevices();
       } else {
@@ -561,6 +563,10 @@ export default class HomeScreen extends Component {
       }
     } catch (err) {
       console.log(err);
+
+      this.setState({
+        loading: false,
+      });
     }
   }
 
