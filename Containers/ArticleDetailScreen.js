@@ -1,5 +1,12 @@
-import React, {Component} from 'react';
-import {StyleSheet, Image, Text, ScrollView, View} from 'react-native';
+import React from 'react';
+import {
+  StyleSheet,
+  Image,
+  Text,
+  ScrollView,
+  View,
+  Dimensions,
+} from 'react-native';
 import Config from 'react-native-config';
 import moment from 'moment';
 
@@ -10,7 +17,7 @@ export default function ArticleDetailScreen({navigation}) {
     <ScrollView style={styles.container}>
       <Image
         style={[styles.headingImage]}
-        resizeMode="stretch"
+        resizeMode="cover"
         source={{
           uri: `${Config.API_URL}/${article.picture}`,
         }}
@@ -26,20 +33,21 @@ export default function ArticleDetailScreen({navigation}) {
   );
 }
 
+const deviceWindow = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: '100%',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
     top: 0,
     width: '100%',
-    height: '30%',
+    minHeight: '30%',
   },
   articleContainer: {
-    height: '100%',
     width: '100%',
+    minHeight: deviceWindow.height / 2,
     backgroundColor: 'white',
     padding: '2%',
   },
