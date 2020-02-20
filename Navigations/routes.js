@@ -151,7 +151,7 @@ const AppNavigator = createBottomTabNavigator(
           </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
-          <Icon name="home" size={horizontal ? 15 : 20} color={tintColor} />
+          <Icon name="home" size={horizontal ? 20 : 25} color={tintColor} />
         ),
       },
     },
@@ -164,7 +164,7 @@ const AppNavigator = createBottomTabNavigator(
           </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
-          <Icon name="weight" size={horizontal ? 15 : 20} color={tintColor} />
+          <Icon name="weight" size={horizontal ? 20 : 25} color={tintColor} />
         ),
       },
     },
@@ -177,7 +177,7 @@ const AppNavigator = createBottomTabNavigator(
           </Text>
         ),
         tabBarIcon: ({horizontal, tintColor}) => (
-          <Icon name="table" size={horizontal ? 15 : 20} color={tintColor} />
+          <Icon name="table" size={horizontal ? 20 : 25} color={tintColor} />
         ),
       },
     },
@@ -192,7 +192,7 @@ const AppNavigator = createBottomTabNavigator(
         tabBarIcon: ({horizontal, tintColor}) => (
           <Icon
             name="user"
-            size={horizontal ? 15 : 20}
+            size={horizontal ? 20 : 25}
             color={tintColor}
             solid
           />
@@ -210,7 +210,7 @@ const AppNavigator = createBottomTabNavigator(
         tabBarIcon: ({horizontal, tintColor}) => (
           <Icon
             name="cog"
-            size={horizontal ? 15 : 20}
+            size={horizontal ? 20 : 25}
             color={tintColor}
             solid
           />
@@ -224,7 +224,14 @@ const AppNavigator = createBottomTabNavigator(
       inactiveTintColor: 'gray',
       labelPosition: 'below-icon',
       style: {
-        overflow: 'hidden',
+        borderTopColor: 'transparent',
+      },
+      tabStyle: {
+        width: '100%',
+        paddingBottom: '10%',
+      },
+      labelStyle: {
+        marginTop: -7,
       },
       allowFontScaling: true,
     },
@@ -243,11 +250,10 @@ const InitialNavigator = createSwitchNavigator(
   },
 );
 
-// Styling
 const tabStyle = StyleSheet.create({
   bottomTabLabel: {
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 8,
   },
 });
 
