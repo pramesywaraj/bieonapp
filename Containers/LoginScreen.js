@@ -100,7 +100,7 @@ class LoginScreen extends Component {
       <View style={styles.container}>
         <ImageBackground
           style={styles.background}
-          source={require('../assets/background/3.png')}>
+          source={require('../assets/background/background.png')}>
           <KeyboardAvoidingView
             behavior="padding"
             style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   },
   background: {
     resizeMode: 'contain',
-    width: '105%',
+    width: '100%',
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
