@@ -14,7 +14,7 @@ export default class PrivacyPolicyScreen extends Component {
       <View style={styles.container}>
         <View style={styles.topheader}>
           <Image
-            style={styles.gear}
+            style={styles.backgroundIcon}
             source={require('../assets/icons/setting/privacy-tr.png')}
           />
           <Text style={styles.titlesetting}>Privacy Policy</Text>
@@ -352,8 +352,6 @@ export default class PrivacyPolicyScreen extends Component {
   }
 }
 
-const win = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -374,7 +372,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#129cd8',
     width: '100%',
   },
-  gear: {
+  backgroundIcon: {
     width: 120,
     height: 120,
     position: 'relative',
