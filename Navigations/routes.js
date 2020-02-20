@@ -225,13 +225,19 @@ const AppNavigator = createBottomTabNavigator(
       labelPosition: 'below-icon',
       style: {
         borderTopColor: 'transparent',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
       },
       tabStyle: {
         width: '100%',
         paddingBottom: '10%',
-      },
-      labelStyle: {
-        marginTop: -7,
       },
       allowFontScaling: true,
     },
