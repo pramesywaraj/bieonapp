@@ -1,17 +1,6 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Image,
-  ImageBackground,
-  Text,
-  View,
-  Dimensions,
-  TextInput,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
-// import DropDownItem from 'react-native-drop-down-item';
+import {StyleSheet, Image, Text, View, ScrollView} from 'react-native';
+
 import Accordion from '@dooboo-ui/native-accordion';
 export default class HelpFeedbackScreen extends Component {
   constructor(props) {
@@ -106,105 +95,85 @@ export default class HelpFeedbackScreen extends Component {
     };
   }
   render() {
-    const {navigate} = this.props.navigation;
     return (
-      <Grid>
-        <Row size={13}>
-          <View style={styles.container}>
-            <View style={styles.topheader}>
-              <Image
-                style={styles.gear}
-                source={require('../assets/icons/setting/help-tr.png')}
-              />
-              <Text style={styles.titlesetting}>Help & Feedback</Text>
-              {/* <Image
-            style={styles.icontop}
-            source={require('../assets/logo/settingwhite.png')}
-          /> */}
-            </View>
-            <ScrollView
-              style={{alignSelf: 'stretch', marginTop: 180, marginLeft: 10}}>
-              {this.state.contents
-                ? this.state.contents.map((param, i) => {
-                    return (
-                      <Accordion
-                        key={i}
-                        style={styles.dropDownItem}
-                        contentVisible={false}
-                        invisibleImage={'x'}
-                        visibleImage={'-'}
-                        header={
-                          <View>
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                color: '#129cd8',
-                                fontWeight: 'bold',
-                              }}>
-                              {param.title}
-                            </Text>
-                          </View>
-                        }>
-                        <Text
-                          style={[
-                            styles.txt,
-                            {
-                              fontSize: 18,
-                            },
-                          ]}>
-                          {param.body}
-                        </Text>
-                      </Accordion>
-                    );
-                  })
-                : null}
-              <View style={{height: 96}} />
-            </ScrollView>
-          </View>
-        </Row>
-      </Grid>
+      <View style={styles.container}>
+        <View style={styles.topheader}>
+          <Image
+            style={styles.backgroundIcon}
+            source={require('../assets/icons/setting/help-tr.png')}
+          />
+          <Text style={styles.titlesetting}>Help & Feedback</Text>
+        </View>
+        <ScrollView style={styles.faqContainer}>
+          {this.state.contents
+            ? this.state.contents.map((param, i) => {
+                return (
+                  <Accordion
+                    key={i}
+                    contentVisible={false}
+                    invisibleImage={'x'}
+                    visibleImage={'-'}
+                    header={
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: '#129cd8',
+                          fontWeight: 'bold',
+                        }}>
+                        {param.title}
+                      </Text>
+                    }>
+                    <Text
+                      style={[
+                        styles.dropDownText,
+                        {
+                          fontSize: 15,
+                        },
+                      ]}>
+                      {param.body}
+                    </Text>
+                  </Accordion>
+                );
+              })
+            : null}
+          <View style={{height: 96}} />
+        </ScrollView>
+      </View>
     );
   }
 }
-
-const win = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
   },
-  logo: {
-    width: 360,
-    marginTop: 0,
-    marginBottom: 70,
+  faqContainer: {
+    padding: '5%',
+    height: '100%',
   },
-  Row: {
-    height: 40,
-    marginTop: -25,
+  dropDownItem: {
+    padding: 0,
+  },
+  dropDownText: {
+    paddingTop: 0,
   },
   topheader: {
-    height: 150,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-    position: 'absolute',
-    top: 0,
+    height: '20%',
     backgroundColor: '#129cd8',
-    width: 420,
+    width: '100%',
   },
-  gear: {
+  backgroundIcon: {
     width: 120,
     height: 120,
+    position: 'relative',
   },
   titlesetting: {
     fontSize: 25,
     color: '#ffffff',
-    top: 20,
-    left: 20,
+    left: '10%',
+    top: '18%',
     position: 'absolute',
-    textAlign: 'justify',
-    borderStyle: 'solid',
   },
 });
