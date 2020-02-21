@@ -314,6 +314,7 @@ export default class PopUpBluetoothScreen extends Component {
       }
     } catch (e) {
       alert(e.message);
+      console.log(e);
       this.setState({processing: false});
     }
   };

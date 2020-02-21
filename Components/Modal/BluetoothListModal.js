@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
   ScrollView,
   View,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 
 import Modal from 'react-native-modal';
