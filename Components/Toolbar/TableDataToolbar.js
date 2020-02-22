@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 export default function TableDataToolbar({onShare, onRefresh, onPrint}) {
   return (
     <View style={styles.toolbar}>
-      {/* <TouchableOpacity onPress={onShare}>
+      <TouchableOpacity onPress={onShare}>
         <Icon style={styles.icon} name="share-alt" />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       <TouchableOpacity onPress={onRefresh}>
         <Icon style={styles.icon} name="sync-alt" />
       </TouchableOpacity>

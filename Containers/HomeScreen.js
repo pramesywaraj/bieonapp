@@ -11,7 +11,9 @@ import {
   View,
   Dimensions,
   Alert,
+  PermissionsAndroid,
 } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 
 import Article from '../Components/Articles/Article';
 const BannerWidth = Dimensions.get('window').width;
@@ -34,6 +36,36 @@ export default class HomeScreen extends Component {
 
   async componentDidMount() {
     this.fetchData();
+    this.requestLocationPermission();
+    // Instead of navigator.geolocation, just use Geolocation.
+  }
+  async requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You have acces location');
+        Geolocation.getCurrentPosition(
+          position => {
+            console.log(position.coords);
+            AsyncStorage.setItem(
+              '@userCoordinate',
+              JSON.stringify(position.coords),
+            );
+          },
+          error => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+          },
+          {enableHighAccuracy: true},
+        );
+      } else {
+        console.log('Location permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   }
 
   onAlert = (title, message) => {
@@ -165,12 +197,12 @@ const styles = StyleSheet.create({
     height: '40%',
   },
   articleContainer: {
-    marginTop: '50%',
+    marginTop: '62%',
     position: 'absolute',
     height: '100%',
     width: '100%',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
     backgroundColor: 'white',
   },
   homeScreenTitle: {

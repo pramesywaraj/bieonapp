@@ -42,8 +42,11 @@ class LoginScreen extends Component {
       console.log('token:', token);
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
       await AsyncStorage.setItem('@userAuth', token);
-
-      navigate('HomeScreen');
+      if (data.role_user === 2) {
+        alert('Anda tidak dapat login dengan akun ini.');
+      } else {
+        navigate('HomeScreen');
+      }
     } catch (err) {
       console.log(err);
       this.onAlert(
