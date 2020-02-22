@@ -219,17 +219,19 @@ export default class RetrieveDataScreen extends Component {
     this.setState({
       loading: true,
     });
-    this.setState({modalVisible: false, connected: true});
     BluetoothManager.connect(item.address).then(
       s => {
         this.setState({
           loading: false,
+          modalVisible: false,
+          connected: true,
           boundAddress: item.address,
           deviceName: item.name || 'UNKNOWN',
         });
       },
       e => {
         this.setState({
+          modalVisible: false,
           loading: false,
         });
       },

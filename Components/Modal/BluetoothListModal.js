@@ -33,7 +33,8 @@ export default function BluetoothListModal({
       animationType="slide"
       transparent={true}
       isVisible={visible}
-      onRequestClose={onClose}>
+      onRequestClose={onClose}
+      onBackdropPress={onClose}>
       <View style={styles.modalLayout}>
         <Text style={styles.modalTitle}>Connect to A New Device</Text>
 
