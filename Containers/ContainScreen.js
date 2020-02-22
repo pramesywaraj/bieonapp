@@ -17,7 +17,9 @@ import {Col, Row, Grid} from 'react-native-easy-grid';
 import BluetoothSerial, {
   withSubscription,
 } from 'react-native-bluetooth-serial-next';
+import LoadingModal from '../Components/Modal/LoadingModal';
 import {Buffer} from 'buffer';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ContainScreen extends Component {
   constructor(props) {
@@ -30,6 +32,8 @@ export default class ContainScreen extends Component {
       scanning: false,
       processing: false,
       progressbar: false,
+      loading: false,
+      newObject: {},
     };
   }
 
@@ -356,57 +360,66 @@ export default class ContainScreen extends Component {
     }
   };
   write = async (id, message) => {
-    try {
-      // for data1
-      this.setState({progressbar: true});
-      if (message === 'Data1') {
-        BluetoothSerial.device(id).write(message);
-        let data = await BluetoothSerial.readFromDevice();
-        console.log('data ', data);
-        let objectBluetooth = JSON.parse(data);
-        const newObject = {
-          nacl: objectBluetooth.nacl,
-          battery: objectBluetooth.battery,
-          count: objectBluetooth.count,
-          no_seri: objectBluetooth.no_seri,
-          water_content: objectBluetooth.water_content,
-          whiteness: objectBluetooth.whiteness,
-        };
-        this.props.navigation.navigate('ContainDetailNaclScreen', {
-          contentBluetooth: JSON.stringify(newObject),
-        });
-        // for data2
-      } else if (message === 'Data2') {
-        BluetoothSerial.device(id).write(message);
-        let data = await BluetoothSerial.readFromDevice();
-        let objectBluetooth = JSON.parse(data);
-        console.log('objectBluetooth', objectBluetooth);
-        const newObject = {
-          iodium: objectBluetooth.iodium,
-          battery: objectBluetooth.battery,
-          count: objectBluetooth.count,
-          no_seri: objectBluetooth.no_seri,
-        };
-        this.props.navigation.navigate('ContainDetailIodiumScreen', {
-          contentBluetooth: JSON.stringify(newObject),
-        });
-      } else {
-        BluetoothSerial.device(id).write(message);
-        let data = await BluetoothSerial.readFromDevice();
-        let objectBluetooth = JSON.parse(data);
-        console.log('objectBluetooth', objectBluetooth);
-        const newObject = {
-          lastcal: objectBluetooth.lastcal,
-          battery: objectBluetooth.battery,
-          count: objectBluetooth.count,
-          no_seri: objectBluetooth.no_seri,
-        };
-        this.props.navigation.navigate('DeviceInfoScreen', {
-          contentBluetooth: JSON.stringify(newObject),
-        });
-      }
-    } catch (e) {
-      alert('Sedang mengambil data, silahkan klik 10 detik lagi.', e.message);
+    // try {
+    // for data1
+    console.log('mes', message);
+    this.setState({loading: true});
+    if (message === 'Data1') {
+      await BluetoothSerial.device(id).write(message);
+      await BluetoothSerial.readFromDevice().then(response => {
+        setTimeout(() => {
+          console.log('res', response);
+          let objectBluetooth = JSON.parse(response);
+          const newObject = {
+            nacl: objectBluetooth.nacl,
+            battery: objectBluetooth.battery,
+            count: objectBluetooth.count,
+            no_seri: objectBluetooth.no_seri,
+            water_content: objectBluetooth.water_content,
+            whiteness: objectBluetooth.whiteness,
+          };
+          this.props.navigation.navigate('ContainDetailNaclScreen', {
+            contentBluetooth: JSON.stringify(newObject),
+          });
+          this.setState({loading: false});
+        }, 11000);
+      });
+    } else if (message === 'Data2') {
+      BluetoothSerial.device(id).write(message);
+      BluetoothSerial.readFromDevice().then(response => {
+        setTimeout(() => {
+          console.log('res', response);
+          let objectBluetooth = JSON.parse(response);
+          const newObject = {
+            iodium: objectBluetooth.iodium,
+            battery: objectBluetooth.battery,
+            count: objectBluetooth.count,
+            no_seri: objectBluetooth.no_seri,
+          };
+          this.props.navigation.navigate('ContainDetailIodiumScreen', {
+            contentBluetooth: JSON.stringify(newObject),
+          });
+          this.setState({loading: false});
+        }, 11000);
+      });
+    } else {
+      BluetoothSerial.device(id).write(message);
+      BluetoothSerial.readFromDevice().then(response => {
+        setTimeout(() => {
+          console.log('res', response);
+          let objectBluetooth = JSON.parse(response);
+          const newObject = {
+            lastcal: objectBluetooth.lastcal,
+            battery: objectBluetooth.battery,
+            count: objectBluetooth.count,
+            no_seri: objectBluetooth.no_seri,
+          };
+          this.props.navigation.navigate('DeviceInfoScreen', {
+            contentBluetooth: JSON.stringify(newObject),
+          });
+          this.setState({loading: false});
+        }, 13000);
+      });
     }
   };
 
@@ -434,6 +447,7 @@ export default class ContainScreen extends Component {
     return (
       <Grid>
         <Row size={13}>
+          <LoadingModal visible={this.state.loading} />
           <View style={styles.container}>
             <View style={styles.itemContainer}>
               <Image

@@ -39,7 +39,26 @@ export default class EditProfileScreen extends Component {
     } else {
       this.setState({gender: 'Male'});
     }
+    this.getCompanyDetail();
   }
+  async getCompanyDetail() {
+    try {
+      let response = await axios.get(
+        `${Config.API_URL}/company/detail/` + this.state.currentUser.company_id,
+        {
+          headers: {
+            token: await AsyncStorage.getItem('@userAuth'),
+          },
+        },
+      );
+      const companyName = response.data.data;
+      console.log('company', response.data.data);
+      this.setState({companyName: companyName.name});
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  // te
   changeLogo = () => {
     console.log('click');
     const options = {
@@ -66,6 +85,9 @@ export default class EditProfileScreen extends Component {
           });
       }
     });
+  };
+  saveProfile = () => {
+    // navigate('EditProfileScreen')
   };
   render() {
     let data = [
@@ -159,7 +181,6 @@ export default class EditProfileScreen extends Component {
                 <Col>
                   <Text style={styles.text}>Phone Number</Text>
                   <TextInput
-                    editable={false}
                     style={[styles.TextInput]}
                     placeholder="Phone Number"
                     underlineColorAndroid={'transparent'}>
@@ -237,16 +258,16 @@ export default class EditProfileScreen extends Component {
                     style={[styles.TextInput]}
                     placeholder="Company/Institution"
                     underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.email}
+                    {this.state.companyName}
                   </TextInput>
                 </Col>
               </Row>
             </View>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={[styles.button]}
-              onPress={() => navigate('EditProfileScreen')}>
+              onPress={() => this.saveProfile()}>
               <Text style={[styles.textbutton]}>SAVE</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
         </Row>
       </Grid>

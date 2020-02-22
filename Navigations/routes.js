@@ -241,7 +241,7 @@ const InitialNavigator = createSwitchNavigator(
 // Styling
 const tabStyle = StyleSheet.create({
   bottomTabLabel: {
-    fontSize: 12,
+    fontSize: 10,
     textAlign: 'center',
   },
 });

@@ -11,11 +11,9 @@ import {
   Alert,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
-
 import {Col, Row, Grid} from 'react-native-easy-grid';
 
 export default class DeviceInfoScreen extends Component {
@@ -27,21 +25,13 @@ export default class DeviceInfoScreen extends Component {
       longitude: 0,
     };
   }
+
   componentDidMount() {
-    Geolocation.getCurrentPosition(
-      position => {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
-      },
-      error => {
-        // See error code charts below.
-        console.log(error.code, error.message);
-      },
-      {enableHighAccuracy: true, timeout: 1000, maximumAge: 10000},
-    );
+    if (this.state.content.battery < 25) {
+      alert('Baterai lemah, harap segera mengisi baterai.');
+    }
   }
+
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
       {text: 'Ok', onPress: () => console.log('Pressed')},
@@ -118,7 +108,7 @@ export default class DeviceInfoScreen extends Component {
                 </Col>
               </Row>
             </View>
-            <View style={styles.itemContainer}>
+            {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -135,7 +125,7 @@ export default class DeviceInfoScreen extends Component {
                   </TextInput>
                 </Col>
               </Row>
-            </View>
+            </View> */}
             <View style={styles.itemContainer}>
               <Row>
                 <Image

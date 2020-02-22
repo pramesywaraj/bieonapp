@@ -19,88 +19,88 @@ export default class HelpFeedbackScreen extends Component {
     this.state = {
       contents: [
         {
-          title: '1. Apa itu Bieon Salt Smart Detector?' + '\n',
+          title: '1. What is a Bieon Salt Smart Detector?' + '\n',
           body:
-            '• Bieon Salt Smart Detector adalah alat ukur digital untuk mengukur kualitas garam dengan hasil pengukuran realtime',
+            '• Bieon Salt Smart Detector is a digital measuring tool to measure salt quality with realtime measurement results',
         },
         {
           title:
-            '2. Parameter apa saja yang dapat diukur dengan menggunakan Bieon Salt Smart Detector?' +
+            '2. What parameters can be measured using the Bieon Salt Smart Detector?' +
             '\n',
           body:
-            '• Bieon Salt Smart Detector dapat digunakan untuk mengukur Kadar NaCl, derajat putih (whiteness) dan Kadar Air (water content) garam yang masih berbentuk kristal.' +
+            '• Bieon Salt Smart Detector can be used to measure NaCl levels, whiteness and water content of crystals that are still crystalline.' +
             '\n' +
             '\n' +
-            '• Range pengukuran Bieon Salt Smart Detector yaitu :' +
+            '• Bieon Salt Smart Detector measurement ranges are :' +
             '\n' +
             'NaCl = 80% – 99.99%' +
             '\n' +
             'Whiteness = 45% – 95%' +
             '\n' +
-            'Kadar Air   = 0.5% – 12%',
-        },
-        {
-          title: '3. Apa saja keunggulan Bieon Salt Smart Detector?' + '\n',
-          body:
-            '• Dapat mengukur 3 parameter kualitas garam dengan waktu yang bersamaan' +
-            '\n' +
-            '\n' +
-            '• Hasil pengukuran yang akurat' +
-            '\n' +
-            '\n' +
-            '• Hasil pengukuran dapat langsung dicetak (print)' +
-            '\n' +
-            '\n' +
-            '• Ukuran yang kecil dan portable' +
-            '\n' +
-            '\n' +
-            '• Sudah tersertifikasi oleh syscal' +
-            '\n' +
-            '\n' +
-            '• Menggunakan baterai yang dapat diisi ulang',
-        },
-        {
-          title: '4. Apakah Bieon Salt Smart Detector Ready Stock?' + '\n',
-          body:
-            '• Pembelian Bieon Salt Smart Detector indent dengan waktu maksimal 45 hari kerja setelah PO diterima',
-        },
-        {
-          title: '5. Berapa harga Bieon Salt Smart Detector?' + '\n',
-          body: '• Silahkan hubungi contact center : +6282320007800',
-        },
-        {
-          title: '6. Apakah ada garansi untuk barang yang dibeli?' + '\n',
-          body:
-            '• Garansi Spare Part : 1 bulan' +
-            '\n' +
-            '• Garansi Service : 6 bulan',
+            'Moisture content = 0.5% – 12%',
         },
         {
           title:
-            '7.Apabila pada saat penggunaan, ditemui kendala. Apakah yang harus dilakukan?' +
+            '3. What are the benefits of Bieon Salt Smart Detector?' + '\n',
+          body:
+            '• Can measure 3 parameters of salt quality at the same time' +
+            '\n' +
+            '\n' +
+            '• Accurate measurement results' +
+            '\n' +
+            '\n' +
+            '• The measurement results can be directly printed (print)' +
+            '\n' +
+            '\n' +
+            '• Small and portable size' +
+            '\n' +
+            '\n' +
+            '• Has been certified by Syscal' +
+            '\n' +
+            '\n' +
+            '• Use a rechargeable battery',
+        },
+        {
+          title: '4. Is the Bieon Salt Smart Detector Ready Stock?' + '\n',
+          body:
+            '• Purchase a Bieon Salt Smart Detector indent within a maximum of 45 working days after PO is received.',
+        },
+        {
+          title: '5. What is the price of a Bieon Salt Smart Detector?' + '\n',
+          body: '• Please contact the contact centre: +6282320007800',
+        },
+        {
+          title: '6. Is there a warranty for the items purchased?' + '\n',
+          body:
+            '• Spare Part Warranty: 1 month' +
+            '\n' +
+            '• Service warranty: 6 months',
+        },
+        {
+          title:
+            '7. If during use, obstacles are encountered. What should be done?' +
             '\n',
-          body: '• Silahkan hubungi contact center : +6282320007800',
+          body: '• Please contact the contact centre: +6282320007800',
         },
         {
-          title: '8. Mengapa struk/kertas hasil print tidak keluar?' + '\n',
+          title: '8. Why doesnt the printed receipt / paper come out?' + '\n',
           body:
-            '• Hasil pengukuran dapat langsung dicetak (print) dengan menekan tombol “PRINT”' +
-            'pada alat. Bila setelah ditekan tombol “PRINT” tapi tidak keluar kertas, dapat' +
-            'dikarenakan kertas printer telah habis. Silahkan melakukan pengisian ulang (refill)' +
-            'kertas printer. Cara mengisi kertas printer dapat dilihat pada video berikut.',
+            '• The measurement results can be printed directly by pressing the "PRINT" button on the device. If after' +
+            'pressing the "PRINT" button but no paper comes out, it could be because the printer paper has run out.' +
+            'Please refill the printer paper. How to load printer paper can be seen in the following video.',
         },
         {
           title:
-            '9. Kapan Bieon Salt Smart Detector harus dicharge / isi ulang baterai?' +
+            '9. When does the Bieon Salt Smart Detector need to be charged / recharged?' +
             '\n',
           body:
-            '• Status baterai Bieon Salt Smart Detector bisa dilihat dilihat melalui aplikasi pada menu “Device info” dan bisa di charge melalui wireless charger.',
+            '• The status of the Bieon Salt Smart Detector battery can be viewed through an application in the "Device info" menu and can be charged via a wireless charger.',
         },
         {
           title:
-            '10. Kapan Bieon Salt Smart Detector harus dikalibrasi?' + '\n',
+            '10. When must the Bieon Salt Smart Detector be calibrated?' + '\n',
           body:
-            '• Bieon Salt Smart Detector disarankan untuk dikalibrasi setiap 1 tahun sekali.',
+            '• Bieon Salt Smart Detector is recommended to be calibrated once every 1 year.',
         },
       ],
     };

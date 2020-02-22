@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-dupe-class-members */
 import React, {Component} from 'react';
 import {
@@ -23,6 +24,11 @@ export default class ContainDetailIoduiScreen extends Component {
       sample_name: '',
       token: '',
     };
+  }
+  componentDidMount() {
+    if (this.state.content.battery < 25) {
+      alert('Baterai lemah, harap segera mengisi baterai.');
+    }
   }
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
@@ -55,10 +61,7 @@ export default class ContainDetailIoduiScreen extends Component {
       navigate('ContainScreen');
       console.log('what?', response);
     } catch (err) {
-      this.onAlert(
-        'Terjadi Kesalahan',
-        'Telah terjadi kesalahan ketika menyimpan data, silahkan coba lagi.',
-      );
+      this.onAlert('Terjadi Kesalahan', 'Sampel nama wajib diisi.');
       console.log('Terjadi kesalahan pada bagian konten', err);
     }
   }

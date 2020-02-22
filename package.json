@@ -17,6 +17,7 @@
     "@react-native-community/masked-view": "^0.1.6",
     "axios": "^0.19.2",
     "buffer": "^5.4.3",
+    "html-to-image": "^0.1.1",
     "moment": "^2.24.0",
     "react": "16.9.0",
     "react-data-table-component": "^6.2.2",
