@@ -102,8 +102,8 @@ class LoginScreen extends Component {
     return (
       <View style={styles.container}>
         <ImageBackground
-          style={[styles.background]}
-          source={require('../assets/background/3.png')}>
+          style={styles.background}
+          source={require('../assets/background/background.png')}>
           <KeyboardAvoidingView
             behavior="padding"
             style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -144,9 +144,6 @@ class LoginScreen extends Component {
               buttonColor={'#fff'}
               textColor={'#129cd8'}
             />
-            {/* <TouchableOpacity onPress={() => navigate('ForgetPasswordScreen')}>
-              <Text style={[styles.text]}>FORGOT PASSWORD?</Text>
-            </TouchableOpacity> */}
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
@@ -168,15 +165,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: 200,
   },
-  Col: {
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
   background: {
     resizeMode: 'contain',
-    width: win.width,
+    width: '100%',
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',

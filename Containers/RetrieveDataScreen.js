@@ -9,42 +9,38 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
 
 export default class RetrieveDataScreen extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Grid>
-        <Row size={10.5}>
-          <View style={styles.container}>
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() =>
-                navigate('PopUpBluetoothScreen', {idPrint: 'idFieldDevice'})
-              }>
+      <View style={styles.container}>
+        <View>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() =>
+              navigate('PopUpBluetoothScreen', {idPrint: 'idFieldDevice'})
+            }>
+            <Image
+              style={[styles.logo]}
+              source={require('../assets/icons/retrievedata/bluetoothgray.png')}
+            />
+          </TouchableOpacity>
+          <View style={[styles.buttonGoogle]}>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
               <Image
-                style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothgray.png')}></Image>
-            </TouchableOpacity>
-            <View style={[styles.buttonGoogle]}>
-              <Row
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image
-                  style={styles.itemGoogleImage}
-                  source={require('../assets/icons/retrievedata/warning.png')}
-                />
-                <Text style={[styles.textbuttonGoogle]}>
-                  No Probe Connected
-                </Text>
-              </Row>
+                style={styles.itemGoogleImage}
+                source={require('../assets/icons/retrievedata/warning.png')}
+              />
+              <Text style={[styles.textbuttonGoogle]}>No Probe Connected</Text>
             </View>
           </View>
-        </Row>
-        <Row
+        </View>
+        <View
           size={1.5}
           style={{
             alignItems: 'center',
@@ -54,8 +50,8 @@ export default class RetrieveDataScreen extends Component {
           <Text style={[styles.textbluetooth]}>
             Touch Bluetooth symbol on the top right to connect to a probe
           </Text>
-        </Row>
-      </Grid>
+        </View>
+      </View>
     );
   }
 }
@@ -65,7 +61,6 @@ const win = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f3f3f3',

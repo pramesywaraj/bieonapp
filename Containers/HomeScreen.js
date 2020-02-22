@@ -19,11 +19,6 @@ import Article from '../Components/Articles/Article';
 const BannerWidth = Dimensions.get('window').width;
 const BannerHeight = 260;
 
-const images = [
-  'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
-  'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
-  'https://bieonbe.defuture.tech/public/images/article/upload-article-1579857277-625625761.jpg',
-];
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -171,10 +166,7 @@ export default class HomeScreen extends Component {
           index={0}
           pageSize={BannerWidth}>
           {this.state.banner.map((bann, index) =>
-            this.renderPage(
-              'https://bieonbe.defuture.tech/' + bann.picture,
-              index,
-            ),
+            this.renderPage(`${Config.API_URL}/` + bann.picture, index),
           )}
         </Carousel>
 

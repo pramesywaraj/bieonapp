@@ -37,7 +37,7 @@ export default class SplashScreen extends Component {
       <View style={styles.container}>
         <ImageBackground
           style={[styles.background]}
-          source={require('../assets/background/3.png')}>
+          source={require('../assets/background/background.png')}>
           <Image
             style={[styles.logo]}
             source={require('../assets/logo/settingwhite.png')}
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     height: 140,
   },
   background: {
-    width: win.width,
+    width: '100%',
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
