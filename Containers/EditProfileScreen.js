@@ -2,14 +2,10 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
   View,
   Dimensions,
   TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Button,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import axios from 'axios';
@@ -17,6 +13,7 @@ import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
 export default class EditProfileScreen extends Component {
   constructor(props) {
     super(props);
@@ -69,13 +66,9 @@ export default class EditProfileScreen extends Component {
         // this.setState({photo: response});
         console.log('respo', response);
         axios
-          .post(
-            'http://bieonbe.defuture.tech/upload-image/user',
-            response.uri,
-            {
-              headers: {'content-type': 'multipart/form-data'},
-            },
-          )
+          .post(`${Config.API_URL}/upload-image/user`, response.uri, {
+            headers: {'content-type': 'multipart/form-data'},
+          })
           .then(response2 => {
             console.log('lol', response2.data.data);
             // this.setState({picture: response.data.data});
@@ -90,37 +83,24 @@ export default class EditProfileScreen extends Component {
     // navigate('EditProfileScreen')
   };
   render() {
-    let data = [
-      {
-        value: 'Male',
-      },
-      {
-        value: 'Female',
-      },
-    ];
-    const {navigate} = this.props.navigation;
     return (
-      <Grid style={{marginTop: 30}}>
-        <Row size={13}>
-          <View style={styles.container}>
-            <Image
-              style={styles.avatarImage}
-              source={{
-                uri:
-                  'http://bieonbe.defuture.tech/' +
-                  this.state.currentUser.picture_user,
-              }}
-            />
-            {/* <Icon
+      <View style={styles.container}>
+        <Image
+          style={styles.avatarImage}
+          source={{
+            uri: `${Config.API_URL}/` + this.state.currentUser.picture_user,
+          }}
+        />
+        {/* <Icon
               name="user-edit"
               style={styles.userEdit}
               onPress={() => this.changeLogo()}
             /> */}
-            {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
-            <Text style={[styles.textTitle]}>
-              {this.state.currentUser.fullname}
-            </Text>
-            {/* <View style={styles.itemContainer}>
+        {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
+        <Text style={[styles.textTitle]}>
+          {this.state.currentUser.fullname}
+        </Text>
+        {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -154,60 +134,61 @@ export default class EditProfileScreen extends Component {
                 </Col>
               </Row>
             </View> */}
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/email.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Email</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Email"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.email}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/phone.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Phone Number</Text>
-                  <TextInput
-                    style={[styles.TextInput]}
-                    placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.phone_number}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/gender.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Gender</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.gender}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            {/* <View style={styles.itemContainer}>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/email.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Email</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Email"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.email}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/phone.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Phone Number</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.phone_number}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/gender.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Gender</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}>
+                {this.state.gender}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -227,50 +208,48 @@ export default class EditProfileScreen extends Component {
                 </Col>
               </Row>
             </View> */}
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/position.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Position</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Position"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.position}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/agency.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Company/Institution</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Company/Institution"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.companyName}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <TouchableOpacity
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/position.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Position</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Position"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.position}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/agency.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Company/Institution</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Company/Institution"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.email}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        {/* <TouchableOpacity
               style={[styles.button]}
               onPress={() => this.saveProfile()}>
               <Text style={[styles.textbutton]}>SAVE</Text>
-            </TouchableOpacity>
-          </View>
-        </Row>
-      </Grid>
+            </TouchableOpacity> */}
+      </View>
     );
   }
 }

@@ -2,52 +2,271 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
   View,
-  Dimensions,
-  TextInput,
   TouchableOpacity,
+  Platform,
+  DeviceEventEmitter,
+  NativeEventEmitter,
+  ToastAndroid,
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import BluetoothListModal from '../Components/Modal/BluetoothListModal';
+import {BluetoothManager} from 'react-native-bluetooth-escpos-printer';
+import LoadingModal from '../Components/Modal/LoadingModal';
+
 export default class RetrieveDataScreen extends Component {
+  _listeners = [];
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      devices: null,
+      deviceName: '',
+      pairedDs: [],
+      foundDs: [],
+      loading: false,
+      boundAddress: '',
+      modalVisible: false,
+      connected: false,
+    };
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.connectToDevice = this.connectToDevice.bind(this);
+    this.scan = this.scan.bind(this);
+  }
+
+  async componentDidMount() {
+    if (Platform.OS === 'ios') {
+      let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
+      this._listeners.push(
+        bluetoothManagerEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+          rsp => {
+            this.deviceAlreadyPaired(rsp);
+          },
+        ),
+      );
+      this._listeners.push(
+        bluetoothManagerEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_FOUND,
+          rsp => {
+            this.deviceFoundEvent(rsp);
+          },
+        ),
+      );
+      this._listeners.push(
+        bluetoothManagerEmitter.addListener(
+          BluetoothManager.EVENT_CONNECTION_LOST,
+          () => {
+            this.setState({
+              deviceName: '',
+              boundAddress: '',
+            });
+          },
+        ),
+      );
+    } else if (Platform.OS === 'android') {
+      this._listeners.push(
+        DeviceEventEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
+          rsp => {
+            this.deviceAlreadyPaired(rsp);
+          },
+        ),
+      );
+      this._listeners.push(
+        DeviceEventEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_FOUND,
+          rsp => {
+            this.deviceFoundEvent(rsp);
+          },
+        ),
+      );
+      this._listeners.push(
+        DeviceEventEmitter.addListener(
+          BluetoothManager.EVENT_DEVICE_DISCOVER_DONE,
+          rsp => {
+            this.deviceFoundEvent(rsp);
+          },
+        ),
+      );
+      this._listeners.push(
+        DeviceEventEmitter.addListener(
+          BluetoothManager.EVENT_CONNECTION_LOST,
+          () => {
+            this.setState({
+              deviceName: '',
+              boundAddress: '',
+            });
+          },
+        ),
+      );
+      this._listeners.push(
+        DeviceEventEmitter.addListener(
+          BluetoothManager.EVENT_BLUETOOTH_NOT_SUPPORT,
+          () => {
+            ToastAndroid.show(
+              'Device Not Support Bluetooth !',
+              ToastAndroid.LONG,
+            );
+          },
+        ),
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    console.log('unmount');
+    this._listeners.map(listener => {
+      listener.remove();
+    });
+  }
+
+  async scan() {
+    const scanDevices = async () => {
+      const bluetoothResponse = await BluetoothManager.scanDevices();
+      await this.deviceFoundEvent(bluetoothResponse);
+
+      this.setState({
+        loading: false,
+      });
+
+      this.openModal();
+    };
+
+    try {
+      const isBluetoothEnabled = await BluetoothManager.isBluetoothEnabled();
+
+      this.setState({
+        loading: true,
+      });
+
+      if (isBluetoothEnabled) {
+        await scanDevices();
+      } else {
+        await BluetoothManager.enableBluetooth();
+        await scanDevices();
+      }
+    } catch (err) {
+      console.log(err);
+
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  deviceAlreadyPaired(response) {
+    var temp = null;
+    if (typeof response.devices === 'object') {
+      temp = response.devices;
+    } else {
+      try {
+        temp = JSON.parse(response.devices);
+      } catch (e) {}
+    }
+    if (temp && temp.length) {
+      // let paired = this.state.pairedDs;
+      // paired = paired.concat(temp || []);
+      this.setState({
+        pairedDs: temp,
+      });
+    }
+  }
+
+  deviceFoundEvent(rsp) {
+    //alert(JSON.stringify(rsp))
+    var r = null;
+    try {
+      if (typeof rsp.device === 'object') {
+        r = rsp.device;
+      } else {
+        r = JSON.parse(rsp.device);
+      }
+    } catch (e) {
+      console.log('Error detected in TableDataScreen');
+    }
+
+    if (r) {
+      let found = this.state.foundDs || [];
+      if (found.findIndex) {
+        let duplicated = found.findIndex(function(x) {
+          return x.address === r.address;
+        });
+
+        if (duplicated === -1) {
+          found.push(r);
+          this.setState({
+            foundDs: found,
+          });
+        }
+      }
+    }
+  }
+
+  openModal() {
+    this.setState({modalVisible: true});
+  }
+
+  closeModal() {
+    this.setState({modalVisible: false});
+  }
+
+  connectToDevice(item) {
+    this.setState({
+      loading: true,
+    });
+    BluetoothManager.connect(item.address).then(
+      s => {
+        this.setState({
+          loading: false,
+          modalVisible: false,
+          connected: true,
+          boundAddress: item.address,
+          deviceName: item.name || 'UNKNOWN',
+        });
+      },
+      e => {
+        this.setState({
+          modalVisible: false,
+          loading: false,
+        });
+      },
+    );
+  }
+
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <View>
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() =>
-              navigate('PopUpBluetoothScreen', {idPrint: 'idFieldDevice'})
-            }>
-            <Image
-              style={[styles.logo]}
-              source={require('../assets/icons/retrievedata/bluetoothgray.png')}
-            />
+        <BluetoothListModal
+          visible={this.state.modalVisible}
+          onClose={this.closeModal}
+          newDevices={this.state.foundDs}
+          alreadyPairedDevices={this.state.pairedDs}
+          onConnect={this.connectToDevice}
+        />
+        <LoadingModal visible={this.state.loading} />
+        <View style={styles.topSection}>
+          <TouchableOpacity onPress={this.scan}>
+            <Icon name="bluetooth" color="#9c9c9c" size={40} />
           </TouchableOpacity>
-          <View style={[styles.buttonGoogle]}>
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Image
-                style={styles.itemGoogleImage}
-                source={require('../assets/icons/retrievedata/warning.png')}
-              />
-              <Text style={[styles.textbuttonGoogle]}>No Probe Connected</Text>
-            </View>
-          </View>
         </View>
         <View
-          size={1.5}
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#e8e8e8',
           }}>
-          <Text style={[styles.textbluetooth]}>
+          <Image
+            style={styles.warningIcon}
+            source={require('../assets/icons/retrievedata/warning.png')}
+          />
+          <Text style={styles.noDeviceConnectedText}>No Device Connected</Text>
+        </View>
+        <View style={styles.bottomSection}>
+          <Text style={styles.instructionText}>
             Touch Bluetooth symbol on the top right to connect to a probe
           </Text>
         </View>
@@ -55,73 +274,40 @@ export default class RetrieveDataScreen extends Component {
     );
   }
 }
-
-const win = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#f3f3f3',
+    height: '100%',
   },
-  logo: {
-    width: 45,
-    height: 45,
+  topSection: {
+    flexDirection: 'row',
+    padding: '5%',
+    marginLeft: 'auto',
+    marginBottom: 'auto',
   },
-  button: {
-    marginTop: -140,
-    marginBottom: 120,
-    marginRight: -320,
-  },
-  text: {
-    color: '#fff',
-    fontSize: 16,
-    marginTop: 15,
-    margin: 15,
-    textAlign: 'justify',
-    fontWeight: '600',
-  },
-  itemMenuImage: {
-    resizeMode: 'contain',
-    width: 25,
-    height: 25,
-    marginTop: 3,
-  },
-  col: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  textmenu: {
-    fontSize: 10,
-    marginTop: 5,
-    color: '#808080',
-  },
-  textbluetooth: {
+  instructionText: {
     fontSize: 16,
     margin: 29,
     textAlign: 'center',
     color: '#129cd8',
   },
-  buttonGoogle: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    width: 330,
-    height: 80,
-    padding: 10,
-    backgroundColor: '#d9d9d9',
-    marginTop: 80,
-  },
-  textbuttonGoogle: {
+  noDeviceConnectedText: {
     fontSize: 20,
     color: '#129cd8',
     fontWeight: '700',
     textAlign: 'center',
     marginLeft: 10,
   },
-  itemGoogleImage: {
+  bottomSection: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#e8e8e8',
+    marginTop: 'auto',
+    width: '100%',
+  },
+  warningIcon: {
     resizeMode: 'contain',
     width: 50,
     height: 50,

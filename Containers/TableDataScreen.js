@@ -287,7 +287,7 @@ export default class HomeScreen extends Component {
         bluetoothManagerEmitter.addListener(
           BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
           rsp => {
-            this._deviceAlreadPaired(rsp);
+            this._deviceAlreadyPaired(rsp);
           },
         ),
       );
@@ -585,8 +585,6 @@ export default class HomeScreen extends Component {
       this.setState({
         loading: true,
       });
-
-      console.log(isBluetoothEnabled);
 
       if (isBluetoothEnabled) {
         await scanDevices();
