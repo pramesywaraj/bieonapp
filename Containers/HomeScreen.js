@@ -3,6 +3,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'react-native-banner-carousel';
+
 import {
   StyleSheet,
   Image,
@@ -10,6 +11,7 @@ import {
   FlatList,
   View,
   Dimensions,
+  TouchableHighlight,
   Alert,
   PermissionsAndroid,
 } from 'react-native';
@@ -33,7 +35,6 @@ export default class HomeScreen extends Component {
     this.handleRefresh = this.handleRefresh.bind(this);
     this.renderSeparator = this.renderSeparator.bind(this);
   }
-
   async componentDidMount() {
     this.fetchArticles();
     this.fetchBanner();
@@ -86,8 +87,8 @@ export default class HomeScreen extends Component {
       this.setState({banner: banner.banners, refreshing: false});
     } catch (err) {
       this.onAlert(
-        'Terjadi Kesalahan',
-        'Terjadi kesalahan pada server, silahkan refresh dan coba kembali.',
+        'There is an error',
+        'There is an error when load data. Please refresh again',
       );
       this.setState({
         ...this.state.banner,
@@ -108,9 +109,10 @@ export default class HomeScreen extends Component {
       this.setState({articles: articles, refreshing: false});
     } catch (err) {
       this.onAlert(
-        'Terjadi Kesalahan',
-        'Terjadi kesalahan pada server, silahkan refresh dan coba kembali.',
+        'There is an error',
+        'There is an error when load data. Please refresh again',
       );
+
       this.setState({
         ...this.state.articles,
         refreshing: false,
@@ -159,6 +161,11 @@ export default class HomeScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View>
+          <TouchableHighlight onPress={this.createPDF}>
+            <Text>Create PDF</Text>
+          </TouchableHighlight>
+        </View>
         <Carousel
           autoplay
           autoplayTimeout={5000}

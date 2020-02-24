@@ -43,15 +43,15 @@ class LoginScreen extends Component {
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
       await AsyncStorage.setItem('@userAuth', token);
       if (data.role_user === 2) {
-        alert('Anda tidak dapat login dengan akun ini.');
+        alert("You can't login with this account, please try again.");
       } else {
         navigate('HomeScreen');
       }
     } catch (err) {
       console.log(err);
       this.onAlert(
-        'Terjadi Kesalahan',
-        'Telah terjadi kesalahan ketika menyimpan data, silahkan restart aplikasi.',
+        'There is an error',
+        'There is an error when load data. Please try again',
       );
     }
   };

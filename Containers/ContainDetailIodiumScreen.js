@@ -27,7 +27,10 @@ export default class ContainDetailIoduiScreen extends Component {
   }
   componentDidMount() {
     if (this.state.content.battery < 25) {
-      alert('Baterai lemah, harap segera mengisi baterai.');
+      this.onAlert(
+        'Battery low',
+        'Battery under 25%, please recharge the device.',
+      );
     }
   }
   onAlert = (title, message) => {
@@ -57,11 +60,11 @@ export default class ContainDetailIoduiScreen extends Component {
           },
         },
       );
-      this.onAlert('Berhasil', 'Anda berhasil menyimpan data.');
+      this.onAlert('Success', 'Data has been uploaded.');
       navigate('ContainScreen');
       console.log('what?', response);
     } catch (err) {
-      this.onAlert('Terjadi Kesalahan', 'Sampel nama wajib diisi.');
+      this.onAlert('Sample name blank', 'You must fill the sample name.');
       console.log('Terjadi kesalahan pada bagian konten', err);
     }
   }

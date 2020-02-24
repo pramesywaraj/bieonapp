@@ -29,7 +29,7 @@ class SettingScreen extends Component {
     try {
       await AsyncStorage.removeItem('@userData');
       await AsyncStorage.removeItem('@userAuth');
-      this.onAlert('Logout', 'Anda telah keluar dari aplikasi');
+      this.onAlert('Logout', 'You are logout from application');
       navigate('Auth');
     } catch (err) {
       console.log(err);

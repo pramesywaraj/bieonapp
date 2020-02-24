@@ -25,7 +25,7 @@ export default function ArticleDetailScreen({navigation}) {
       <View style={styles.articleContainer}>
         <Text style={styles.articleTitle}>{article.title}</Text>
         <Text style={styles.articleDate}>
-          {moment(article.create_at).format('Do MMMM YYYY')}
+          {moment(article.create_at).format('DD/MMM/YYYY')}
         </Text>
         <Text style={styles.articleText}>{article.description}</Text>
       </View>

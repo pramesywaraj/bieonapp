@@ -28,7 +28,10 @@ export default class DeviceInfoScreen extends Component {
 
   componentDidMount() {
     if (this.state.content.battery < 25) {
-      alert('Baterai lemah, harap segera mengisi baterai.');
+      this.onAlert(
+        'Battery low',
+        'Battery under 25%, please recharge the device.',
+      );
     }
   }
 
@@ -57,13 +60,13 @@ export default class DeviceInfoScreen extends Component {
           },
         },
       );
-      this.onAlert('Berhasil', 'Anda berhasil menyimpan data.');
+      this.onAlert('Success', 'Data has been uploaded.');
       navigate('ContainScreen');
       console.log('what?', response.config.data);
     } catch (err) {
       this.onAlert(
-        'Terjadi Kesalahan',
-        'Telah terjadi kesalahan ketika menyimpan data, silahkan coba lagi.',
+        'There is an error',
+        'Ther is an error when save data. Please try again',
       );
       console.log('Terjadi kesalahan pada bagian konten', err);
     }

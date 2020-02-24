@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Button,
-  Alert,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import axios from 'axios';
@@ -18,7 +17,7 @@ import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-export default class EditProfileScreen extends Component {
+export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -87,25 +86,18 @@ export default class EditProfileScreen extends Component {
       }
     });
   };
-  goToEditProfile = () => {
-    const {navigate} = this.props.navigation;
-    navigate('EditProfileScreen');
-  };
-
-  onAlert = (title, message) => {
-    return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
-    ]);
-  };
-
   async saveProfile() {
     try {
       const {navigate} = this.props.navigation;
       let response = await axios.patch(
-        `${Config.API_URL}/auth/update`,
+        `${Config.API_URL}/device/device-edit`,
         {
-          fullname: 'a',
-          Address: 'Test',
+          main_device_id: 1,
+          device_id: this.state.device_id,
+          counter: this.state.content.count,
+          company_id: 1,
+          status_battery: parseInt(this.state.content.battery),
+          last_calibration: '2020-12-02T23:00:00+07:00',
         },
         {
           headers: {
@@ -125,25 +117,55 @@ export default class EditProfileScreen extends Component {
       console.log('Terjadi kesalahan pada bagian konten', err);
     }
   }
+  goToEditProfile = () => {
+    const {navigate} = this.props.navigation;
+    navigate('EditProfileScreen');
+  };
   render() {
+    let data = [
+      {
+        value: 'Male',
+      },
+      {
+        value: 'Female',
+      },
+    ];
     const {navigate} = this.props.navigation;
     return (
       <Grid style={{marginTop: 30}}>
         <Row size={13}>
           <View style={styles.container}>
+            <Image
+              style={styles.avatarImage}
+              source={{
+                uri:
+                  'http://bieonbe.defuture.tech/' +
+                  this.state.currentUser.picture_user,
+              }}
+            />
+            {/* <Icon
+              name="user-edit"
+              style={styles.userEdit}
+              onPress={() => this.changeLogo()}
+            /> */}
+            {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
+            <Text style={[styles.textTitle]}>
+              {this.state.currentUser.fullname}
+            </Text>
             <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/profile.png')}
+                  source={require('../assets/icons/editprofile/email.png')}
                 />
                 <Col>
-                  <Text style={styles.text}>Name</Text>
+                  <Text style={styles.text}>Email</Text>
                   <TextInput
+                    editable={false}
                     style={[styles.TextInput]}
-                    placeholder="Name"
+                    placeholder="Email"
                     underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.fullname}
+                    {this.state.currentUser.email}
                   </TextInput>
                 </Col>
               </Row>
@@ -184,10 +206,84 @@ export default class EditProfileScreen extends Component {
                 </Col>
               </Row>
             </View>
+            <View style={styles.itemContainer}>
+              <Row>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/gender.png')}
+                />
+                <Col>
+                  <Text style={styles.text}>Gender</Text>
+                  <TextInput
+                    editable={false}
+                    style={[styles.TextInput]}
+                    placeholder="Phone Number"
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.gender}
+                  </TextInput>
+                </Col>
+              </Row>
+            </View>
+            {/* <View style={styles.itemContainer}>
+              <Row>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/gender.png')}
+                />
+                <Col>
+                  <Text style={styles.text}>Gender</Text>
+                  <Dropdown
+                    data={data}
+                    style={[styles.Dropdown]}
+                    pickerStyle={{
+                      borderBottomColor: 'transparent',
+                      borderWidth: 0,
+                    }}
+                    dropdownOffset={{top: 10}}
+                    placeholder="Gender"></Dropdown>
+                </Col>
+              </Row>
+            </View> */}
+            <View style={styles.itemContainer}>
+              <Row>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/position.png')}
+                />
+                <Col>
+                  <Text style={styles.text}>Position</Text>
+                  <TextInput
+                    editable={false}
+                    style={[styles.TextInput]}
+                    placeholder="Position"
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.currentUser.position}
+                  </TextInput>
+                </Col>
+              </Row>
+            </View>
+            <View style={styles.itemContainer}>
+              <Row>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/editprofile/agency.png')}
+                />
+                <Col>
+                  <Text style={styles.text}>Company/Institution</Text>
+                  <TextInput
+                    editable={false}
+                    style={[styles.TextInput]}
+                    placeholder="Company/Institution"
+                    underlineColorAndroid={'transparent'}>
+                    {this.state.companyName}
+                  </TextInput>
+                </Col>
+              </Row>
+            </View>
             <TouchableOpacity
               style={[styles.button]}
-              onPress={() => this.saveProfile()}>
-              <Text style={[styles.textbutton]}>SAVE</Text>
+              onPress={() => this.goToEditProfile()}>
+              <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
             </TouchableOpacity>
           </View>
         </Row>

@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import SplashScreen from '../Containers/SplashScreen';
 import LoginScreen from '../Containers/LoginScreen';
 // import RegisterScreen from '../Containers/RegisterScreen';
+import ProfileScreen from '../Containers/ProfileScreen';
 import EditProfileScreen from '../Containers/EditProfileScreen';
 import HomeScreen from '../Containers/HomeScreen';
 import ArticleDetailScreen from '../Containers/ArticleDetailScreen';
@@ -98,6 +99,13 @@ const ViewDataNavigator = createStackNavigator({
 });
 
 const ProfileNavigator = createStackNavigator({
+  ProfileScreen: {
+    screen: ProfileScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+
   EditProfileScreen: {
     screen: EditProfileScreen,
     navigationOptions: {
