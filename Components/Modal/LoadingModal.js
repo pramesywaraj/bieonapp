@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, ActivityIndicator} from 'react-native';
 
 import Modal from 'react-native-modal';
 
-export default function LoadingModal({visible}) {
+export default function LoadingModal({visible, label}) {
   return (
     <Modal
       animationType="slide"
@@ -14,7 +14,7 @@ export default function LoadingModal({visible}) {
       }}>
       <View style={styles.loadingLayout}>
         <ActivityIndicator size="large" color="#129cd8" />
-        <Text style={styles.loadingText}>Please wait...</Text>
+        <Text style={styles.loadingText}>{label || 'Please wait...'}</Text>
       </View>
     </Modal>
   );

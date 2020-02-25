@@ -3,7 +3,7 @@ import {View, StyleSheet, Image, Text} from 'react-native';
 
 import TypeButton from '../Buttons/TypeButton';
 
-export default function ContainLayout({device}) {
+export default function ContainLayout({device, onSelect}) {
   return (
     <View style={styles.container}>
       <View style={styles.topSection}>
@@ -14,9 +14,12 @@ export default function ContainLayout({device}) {
         <Text style={styles.deviceNameText}>{device.name}</Text>
       </View>
       <View style={styles.itemSection}>
-        <TypeButton label="NaCl, Whiteness and Water Content" />
-        <TypeButton label="Iodium" />
-        <TypeButton label="Device Info" />
+        <TypeButton
+          label="NaCl, Whiteness and Water Content"
+          action={() => onSelect('Data1')}
+        />
+        <TypeButton label="Iodium" action={() => onSelect('Data2')} />
+        <TypeButton label="Device Info" action={() => onSelect('Device')} />
       </View>
     </View>
   );

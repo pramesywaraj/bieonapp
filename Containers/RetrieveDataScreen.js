@@ -16,7 +16,7 @@ export default class RetrieveDataScreen extends Component {
     super(props);
     this.state = {
       isBluetoothEnabled: false,
-      device: null,
+      device: {},
       pairedDs: [],
       foundDs: [],
       loading: true,
@@ -29,6 +29,7 @@ export default class RetrieveDataScreen extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.connectToDevice = this.connectToDevice.bind(this);
     this.scan = this.scan.bind(this);
+    this.write = this.write.bind(this);
   }
 
   async componentDidMount() {
@@ -51,6 +52,7 @@ export default class RetrieveDataScreen extends Component {
     this._eventListener.push(
       BluetoothSerial.addListener('connectionSuccess', response => {
         this.onAlert('Terhubung', 'Perangkat berhasil terhubung.');
+        console.log(response);
         this.setState({
           connected: true,
           device: response.device,
@@ -92,7 +94,6 @@ export default class RetrieveDataScreen extends Component {
   };
 
   componentWillUnmount() {
-    console.log('unmount');
     this._eventListener.map(listener => {
       listener.remove();
     });
@@ -132,6 +133,8 @@ export default class RetrieveDataScreen extends Component {
       let pairedDevices = scanResponse[0];
       let unPairedDevices = scanResponse[1];
 
+      console.log(unPairedDevices);
+
       this.setState({
         pairedDs: pairedDevices,
         foundDs: unPairedDevices,
@@ -159,7 +162,6 @@ export default class RetrieveDataScreen extends Component {
     const {isBluetoothEnabled} = this.state;
 
     if (isBluetoothEnabled) {
-      console.log('Got here');
       this.scanAction();
     } else {
       this.activateBluetooth();
@@ -168,17 +170,16 @@ export default class RetrieveDataScreen extends Component {
   }
 
   async connectToDevice(item) {
+    await BluetoothSerial.disconnectAll();
+
     this.setState({
       loading: true,
     });
 
     try {
-      console.log(item.id);
       const connectingResponse = await BluetoothSerial.device(
         item.id,
       ).connect();
-
-      console.log('Connecting Response', connectingResponse);
 
       this.setState({
         loading: false,
@@ -189,6 +190,66 @@ export default class RetrieveDataScreen extends Component {
       this.setState({
         loading: false,
       });
+    }
+  }
+
+  async write(message) {
+    const {device} = this.state;
+    console.log(device);
+    const {navigation} = this.props;
+
+    this.setState({loading: true});
+
+    let tempObj = {};
+
+    try {
+      await BluetoothSerial.device(device.address).write(message);
+      await BluetoothSerial.readFromDevice().then(response => {
+        console.log(response);
+        setTimeout(() => {
+          let bluetoothObj = response;
+
+          switch (message) {
+            case 'Data1':
+              tempObj.nacl = bluetoothObj.nacl;
+              tempObj.battery = bluetoothObj.battery;
+              tempObj.count = bluetoothObj.count;
+              tempObj.no_seri = bluetoothObj.no_seri;
+              tempObj.water_content = bluetoothObj.water_content;
+              tempObj.whiteness = bluetoothObj.whiteness;
+
+              this.setState({loading: false});
+              navigation.navigate('ContainDetailNaclScreen', {
+                contentBluetooth: JSON.stringify(tempObj),
+              });
+              break;
+            case 'Data2':
+              tempObj.iodium = bluetoothObj.iodium;
+              tempObj.battery = bluetoothObj.battery;
+              tempObj.count = bluetoothObj.count;
+              tempObj.no_seri = bluetoothObj.no_seri;
+
+              this.setState({loading: false});
+              navigation.navigate('ContainDetailIodiumScreen', {
+                contentBluetooth: JSON.stringify(tempObj),
+              });
+              break;
+            case 'Device':
+              tempObj.lastcal = bluetoothObj.lastcal;
+              tempObj.battery = bluetoothObj.battery;
+              tempObj.count = bluetoothObj.count;
+              tempObj.no_seri = bluetoothObj.no_seri;
+
+              this.setState({loading: false});
+              navigation.navigate('DeviceInfoScreen', {
+                contentBluetooth: JSON.stringify(tempObj),
+              });
+          }
+        }, 13000);
+      });
+    } catch (err) {
+      console.log('Error happened on write()', err);
+      this.setState({loading: false});
     }
   }
 
@@ -208,7 +269,7 @@ export default class RetrieveDataScreen extends Component {
           onScan={this.scan}
         />
         {this.state.connected ? (
-          <ContainLayout device={this.state.device} />
+          <ContainLayout device={this.state.device} onSelect={this.write} />
         ) : (
           <NoDeviceConnected />
         )}
