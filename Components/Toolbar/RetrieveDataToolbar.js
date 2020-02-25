@@ -11,7 +11,7 @@ export default function RetrieveDataToolbar({isBluetoothEnabled, onScan}) {
         <Icon
           name="bluetooth"
           color={isBluetoothEnabled ? '#3cfa02' : 'white'}
-          size={25}
+          size={20}
         />
       </TouchableOpacity>
     </View>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   scanText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 16,
     paddingRight: '2%',
   },
 });

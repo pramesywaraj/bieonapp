@@ -3,7 +3,7 @@ import {View, StyleSheet, Image, Text} from 'react-native';
 
 import TypeButton from '../Buttons/TypeButton';
 
-export default function ContainLayout() {
+export default function ContainLayout({device}) {
   return (
     <View style={styles.container}>
       <View style={styles.topSection}>
@@ -11,7 +11,7 @@ export default function ContainLayout() {
           style={styles.topImage}
           source={require('../../assets/icons/retrievedata/device.png')}
         />
-        <Text style={styles.deviceNameText}>Nama Device</Text>
+        <Text style={styles.deviceNameText}>{device.name}</Text>
       </View>
       <View style={styles.itemSection}>
         <TypeButton label="NaCl, Whiteness and Water Content" />

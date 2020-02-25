@@ -16,8 +16,7 @@ export default class RetrieveDataScreen extends Component {
     super(props);
     this.state = {
       isBluetoothEnabled: false,
-      devices: null,
-      deviceName: '',
+      device: null,
       pairedDs: [],
       foundDs: [],
       loading: true,
@@ -45,6 +44,38 @@ export default class RetrieveDataScreen extends Component {
       BluetoothSerial.addListener('bluetoothDisabled', respond => {
         this.setState({
           isBluetoothEnabled: false,
+        });
+      }),
+    );
+
+    this._eventListener.push(
+      BluetoothSerial.addListener('connectionSuccess', response => {
+        this.onAlert('Terhubung', 'Perangkat berhasil terhubung.');
+        this.setState({
+          connected: true,
+          device: response.device,
+        });
+      }),
+    );
+
+    this._eventListener.push(
+      BluetoothSerial.addListener('connectionFailed', response => {
+        this.onAlert(
+          'Gagal Terhubung',
+          'Perangkat gagal terhubung, silahkan coba untuk unpairing secara manual kemudian coba kembali.',
+        );
+        this.setState({
+          connected: false,
+          device: null,
+        });
+      }),
+    );
+    this._eventListener.push(
+      BluetoothSerial.addListener('connectionLost', response => {
+        this.onAlert('Perangkat Terputus', 'Perangkat telah terputus.');
+        this.setState({
+          connected: false,
+          device: null,
         });
       }),
     );
@@ -101,8 +132,6 @@ export default class RetrieveDataScreen extends Component {
       let pairedDevices = scanResponse[0];
       let unPairedDevices = scanResponse[1];
 
-      console.log('Kesini');
-
       this.setState({
         pairedDs: pairedDevices,
         foundDs: unPairedDevices,
@@ -138,10 +167,29 @@ export default class RetrieveDataScreen extends Component {
     }
   }
 
-  async connectToDevice() {
-    const {navigate} = this.props.navigation;
+  async connectToDevice(item) {
+    this.setState({
+      loading: true,
+    });
 
-    navigate('ContainScreen');
+    try {
+      console.log(item.id);
+      const connectingResponse = await BluetoothSerial.device(
+        item.id,
+      ).connect();
+
+      console.log('Connecting Response', connectingResponse);
+
+      this.setState({
+        loading: false,
+        modalVisible: false,
+      });
+    } catch (err) {
+      console.log('Error connecting', err);
+      this.setState({
+        loading: false,
+      });
+    }
   }
 
   render() {
@@ -159,8 +207,11 @@ export default class RetrieveDataScreen extends Component {
           isBluetoothEnabled={this.state.isBluetoothEnabled}
           onScan={this.scan}
         />
-        {/* <NoDeviceConnected /> */}
-        <ContainLayout />
+        {this.state.connected ? (
+          <ContainLayout device={this.state.device} />
+        ) : (
+          <NoDeviceConnected />
+        )}
       </View>
     );
   }
