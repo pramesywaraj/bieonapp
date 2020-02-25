@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {StyleSheet, Image, Text, View, Alert} from 'react-native';
+import {StyleSheet, View, Alert} from 'react-native';
 
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
 import RetrieveDataToolbar from '../Components/Toolbar/RetrieveDataToolbar';
+import NoDeviceConnected from '../Components/RetrieveData/NoDeviceConnected';
+import ContainLayout from '../Components/RetrieveData/ContainLayout';
 
 import BluetoothSerial from 'react-native-bluetooth-serial-next';
 
@@ -18,7 +20,7 @@ export default class RetrieveDataScreen extends Component {
       deviceName: '',
       pairedDs: [],
       foundDs: [],
-      loading: false,
+      loading: true,
       boundAddress: '',
       modalVisible: false,
       connected: false,
@@ -48,8 +50,8 @@ export default class RetrieveDataScreen extends Component {
     );
 
     (await BluetoothSerial.isEnabled())
-      ? this.setState({isBluetoothEnabled: true})
-      : '';
+      ? this.setState({isBluetoothEnabled: true, loading: false})
+      : this.setState({loading: false});
   }
 
   onAlert = (title, message) => {
@@ -157,22 +159,8 @@ export default class RetrieveDataScreen extends Component {
           isBluetoothEnabled={this.state.isBluetoothEnabled}
           onScan={this.scan}
         />
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            style={styles.warningIcon}
-            source={require('../assets/icons/retrievedata/warning.png')}
-          />
-          <Text style={styles.noDeviceConnectedText}>No Device Connected</Text>
-        </View>
-        <View style={styles.bottomSection}>
-          <Text style={styles.instructionText}>
-            Touch Bluetooth symbol on the top right to connect to a device
-          </Text>
-        </View>
+        {/* <NoDeviceConnected /> */}
+        <ContainLayout />
       </View>
     );
   }
@@ -183,30 +171,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f3f3f3',
     height: '100%',
-  },
-  instructionText: {
-    fontSize: 16,
-    margin: 29,
-    textAlign: 'center',
-    color: '#129cd8',
-  },
-  noDeviceConnectedText: {
-    fontSize: 20,
-    color: '#129cd8',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginLeft: 10,
-  },
-  bottomSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#e8e8e8',
-    marginTop: 'auto',
-    width: '100%',
-  },
-  warningIcon: {
-    resizeMode: 'contain',
-    width: 50,
-    height: 50,
   },
 });
