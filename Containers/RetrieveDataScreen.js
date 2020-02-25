@@ -1,16 +1,9 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {StyleSheet, Image, Text, View, Alert} from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
+import RetrieveDataToolbar from '../Components/Toolbar/RetrieveDataToolbar';
 
 import BluetoothSerial from 'react-native-bluetooth-serial-next';
 
@@ -33,13 +26,13 @@ export default class RetrieveDataScreen extends Component {
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    // this.connectToDevice = this.connectToDevice.bind(this);
+    this.connectToDevice = this.connectToDevice.bind(this);
     this.scan = this.scan.bind(this);
   }
 
   async componentDidMount() {
     this._eventListener.push(
-      BluetoothSerial.on('bluetoothEnabled', respond => {
+      BluetoothSerial.addListener('bluetoothEnabled', respond => {
         this.setState({
           isBluetoothEnabled: true,
         });
@@ -47,12 +40,16 @@ export default class RetrieveDataScreen extends Component {
     );
 
     this._eventListener.push(
-      BluetoothSerial.on('bluetoothDisabled', respond => {
+      BluetoothSerial.addListener('bluetoothDisabled', respond => {
         this.setState({
           isBluetoothEnabled: false,
         });
       }),
     );
+
+    (await BluetoothSerial.isEnabled())
+      ? this.setState({isBluetoothEnabled: true})
+      : '';
   }
 
   onAlert = (title, message) => {
@@ -79,11 +76,47 @@ export default class RetrieveDataScreen extends Component {
   async activateBluetooth() {
     try {
       await BluetoothSerial.enable();
+    } catch (err) {
+      console.log('Error happen at activateBluetooth()', err);
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika mengaktifkan bluetooth, silahkan ulangi dalam beberapa saat.',
+      );
+
       this.setState({
         loading: false,
       });
+    }
+  }
+
+  async scanAction() {
+    try {
+      const scanResponse = await Promise.all([
+        BluetoothSerial.list(),
+        BluetoothSerial.discoverUnpairedDevices(),
+      ]);
+
+      let pairedDevices = scanResponse[0];
+      let unPairedDevices = scanResponse[1];
+
+      console.log('Kesini');
+
+      this.setState({
+        pairedDs: pairedDevices,
+        foundDs: unPairedDevices,
+        loading: false,
+        modalVisible: true,
+      });
     } catch (err) {
-      console.log('Error happen at activateBluetooth()', err);
+      console.log('Error happened at scanAction Function', err);
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika melakukan pemindaian alat, silahkan ulangi dalam beberapa saat.',
+      );
+
+      this.setState({
+        loading: false,
+      });
     }
   }
 
@@ -95,9 +128,18 @@ export default class RetrieveDataScreen extends Component {
     const {isBluetoothEnabled} = this.state;
 
     if (isBluetoothEnabled) {
+      console.log('Got here');
+      this.scanAction();
     } else {
       this.activateBluetooth();
+      this.scanAction();
     }
+  }
+
+  async connectToDevice() {
+    const {navigate} = this.props.navigation;
+
+    navigate('ContainScreen');
   }
 
   render() {
@@ -111,15 +153,10 @@ export default class RetrieveDataScreen extends Component {
           onConnect={this.connectToDevice}
         />
         <LoadingModal visible={this.state.loading} />
-        <View style={styles.topSection}>
-          <TouchableOpacity onPress={this.scan}>
-            <Icon
-              name="bluetooth"
-              color={this.state.isBluetoothEnabled ? '#0082FC' : '#9c9c9c'}
-              size={40}
-            />
-          </TouchableOpacity>
-        </View>
+        <RetrieveDataToolbar
+          isBluetoothEnabled={this.state.isBluetoothEnabled}
+          onScan={this.scan}
+        />
         <View
           style={{
             alignItems: 'center',
@@ -133,7 +170,7 @@ export default class RetrieveDataScreen extends Component {
         </View>
         <View style={styles.bottomSection}>
           <Text style={styles.instructionText}>
-            Touch Bluetooth symbol on the top right to connect to a probe
+            Touch Bluetooth symbol on the top right to connect to a device
           </Text>
         </View>
       </View>
@@ -146,12 +183,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f3f3f3',
     height: '100%',
-  },
-  topSection: {
-    flexDirection: 'row',
-    padding: '5%',
-    marginLeft: 'auto',
-    marginBottom: 'auto',
   },
   instructionText: {
     fontSize: 16,
