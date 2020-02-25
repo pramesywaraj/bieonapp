@@ -45,7 +45,6 @@ export default class HomeScreen extends Component {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You have acces location');
         Geolocation.getCurrentPosition(
           position => {
             console.log(position.coords);
