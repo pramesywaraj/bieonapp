@@ -8,8 +8,12 @@ export default function SmallButton({action, label, textColor, buttonColor}) {
     <TouchableNativeFeedback
       onPress={action}
       background={TouchableNativeFeedback.SelectableBackground()}>
-      <View style={[buttonStyle.button, {backgroundColor: buttonColor}]}>
-        <Text style={[buttonStyle.textbutton, {color: textColor}]}>
+      <View
+        style={[
+          buttonStyle.button,
+          {backgroundColor: buttonColor || '#129cd8'},
+        ]}>
+        <Text style={[buttonStyle.textbutton, {color: textColor || 'white'}]}>
           {label}
         </Text>
       </View>
