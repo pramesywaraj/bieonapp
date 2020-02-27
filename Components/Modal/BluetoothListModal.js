@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
   ScrollView,
   View,
   TouchableOpacity,
-  ActivityIndicator,
 } from 'react-native';
 
 import Modal from 'react-native-modal';
@@ -34,7 +33,8 @@ export default function BluetoothListModal({
       animationType="slide"
       transparent={true}
       isVisible={visible}
-      onRequestClose={onClose}>
+      onRequestClose={onClose}
+      onBackdropPress={onClose}>
       <View style={styles.modalLayout}>
         <Text style={styles.modalTitle}>Connect to A New Device</Text>
 

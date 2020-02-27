@@ -15,6 +15,8 @@ import {Col, Row, Grid} from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
+import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class ContainDetailIoduiScreen extends Component {
   constructor(props) {
@@ -23,6 +25,7 @@ export default class ContainDetailIoduiScreen extends Component {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       sample_name: '',
       token: '',
+      loading: false,
     };
   }
   componentDidMount() {
@@ -38,6 +41,34 @@ export default class ContainDetailIoduiScreen extends Component {
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
+  write = async (id, message) => {
+    // try {
+    // for data1
+    this.setState({loading: true});
+    await BluetoothSerial.device(id).write(message);
+    await BluetoothSerial.readFromDevice().then(response => {
+      setTimeout(() => {
+        console.log('res', response);
+        if (!response) {
+          this.setState({loading: false});
+          alert('There is something error. Please try again');
+        } else {
+          let objectBluetooth = JSON.parse(response);
+          const newObject = {
+            iodium: objectBluetooth.iodium,
+            battery: objectBluetooth.battery,
+            count: objectBluetooth.count,
+            no_seri: objectBluetooth.no_seri,
+          };
+          this.setState({content: newObject});
+          this.props.navigation.navigate('ContainDetailIodiumScreen', {
+            contentBluetooth: JSON.stringify(newObject),
+          });
+          this.setState({loading: false});
+        }
+      }, 11000);
+    });
+  };
 
   async saveData() {
     try {
@@ -52,6 +83,7 @@ export default class ContainDetailIoduiScreen extends Component {
           longitude: 0.0,
           status_battery: parseInt(this.state.content.battery),
           sample_name: this.state.sample_name,
+          counter: this.state.content.count,
         },
         {
           headers: {
@@ -71,111 +103,110 @@ export default class ContainDetailIoduiScreen extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Grid>
-        <Row size={13}>
-          <View style={styles.container}>
-            <View style={styles.itemContainerTop}>
-              <Image
-                style={styles.itemIconImage}
-                source={require('../assets/icons/retrievedata/device.png')}
-              />
-              <Text style={styles.itemTextTop}>
-                {this.state.content.no_seri}
-              </Text>
-            </View>
-            <View style={[styles.button]}>
-              <Image
-                style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
-            </View>
+      <View style={styles.container}>
+        <LoadingModal visible={this.state.loading} />
+        <View style={styles.itemContainerTop}>
+          <Image
+            style={styles.itemIconImage}
+            source={require('../assets/icons/retrievedata/device.png')}
+          />
+          <Text style={styles.itemTextTop}>{this.state.content.no_seri}</Text>
+        </View>
+        <View style={[styles.button]}>
+          <Image
+            style={[styles.logo]}
+            source={require('../assets/icons/retrievedata/bluetoothblue.png')}></Image>
+        </View>
 
-            <View style={[styles.buttonGoogle]}>
-              <Image
-                style={[styles.logosearch]}
-                source={require('../assets/icons/retrievedata/searchgray.png')}></Image>
-              <Col
+        <View style={[styles.buttonGoogle]}>
+          <Image
+            style={[styles.logosearch]}
+            source={require('../assets/icons/retrievedata/searchgray.png')}></Image>
+          <Col
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <View>
+              <Row
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  marginTop: -30,
+                  marginBottom: -10,
                 }}>
-                <View>
-                  <Row
-                    style={{
-                      marginTop: -30,
-                      marginBottom: -10,
-                    }}>
-                    <Col
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Text style={[styles.textbuttonTop]}>Iodine Level</Text>
-                    </Col>
-                  </Row>
-                  <Row
-                    style={{
-                      marginTop: -20,
-                      marginBottom: -10,
-                    }}>
-                    <Col
-                      style={{alignItems: 'center', justifyContent: 'center'}}>
-                      <Text style={[styles.textbuttonMiddle]}>
-                        {this.state.content.iodium}
-                      </Text>
-                    </Col>
-                  </Row>
-                  <Row
-                    style={{
-                      marginTop: -40,
-                      marginBottom: -10,
-                    }}>
-                    <Col
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
-                      <Text style={[styles.textbuttonBottom]}>ppm</Text>
-                    </Col>
-                  </Row>
-                  <View style={[styles.BorderBottom]}></View>
-                  <Row>
-                    <Image
-                      style={styles.itemIconContain}
-                      source={require('../assets/icons/retrievedata/sample.png')}
-                    />
-                    <Col>
-                      <Text style={styles.text}>Sample Name</Text>
-                      <TextInput
-                        style={[styles.TextInput]}
-                        placeholder="Sample Name"
-                        underlineColorAndroid={'transparent'}
-                        onChangeText={sample_name =>
-                          this.setState({sample_name})
-                        }></TextInput>
-                    </Col>
-                  </Row>
-                </View>
-              </Col>
+                <Col
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={[styles.textbuttonTop]}>Iodine Level</Text>
+                </Col>
+              </Row>
+              <Row
+                style={{
+                  marginTop: -20,
+                  marginBottom: -10,
+                }}>
+                <Col style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={[styles.textbuttonMiddle]}>
+                    {this.state.content.iodium}
+                  </Text>
+                </Col>
+              </Row>
+              <Row
+                style={{
+                  marginTop: -40,
+                  marginBottom: -10,
+                }}>
+                <Col
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={[styles.textbuttonBottom]}>ppm</Text>
+                </Col>
+              </Row>
+              <View style={[styles.BorderBottom]}></View>
+              <Row>
+                <Image
+                  style={styles.itemIconContain}
+                  source={require('../assets/icons/retrievedata/sample.png')}
+                />
+                <Col>
+                  <Text style={styles.text}>Sample Name</Text>
+                  <TextInput
+                    style={[styles.TextInput]}
+                    placeholder="Sample Name"
+                    underlineColorAndroid={'transparent'}
+                    onChangeText={sample_name =>
+                      this.setState({sample_name})
+                    }></TextInput>
+                </Col>
+              </Row>
             </View>
-            <Row>
-              <Col>
-                <TouchableOpacity
-                  style={[styles.buttonsearchLeft]}
-                  onPress={() => this.saveData()}>
-                  <Text style={[styles.textbuttonsearch]}>Save</Text>
-                </TouchableOpacity>
-              </Col>
-              <Col>
-                <TouchableOpacity
-                  style={[styles.buttonsearchRight]}
-                  onPress={() => navigate('ContainScreen')}>
-                  <Text style={[styles.textbuttonsearch]}>Re-Measure</Text>
-                </TouchableOpacity>
-              </Col>
-            </Row>
-          </View>
+          </Col>
+        </View>
+        <Row>
+          <Col>
+            <TouchableOpacity
+              style={[styles.buttonsearchLeft]}
+              onPress={() => this.saveData()}>
+              <Text style={[styles.textbuttonsearch]}>Save</Text>
+            </TouchableOpacity>
+          </Col>
+          <Col>
+            <TouchableOpacity
+              style={[styles.buttonsearchRight]}
+              onPress={() =>
+                this.write(
+                  this.props.navigation.state.params.idBluetooth,
+                  'Data2',
+                )
+              }>
+              <Text style={[styles.textbuttonsearch]}>Re-Measure</Text>
+            </TouchableOpacity>
+          </Col>
         </Row>
-      </Grid>
+      </View>
     );
   }
 }

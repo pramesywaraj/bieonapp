@@ -25,13 +25,11 @@ export default class PopUpBluetoothScreen extends Component {
       devices: [],
       scanning: false,
       processing: false,
-      idPrint: this.props.navigation.state.params.idPrint,
     };
   }
 
   async componentDidMount() {
     this.events = this.props.events;
-
     try {
       const [isEnabled, devices] = await Promise.all([
         BluetoothSerial.isEnabled(),
@@ -106,9 +104,7 @@ export default class PopUpBluetoothScreen extends Component {
     try {
       if (value === 'on') {
         await BluetoothSerial.enable();
-        this.props.navigation.navigate('ScanningDeviceScreen', {
-          idPrint: this.state.idPrint,
-        });
+        this.props.navigation.navigate('SelectedDeviceScreen', {});
       } else {
         await BluetoothSerial.disable();
         this.props.navigation.navigate('RetrieveDataScreen');
@@ -314,6 +310,7 @@ export default class PopUpBluetoothScreen extends Component {
       }
     } catch (e) {
       alert(e.message);
+      console.log(e);
       this.setState({processing: false});
     }
   };

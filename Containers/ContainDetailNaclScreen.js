@@ -18,6 +18,8 @@ import {Col, Row, Grid} from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
+import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class ContainDetailNaclScreen extends Component {
   constructor(props) {
@@ -26,6 +28,7 @@ export default class ContainDetailNaclScreen extends Component {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       sample_name: '',
       token: '',
+      loading: false,
     };
   }
   componentDidMount() {
@@ -40,6 +43,36 @@ export default class ContainDetailNaclScreen extends Component {
     return Alert.alert(title, message, [
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
+  };
+  write = async (id, message) => {
+    // try {
+    // for data1
+    this.setState({loading: true});
+    await BluetoothSerial.device(id).write(message);
+    await BluetoothSerial.readFromDevice().then(response => {
+      setTimeout(() => {
+        console.log('res', response);
+        if (!response) {
+          this.setState({loading: false});
+          alert('There is something error. Please try again');
+        } else {
+          let objectBluetooth = JSON.parse(response);
+          const newObject = {
+            nacl: objectBluetooth.nacl,
+            battery: objectBluetooth.battery,
+            count: objectBluetooth.count,
+            no_seri: objectBluetooth.no_seri,
+            water_content: objectBluetooth.water_content,
+            whiteness: objectBluetooth.whiteness,
+          };
+          this.setState({content: newObject});
+          this.props.navigation.navigate('ContainDetailNaclScreen', {
+            contentBluetooth: JSON.stringify(newObject),
+          });
+          this.setState({loading: false});
+        }
+      }, 11000);
+    });
   };
 
   async saveData() {
@@ -57,6 +90,7 @@ export default class ContainDetailNaclScreen extends Component {
           longitude: 0.0,
           status_battery: parseInt(this.state.content.battery),
           sample_name: this.state.sample_name,
+          counter: this.state.content.count,
         },
         {
           headers: {
@@ -76,150 +110,146 @@ export default class ContainDetailNaclScreen extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Grid>
-        <Row size={13}>
-          <View style={styles.container}>
-            <View style={styles.itemContainerTop}>
-              <Image
-                style={styles.itemIconImage}
-                source={require('../assets/icons/retrievedata/device.png')}
-              />
-              <Text style={styles.itemTextTop}>
-                {this.state.content.no_seri}
-              </Text>
-            </View>
-            <View style={[styles.button]}>
-              <Image
-                style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
-              />
-            </View>
+      <View style={styles.container}>
+        <LoadingModal visible={this.state.loading} />
+        <View style={styles.itemContainerTop}>
+          <Image
+            style={styles.itemIconImage}
+            source={require('../assets/icons/retrievedata/device.png')}
+          />
+          <Text style={styles.itemTextTop}>{this.state.content.no_seri}</Text>
+        </View>
+        <View style={[styles.button]}>
+          <Image
+            style={[styles.logo]}
+            source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+          />
+        </View>
 
-            <View style={[styles.buttonGoogle]}>
-              <Image
-                style={[styles.logosearch]}
-                source={require('../assets/icons/retrievedata/searchgray.png')}
-              />
-              <Col
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <ScrollView>
-                  <View>
-                    <Row
-                      style={{
-                        marginTop: 10,
-                        marginBottom: -10,
-                      }}>
-                      <Col
-                        size={3}
-                        style={{
-                          alignItems: 'flex-start',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={[styles.textbuttonGoogle]}>NaCl</Text>
-                      </Col>
-                      <Col
-                        size={3}
-                        style={{
-                          alignItems: 'flex-end',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={[styles.textbuttonGoogle]}>
-                          : {this.state.content.nacl}%
-                        </Text>
-                      </Col>
-                    </Row>
-                    <View style={[styles.Border]} />
-                    <Row
-                      style={{
-                        marginTop: -10,
-                        marginBottom: -10,
-                      }}>
-                      <Col
-                        size={3}
-                        style={{
-                          alignItems: 'flex-start',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={[styles.textbuttonGoogle]}>Whiteness</Text>
-                      </Col>
-                      <Col
-                        size={3}
-                        style={{
-                          alignItems: 'flex-end',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={[styles.textbuttonGoogle]}>
-                          : {this.state.content.whiteness}%
-                        </Text>
-                      </Col>
-                    </Row>
-                    <View style={[styles.Border]} />
-                    <Row
-                      style={{
-                        marginTop: -10,
-                        marginBottom: -10,
-                      }}>
-                      <Col
-                        size={3}
-                        style={{
-                          alignItems: 'flex-start',
-                          justifyContent: 'center',
-                        }}>
-                        <Text style={[styles.textbuttonGoogle]}>
-                          Water Content
-                        </Text>
-                      </Col>
-                      <Col size={2} style={{}}>
-                        <Text style={[styles.textbuttonGoogle]}>
-                          : {this.state.content.water_content}%
-                        </Text>
-                      </Col>
-                    </Row>
-                    <View style={[styles.BorderBottom]} />
-                    <Row>
-                      <Image
-                        style={styles.itemIconContain}
-                        source={require('../assets/icons/retrievedata/sample.png')}
-                      />
-                      <Col>
-                        <Text style={styles.text}>Sample Name*</Text>
-                        <TextInput
-                          required
-                          style={[styles.TextInput]}
-                          placeholder="Sample Name"
-                          underlineColorAndroid={'transparent'}
-                          onChangeText={sample_name =>
-                            this.setState({sample_name})
-                          }
-                        />
-                      </Col>
-                    </Row>
-                  </View>
-                </ScrollView>
-              </Col>
-            </View>
-            <Row>
-              <Col>
-                <TouchableOpacity
-                  style={[styles.buttonsearchLeft]}
-                  onPress={() => this.saveData()}>
-                  <Text style={[styles.textbuttonsearch]}>Save</Text>
-                </TouchableOpacity>
-              </Col>
-              <Col>
-                <TouchableOpacity
-                  style={[styles.buttonsearchRight]}
-                  onPress={() => navigate('ContainScreen')}>
-                  <Text style={[styles.textbuttonsearch]}>Re-Measure</Text>
-                </TouchableOpacity>
-              </Col>
-            </Row>
-          </View>
+        <View style={[styles.buttonGoogle]}>
+          <Image
+            style={[styles.logosearch]}
+            source={require('../assets/icons/retrievedata/searchgray.png')}
+          />
+          <Col
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <ScrollView>
+              <View>
+                <Row
+                  style={{
+                    marginTop: 10,
+                    marginBottom: -10,
+                  }}>
+                  <Col
+                    size={3}
+                    style={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={[styles.textbuttonGoogle]}>NaCl</Text>
+                  </Col>
+                  <Col
+                    size={3}
+                    style={{
+                      alignItems: 'flex-end',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={[styles.textbuttonGoogle]}>
+                      : {this.state.content.nacl}%
+                    </Text>
+                  </Col>
+                </Row>
+                <View style={[styles.Border]} />
+                <Row
+                  style={{
+                    marginTop: -10,
+                    marginBottom: -10,
+                  }}>
+                  <Col
+                    size={3}
+                    style={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={[styles.textbuttonGoogle]}>Whiteness</Text>
+                  </Col>
+                  <Col
+                    size={3}
+                    style={{
+                      alignItems: 'flex-end',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={[styles.textbuttonGoogle]}>
+                      : {this.state.content.whiteness}%
+                    </Text>
+                  </Col>
+                </Row>
+                <View style={[styles.Border]} />
+                <Row
+                  style={{
+                    marginTop: -10,
+                    marginBottom: -10,
+                  }}>
+                  <Col
+                    size={3}
+                    style={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={[styles.textbuttonGoogle]}>Water Content</Text>
+                  </Col>
+                  <Col size={2} style={{}}>
+                    <Text style={[styles.textbuttonGoogle]}>
+                      : {this.state.content.water_content}%
+                    </Text>
+                  </Col>
+                </Row>
+                <View style={[styles.BorderBottom]} />
+                <Row>
+                  <Image
+                    style={styles.itemIconContain}
+                    source={require('../assets/icons/retrievedata/sample.png')}
+                  />
+                  <Col>
+                    <Text style={styles.text}>Sample Name*</Text>
+                    <TextInput
+                      required
+                      style={[styles.TextInput]}
+                      placeholder="Sample Name"
+                      underlineColorAndroid={'transparent'}
+                      onChangeText={sample_name => this.setState({sample_name})}
+                    />
+                  </Col>
+                </Row>
+              </View>
+            </ScrollView>
+          </Col>
+        </View>
+        <Row>
+          <Col>
+            <TouchableOpacity
+              style={[styles.buttonsearchLeft]}
+              onPress={() => this.saveData()}>
+              <Text style={[styles.textbuttonsearch]}>Save</Text>
+            </TouchableOpacity>
+          </Col>
+          <Col>
+            <TouchableOpacity
+              style={[styles.buttonsearchRight]}
+              onPress={() =>
+                this.write(
+                  this.props.navigation.state.params.idBluetooth,
+                  'Data1',
+                )
+              }>
+              <Text style={[styles.textbuttonsearch]}>Re-Measure</Text>
+            </TouchableOpacity>
+          </Col>
         </Row>
-      </Grid>
+      </View>
     );
   }
 }

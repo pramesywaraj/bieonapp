@@ -15,86 +15,46 @@ import BluetoothSerial, {
   withSubscription,
 } from 'react-native-bluetooth-serial-next';
 import {Buffer} from 'buffer';
+import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class ScanningDeviceScreen extends Component {
   constructor(props) {
     super(props);
-    this.events = null;
     this.state = {
       isEnabled: false,
       device: null,
       devices: [],
+      unpairedDevices: [],
       scanning: false,
       processing: false,
-      idPrint: this.props.navigation.state.params.idPrint,
+      loading: false,
     };
-    console.log('id', this.state.idPrint);
   }
 
   async componentDidMount() {
-    this.events = this.props.events;
-
+    this.setState({loading: true});
     try {
-      const [isEnabled, devices] = await Promise.all([
+      const [isEnabled, unpairedDevices] = await Promise.all([
         BluetoothSerial.isEnabled(),
-        BluetoothSerial.list(),
+        BluetoothSerial.discoverUnpairedDevices(),
       ]);
-
+      const newArray = [];
+      unpairedDevices.map(dev => {
+        if (!newArray.some(o => o.name === dev.name)) {
+          newArray.push({...dev});
+        }
+      });
       this.setState({
         isEnabled,
-        devices: devices.map(device => ({
-          ...device,
-          paired: true,
-          connected: false,
+        unpairedDevices: newArray.map(unpaired => ({
+          ...unpaired,
+          unpaired: true,
         })),
       });
+      this.setState({loading: false});
     } catch (e) {
       alert(e.message);
     }
-
-    this.events.on('bluetoothEnabled', () => {
-      alert('Bluetooth enabled');
-      this.setState({isEnabled: true});
-    });
-
-    this.events.on('bluetoothDisabled', () => {
-      alert('Bluetooth disabled');
-      this.setState({isEnabled: false});
-    });
-
-    this.events.on('connectionSuccess', ({device}) => {
-      if (device) {
-        alert(`Device ${device.name}<${device.id}> has been connected`);
-      }
-    });
-
-    this.events.on('connectionFailed', ({device}) => {
-      if (device) {
-        alert(`Failed to connect with device ${device.name}<${device.id}>`);
-      }
-    });
-
-    this.events.on('connectionLost', ({device}) => {
-      if (device) {
-        alert(`Device ${device.name}<${device.id}> connection has been lost`);
-      }
-    });
-
-    this.events.on('data', result => {
-      if (result) {
-        const {id, data} = result;
-        console.log(`Data from device ${id} : ${data}`);
-      }
-    });
-
-    this.events.on('error', e => {
-      if (e) {
-        console.log(`Error: ${e.message}`);
-        alert(e.message);
-      }
-    });
-
-    this.discoverUnpairedDevices();
   }
 
   requestEnable = () => async () => {
@@ -290,9 +250,13 @@ export default class ScanningDeviceScreen extends Component {
     try {
       const connected = await BluetoothSerial.device(id).connect();
 
-      if (connected) {
-        alert(`Connected to device ${connected.name}<${connected.id}>`);
+      console.log('connect' + connected.address);
 
+      if (connected.address !== '') {
+        alert(`Connected to device ${connected.name}<${connected.id}>`);
+        this.props.navigation.navigate('ContainScreen', {
+          idBluetooth: connected.address,
+        });
         this.setState(({devices, device}) => ({
           processing: false,
           device: {
@@ -351,99 +315,33 @@ export default class ScanningDeviceScreen extends Component {
     }
   };
 
-  write = async (id, message) => {
-    try {
-      await BluetoothSerial.device(id).write(message);
-      alert('Successfuly wrote to device');
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  writePackets = async (id, message, packetSize = 64) => {
-    try {
-      const device = BluetoothSerial.device(id);
-      const toWrite = iconv.encode(message, 'cp852');
-      const writePromises = [];
-      const packetCount = Math.ceil(toWrite.length / packetSize);
-
-      for (var i = 0; i < packetCount; i++) {
-        const packet = new Buffer(packetSize);
-        packet.fill(' ');
-        toWrite.copy(packet, 0, i * packetSize, (i + 1) * packetSize);
-        writePromises.push(device.write(packet));
-      }
-
-      await Promise.all(writePromises).then(() => alert('Writed packets'));
-    } catch (e) {
-      alert(e.message);
-    }
-  };
   render() {
-    console.log(this.state.device);
-
     const {navigate} = this.props.navigation;
     return (
-      <Grid>
-        <Row size={13}>
-          <View style={styles.container}>
-            <View style={[styles.buttonGoogle]}>
-              <Col
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text style={[styles.textbuttonGoogle]}>Scanning</Text>
-                <Text style={[styles.textbuttontitle]}>
-                  Make sure your device is turned on and discoverable. Select a
-                  device below to connect
-                </Text>
-                <ScrollView>
-                  <View>
-                    <View style={[styles.BorderTop]} />
-                    <TouchableOpacity>
-                      <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>Unpaired 1</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View style={[styles.Border]} />
-                    <TouchableOpacity>
-                      <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>Unpaired 2</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View style={[styles.Border]} />
-                    <TouchableOpacity>
-                      <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>Unpaired 3</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View style={[styles.Border]} />
-                    <TouchableOpacity>
-                      <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>Unpaired 4</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View style={[styles.Border]} />
-                    <TouchableOpacity>
-                      <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>Unpaired 5</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </ScrollView>
-              </Col>
+      <View style={styles.container}>
+        <LoadingModal visible={this.state.loading} />
+        <View style={[styles.buttonGoogle]}>
+          <Text style={[styles.textbuttonGoogle]}>Scanning</Text>
+          <Text style={[styles.textbuttontitle]}>
+            Make sure your device is turned on and discoverable. Select a device
+            below to connect
+          </Text>
+          <ScrollView>
+            <View>
+              {this.state.unpairedDevices.map(val => (
+                <View>
+                  <View style={[styles.BorderTop]} />
+                  <TouchableOpacity onPress={() => this.connect(val.address)}>
+                    <View style={styles.itemContainer}>
+                      <Text style={styles.itemText}>{val.name}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ))}
             </View>
-            <TouchableOpacity
-              style={[styles.buttonsearch]}
-              onPress={() =>
-                navigate('SelectedDeviceScreen', {idPrint: this.state.idPrint})
-              }>
-              <Text style={[styles.textbuttonsearch]}>Search Device</Text>
-            </TouchableOpacity>
-          </View>
-        </Row>
-      </Grid>
+          </ScrollView>
+        </View>
+      </View>
     );
   }
 }

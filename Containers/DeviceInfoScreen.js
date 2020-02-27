@@ -74,44 +74,42 @@ export default class DeviceInfoScreen extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Grid style={{marginTop: 80}}>
-        <Row size={13}>
-          <View style={styles.container}>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/devicestatus/seri.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>No. Seri Device</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.content.no_seri}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/devicestatus/battery.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Battery Status</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.content.battery}%
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            {/* <View style={styles.itemContainer}>
+      <View style={styles.container}>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/devicestatus/seri.png')}
+            />
+            <Col>
+              <Text style={styles.text}>No. Seri Device</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                underlineColorAndroid={'transparent'}>
+                {this.state.content.no_seri}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/devicestatus/battery.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Battery Status</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                underlineColorAndroid={'transparent'}>
+                {this.state.content.battery}%
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -129,48 +127,46 @@ export default class DeviceInfoScreen extends Component {
                 </Col>
               </Row>
             </View> */}
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/devicestatus/usage.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Ammount of Usage</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.content.count}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/devicestatus/calibration.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Last of Calibration</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.content.lastcal}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() => this.saveData()}>
-              <Text style={[styles.textbutton]}>SAVE</Text>
-            </TouchableOpacity>
-          </View>
-        </Row>
-      </Grid>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/devicestatus/usage.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Ammount of Usage</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                underlineColorAndroid={'transparent'}>
+                {this.state.content.count}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/devicestatus/calibration.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Last of Calibration</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                underlineColorAndroid={'transparent'}>
+                {this.state.content.lastcal}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <TouchableOpacity
+          style={[styles.button]}
+          onPress={() => this.saveData()}>
+          <Text style={[styles.textbutton]}>SAVE</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }

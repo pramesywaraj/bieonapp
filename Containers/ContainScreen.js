@@ -382,7 +382,7 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        }, 11000);
+        }, 30000);
       });
     } else if (message === 'Data2') {
       BluetoothSerial.device(id).write(message);
@@ -400,167 +400,144 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        }, 11000);
+        }, 30000);
       });
     } else {
       BluetoothSerial.device(id).write(message);
       BluetoothSerial.readFromDevice().then(response => {
         setTimeout(() => {
           console.log('res', response);
-          let objectBluetooth = JSON.parse(response);
-          const newObject = {
-            lastcal: objectBluetooth.lastcal,
-            battery: objectBluetooth.battery,
-            count: objectBluetooth.count,
-            no_seri: objectBluetooth.no_seri,
-          };
-          this.props.navigation.navigate('DeviceInfoScreen', {
-            contentBluetooth: JSON.stringify(newObject),
-          });
-          this.setState({loading: false});
-        }, 13000);
+        }, 30000);
+        let objectBluetooth = JSON.parse(response);
+        const newObject = {
+          lastcal: objectBluetooth.lastcal,
+          battery: objectBluetooth.battery,
+          count: objectBluetooth.count,
+          no_seri: objectBluetooth.no_seri,
+        };
+        this.props.navigation.navigate('DeviceInfoScreen', {
+          contentBluetooth: JSON.stringify(newObject),
+        });
+        this.setState({loading: false});
       });
     }
   };
 
-  writePackets = async (id, message, packetSize = 64) => {
-    try {
-      const device = BluetoothSerial.device(id);
-      const toWrite = iconv.encode(message, 'cp852');
-      const writePromises = [];
-      const packetCount = Math.ceil(toWrite.length / packetSize);
-
-      for (var i = 0; i < packetCount; i++) {
-        const packet = new Buffer(packetSize);
-        packet.fill(' ');
-        toWrite.copy(packet, 0, i * packetSize, (i + 1) * packetSize);
-        writePromises.push(device.write(packet));
-      }
-
-      await Promise.all(writePromises).then(() => alert('Writed packets'));
-    } catch (e) {
-      alert(e.message);
-    }
-  };
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Grid>
-        <Row size={13}>
-          <LoadingModal visible={this.state.loading} />
-          <View style={styles.container}>
-            <View style={styles.itemContainer}>
-              <Image
-                style={styles.itemIconImage}
-                source={require('../assets/icons/retrievedata/device.png')}
-              />
-              <Text style={styles.itemText}>Save Data</Text>
-            </View>
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() => navigate('PopUpBluetoothScreen')}>
-              <Image
-                style={[styles.logo]}
-                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
-              />
-            </TouchableOpacity>
-            {/* loading */}
-            <View>
-              <TouchableOpacity
-                style={[styles.buttonGoogle]}
-                onPress={() =>
-                  this.write(
-                    this.props.navigation.state.params.idBluetooth,
-                    'Data1',
-                  )
-                }>
-                <Row>
-                  <Col
-                    size={4}
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Text style={[styles.textbuttonGoogle]}>
-                      NaCl, Whiteness and Water Content
-                    </Text>
-                  </Col>
-                  <Col
-                    // eslint-disable-next-line react-native/no-inline-styles
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      style={styles.itemGoogleImage}
-                      source={require('../assets/icons/retrievedata/searchblue.png')}
-                    />
-                  </Col>
-                </Row>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.buttonGoogle]}
-                onPress={() =>
-                  this.write(
-                    this.props.navigation.state.params.idBluetooth,
-                    'Data2',
-                  )
-                }>
-                <Row>
-                  <Col
-                    size={4}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Text style={[styles.textbuttonGoogle]}>Iodium</Text>
-                  </Col>
-                  <Col
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      style={styles.itemGoogleImage}
-                      source={require('../assets/icons/retrievedata/searchblue.png')}
-                    />
-                  </Col>
-                </Row>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.buttonGoogle]}
-                onPress={() =>
-                  this.write(
-                    this.props.navigation.state.params.idBluetooth,
-                    'Device',
-                  )
-                }>
-                <Row>
-                  <Col
-                    size={4}
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Text style={[styles.textbuttonGoogle]}>Device Info</Text>
-                  </Col>
-                  <Col
-                    style={{
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      style={styles.itemGoogleImage}
-                      source={require('../assets/icons/retrievedata/searchblue.png')}
-                    />
-                  </Col>
-                </Row>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Row>
-      </Grid>
+      <View style={styles.container}>
+        <LoadingModal visible={this.state.loading} />
+        <View style={styles.itemContainer}>
+          <Image
+            style={styles.itemIconImage}
+            source={require('../assets/icons/retrievedata/device.png')}
+          />
+          <Text style={styles.itemText}>Save Data</Text>
+        </View>
+        <TouchableOpacity
+          style={[styles.button]}
+          onPress={() => navigate('PopUpBluetoothScreen')}>
+          <Image
+            style={[styles.logo]}
+            source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+          />
+        </TouchableOpacity>
+        {/* loading */}
+        <View>
+          <TouchableOpacity
+            style={[styles.buttonGoogle]}
+            onPress={() =>
+              this.write(
+                this.props.navigation.state.params.idBluetooth,
+                'Data1',
+              )
+            }>
+            <Row>
+              <Col
+                size={4}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={[styles.textbuttonGoogle]}>
+                  NaCl, Whiteness and Water Content
+                </Text>
+              </Col>
+              <Col
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={styles.itemGoogleImage}
+                  source={require('../assets/icons/retrievedata/searchblue.png')}
+                />
+              </Col>
+            </Row>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.buttonGoogle]}
+            onPress={() =>
+              this.write(
+                this.props.navigation.state.params.idBluetooth,
+                'Data2',
+              )
+            }>
+            <Row>
+              <Col
+                size={4}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={[styles.textbuttonGoogle]}>Iodium</Text>
+              </Col>
+              <Col
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={styles.itemGoogleImage}
+                  source={require('../assets/icons/retrievedata/searchblue.png')}
+                />
+              </Col>
+            </Row>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.buttonGoogle]}
+            onPress={() =>
+              this.write(
+                this.props.navigation.state.params.idBluetooth,
+                'Device',
+              )
+            }>
+            <Row>
+              <Col
+                size={4}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={[styles.textbuttonGoogle]}>Device Info</Text>
+              </Col>
+              <Col
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  style={styles.itemGoogleImage}
+                  source={require('../assets/icons/retrievedata/searchblue.png')}
+                />
+              </Col>
+            </Row>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
 }

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+import FormData from 'form-data';
 import {
+  Platform,
   StyleSheet,
   Image,
   ImageBackground,
@@ -27,13 +29,17 @@ export default class ProfileScreen extends Component {
       banner: [],
       currentUser: [],
       gender: 0,
+      picture: '',
     };
   }
   async componentDidMount() {
     this.setState({
       currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
+      token: await AsyncStorage.getItem('@userAuth'),
+      picture:
+        'http://bieonbe.defuture.tech/' +
+        JSON.parse(await AsyncStorage.getItem('@userData')).picture_user,
     });
-    console.log('user', this.state.currentUser);
     if (this.state.currentUser.gender === 0) {
       this.setState({gender: 'Female'});
     } else {
@@ -47,7 +53,7 @@ export default class ProfileScreen extends Component {
         `${Config.API_URL}/company/detail/` + this.state.currentUser.company_id,
         {
           headers: {
-            token: await AsyncStorage.getItem('@userAuth'),
+            token: this.state.token,
           },
         },
       );
@@ -59,63 +65,80 @@ export default class ProfileScreen extends Component {
     }
   }
   // te
-  changeLogo = () => {
+  createFormData = (photo, body) => {
+    const data = new FormData();
+
+    data.append('image', {
+      name: photo.fileName,
+      type: photo.type,
+      uri:
+        Platform.OS === 'android'
+          ? photo.uri
+          : photo.uri.replace('file://', ''),
+    });
+    console.log('dataupload', JSON.stringify(data));
+    return data;
+  };
+  async changePicture() {
     console.log('click');
     const options = {
       noData: true,
     };
+    const data = new FormData();
+
     ImagePicker.launchImageLibrary(options, response => {
       if (response.uri) {
+        this.setState({picture: response.uri});
+        data.append('image', {
+          name: response.fileName,
+          type: response.type,
+          uri: response.uri,
+        });
         // this.setState({photo: response});
         console.log('respo', response);
         axios
-          .post(
-            'http://bieonbe.defuture.tech/upload-image/user',
-            response.uri,
-            {
-              headers: {'content-type': 'multipart/form-data'},
+          .post('http://bieonbe.defuture.tech/upload-image/user', data, {
+            headers: {
+              'content-type': 'multipart/form-data',
             },
-          )
-          .then(response2 => {
-            console.log('lol', response2.data.data);
-            // this.setState({picture: response.data.data});
+          })
+          .then(respo => {
+            this.savePicture(respo.data.data);
           })
           .catch(function(error) {
             console.log('er', error);
           });
       }
     });
-  };
-  async saveProfile() {
-    try {
-      const {navigate} = this.props.navigation;
-      let response = await axios.patch(
-        `${Config.API_URL}/device/device-edit`,
+  }
+  savePicture(picture_user) {
+    console.log('tok', this.state.token);
+
+    axios
+      .patch(
+        'http://bieonbe.defuture.tech/auth/update',
         {
-          main_device_id: 1,
-          device_id: this.state.device_id,
-          counter: this.state.content.count,
-          company_id: 1,
-          status_battery: parseInt(this.state.content.battery),
-          last_calibration: '2020-12-02T23:00:00+07:00',
+          picture_user: picture_user,
+          email: this.state.currentUser.email,
+          fullname: this.state.currentUser.fullname,
+          phone_number: this.state.currentUser.phone_number,
+          company_id: this.state.currentUser.company_id,
+          position: this.state.currentUser.position,
+          address: this.state.currentUser.address,
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            token: await AsyncStorage.getItem('@userAuth'),
+            token: this.state.token,
           },
         },
-      );
-      this.onAlert('Success', 'Data has been edited.');
-      navigate('ProfileScreen');
-      console.log('what?', response.config.data);
-    } catch (err) {
-      this.onAlert(
-        'There is an error',
-        'There is an error when save data. Please try again',
-      );
-      console.log('Terjadi kesalahan pada bagian konten', err);
-    }
+      )
+      .then(resp => {
+        console.log('change picture', resp.data);
+      })
+      .catch(function(error) {
+        console.log('error change picture', error);
+      });
   }
   goToEditProfile = () => {
     const {navigate} = this.props.navigation;
@@ -132,99 +155,97 @@ export default class ProfileScreen extends Component {
     ];
     const {navigate} = this.props.navigation;
     return (
-      <Grid style={{marginTop: 30}}>
-        <Row size={13}>
-          <View style={styles.container}>
+      <View style={styles.container}>
+        <Image
+          style={styles.avatarImage}
+          source={{
+            uri: this.state.picture,
+          }}
+        />
+        <Icon
+          name="user-edit"
+          style={styles.userEdit}
+          onPress={() => this.changePicture()}
+        />
+        {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
+        <Text style={[styles.textTitle]}>
+          {this.state.currentUser.fullname}
+        </Text>
+        <View style={styles.itemContainer}>
+          <Row>
             <Image
-              style={styles.avatarImage}
-              source={{
-                uri:
-                  'http://bieonbe.defuture.tech/' +
-                  this.state.currentUser.picture_user,
-              }}
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/email.png')}
             />
-            {/* <Icon
-              name="user-edit"
-              style={styles.userEdit}
-              onPress={() => this.changeLogo()}
-            /> */}
-            {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
-            <Text style={[styles.textTitle]}>
-              {this.state.currentUser.fullname}
-            </Text>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/email.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Email</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Email"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.email}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/phone.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Phone Number</Text>
-                  <TextInput
-                    style={[styles.TextInput]}
-                    placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.phone_number}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/address.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Address</Text>
-                  <TextInput
-                    style={[styles.TextArea]}
-                    placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}
-                    multiline={true}
-                    numberOfLines={10}>
-                    {this.state.currentUser.address}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/gender.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Gender</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.gender}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            {/* <View style={styles.itemContainer}>
+            <Col>
+              <Text style={styles.text}>Email</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Email"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.email}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/phone.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Phone Number</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.phone_number}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/address.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Address</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextArea]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}
+                multiline={true}
+                numberOfLines={10}>
+                {this.state.currentUser.address}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/gender.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Gender</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}>
+                {this.state.gender}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -244,50 +265,48 @@ export default class ProfileScreen extends Component {
                 </Col>
               </Row>
             </View> */}
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/position.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Position</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Position"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.position}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/agency.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Company/Institution</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Company/Institution"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.companyName}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() => this.goToEditProfile()}>
-              <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
-            </TouchableOpacity>
-          </View>
-        </Row>
-      </Grid>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/position.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Position</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Position"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.position}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/agency.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Company/Institution</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Company/Institution"
+                underlineColorAndroid={'transparent'}>
+                {this.state.companyName}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        {/* <TouchableOpacity
+          style={[styles.button]}
+          onPress={() => this.goToEditProfile()}>
+          <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
+        </TouchableOpacity> */}
+      </View>
     );
   }
 }
@@ -365,8 +384,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   avatarImage: {
-    borderRadius: 600,
-    resizeMode: 'contain',
+    borderRadius: 100,
     width: 110,
     height: 110,
     marginTop: -20,

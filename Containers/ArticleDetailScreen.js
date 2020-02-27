@@ -38,6 +38,8 @@ const deviceWindow = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: 'auto',
+    paddingBottom: '20%',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',

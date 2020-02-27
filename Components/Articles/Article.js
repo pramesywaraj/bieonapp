@@ -39,10 +39,10 @@ export default function Article({onClick, title, imageUri, createdAt}) {
 
 const styles = StyleSheet.create({
   articleContainer: {
-    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 10,
+    height: 'auto',
   },
   articleImageContainer: {
     backgroundColor: 'black',

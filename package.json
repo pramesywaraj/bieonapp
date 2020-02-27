@@ -1,6 +1,6 @@
 {
   "name": "Bieon",
-  "version": "0.0.1",
+  "version": "0.1.7",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@dooboo-ui/native-accordion": "^0.4.4",
     "@react-native-community/async-storage": "^1.7.1",
+    "@react-native-community/cli": "^4.1.1",
     "@react-native-community/datetimepicker": "^2.2.1",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.6",

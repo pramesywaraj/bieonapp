@@ -87,6 +87,12 @@ const RetrieveDataNavigator = createStackNavigator({
       headerShown: false,
     },
   },
+  DeviceInfoScreen: {
+    screen: DeviceInfoScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
 });
 
 const ViewDataNavigator = createStackNavigator({
@@ -129,12 +135,6 @@ const SettingsNavigator = createStackNavigator({
   },
   PrivacyPolicyScreen: {
     screen: PrivacyPolicyScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
-  DeviceInfoScreen: {
-    screen: DeviceInfoScreen,
     navigationOptions: {
       headerShown: false,
     },

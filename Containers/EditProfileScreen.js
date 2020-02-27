@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
   View,
   Dimensions,
@@ -18,6 +17,7 @@ import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
 export default class EditProfileScreen extends Component {
   constructor(props) {
     super(props);
@@ -70,13 +70,9 @@ export default class EditProfileScreen extends Component {
         // this.setState({photo: response});
         console.log('respo', response);
         axios
-          .post(
-            'http://bieonbe.defuture.tech/upload-image/user',
-            response.uri,
-            {
-              headers: {'content-type': 'multipart/form-data'},
-            },
-          )
+          .post(`${Config.API_URL}/upload-image/user`, response.uri, {
+            headers: {'content-type': 'multipart/form-data'},
+          })
           .then(response2 => {
             console.log('lol', response2.data.data);
             // this.setState({picture: response.data.data});
@@ -128,70 +124,66 @@ export default class EditProfileScreen extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <Grid style={{marginTop: 30}}>
-        <Row size={13}>
-          <View style={styles.container}>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/profile.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Name</Text>
-                  <TextInput
-                    style={[styles.TextInput]}
-                    placeholder="Name"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.fullname}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/phone.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Phone Number</Text>
-                  <TextInput
-                    style={[styles.TextInput]}
-                    placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.currentUser.phone_number}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/address.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Address</Text>
-                  <TextInput
-                    style={[styles.TextArea]}
-                    placeholder="Phone Number"
-                    underlineColorAndroid={'transparent'}
-                    multiline={true}
-                    numberOfLines={10}>
-                    {this.state.currentUser.address}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View>
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() => this.saveProfile()}>
-              <Text style={[styles.textbutton]}>SAVE</Text>
-            </TouchableOpacity>
-          </View>
-        </Row>
-      </Grid>
+      <View style={styles.container}>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/profile.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Name</Text>
+              <TextInput
+                style={[styles.TextInput]}
+                placeholder="Name"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.fullname}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/phone.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Phone Number</Text>
+              <TextInput
+                style={[styles.TextInput]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}>
+                {this.state.currentUser.phone_number}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/editprofile/address.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Address</Text>
+              <TextInput
+                style={[styles.TextArea]}
+                placeholder="Phone Number"
+                underlineColorAndroid={'transparent'}
+                multiline={true}
+                numberOfLines={10}>
+                {this.state.currentUser.address}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
+        <TouchableOpacity
+          style={[styles.button]}
+          onPress={() => this.saveProfile()}>
+          <Text style={[styles.textbutton]}>SAVE</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }

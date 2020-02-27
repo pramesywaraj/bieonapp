@@ -28,16 +28,15 @@ export default class HomeScreen extends Component {
       articles: [],
       refreshing: true,
       token: '',
-      banner: [],
+      banners: [],
     };
 
-    this.fetchArticles = this.fetchArticles.bind(this);
+    this.fetchData = this.fetchData.bind(this);
     this.handleRefresh = this.handleRefresh.bind(this);
     this.renderSeparator = this.renderSeparator.bind(this);
   }
   async componentDidMount() {
-    this.fetchArticles();
-    this.fetchBanner();
+    this.fetchData();
     this.requestLocationPermission();
     // Instead of navigator.geolocation, just use Geolocation.
   }
@@ -75,38 +74,31 @@ export default class HomeScreen extends Component {
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
-  async fetchBanner() {
+
+  async fetchData() {
+    let token = await AsyncStorage.getItem('@userAuth');
     try {
-      let response = await axios.get(`${Config.API_URL}/banner`, {
-        headers: {
-          token: await AsyncStorage.getItem('@userAuth'),
-        },
-      });
-      const banner = response.data.data;
-      console.log('banners', banner.banners);
-      this.setState({banner: banner.banners, refreshing: false});
-    } catch (err) {
-      this.onAlert(
-        'There is an error',
-        'There is an error when load data. Please refresh again',
-      );
+      const response = await Promise.all([
+        axios.get(`${Config.API_URL}/article/list`, {
+          headers: {
+            token: token,
+          },
+        }),
+        axios.get(`${Config.API_URL}/banner`, {
+          headers: {
+            token: token,
+          },
+        }),
+      ]);
+
+      let {articles} = response[0].data.data;
+      let {banners} = response[1].data.data;
+
       this.setState({
-        ...this.state.banner,
+        articles: articles,
+        banners: banners,
         refreshing: false,
       });
-      console.log('Terjadi kesalahan pada bagian HomeScreen', err);
-    }
-  }
-  async fetchArticles() {
-    try {
-      const {data} = await axios.get(`${Config.API_URL}/article/list`, {
-        headers: {
-          token: await AsyncStorage.getItem('@userAuth'),
-        },
-      });
-
-      const {articles} = data.data;
-      this.setState({articles: articles, refreshing: false});
     } catch (err) {
       this.onAlert(
         'There is an error',
@@ -127,8 +119,7 @@ export default class HomeScreen extends Component {
         ...this.state.articles,
         refreshing: true,
       },
-      () => this.fetchArticles(),
-      this.fetchBanner(),
+      () => this.fetchData(),
     );
   }
 
@@ -161,18 +152,13 @@ export default class HomeScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <TouchableHighlight onPress={this.createPDF}>
-            <Text>Create PDF</Text>
-          </TouchableHighlight>
-        </View>
         <Carousel
           autoplay
           autoplayTimeout={5000}
           loop
           index={0}
           pageSize={BannerWidth}>
-          {this.state.banner.map((bann, index) =>
+          {this.state.banners.map((bann, index) =>
             this.renderPage(`${Config.API_URL}/` + bann.picture, index),
           )}
         </Carousel>
@@ -213,7 +199,7 @@ const styles = StyleSheet.create({
     height: '40%',
   },
   articleContainer: {
-    marginTop: '62%',
+    marginTop: '70%',
     position: 'absolute',
     height: '100%',
     width: '100%',
