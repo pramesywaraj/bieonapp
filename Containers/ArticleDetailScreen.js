@@ -14,20 +14,22 @@ export default function ArticleDetailScreen({navigation}) {
   const {article} = navigation.state.params;
 
   return (
-    <ScrollView style={styles.container}>
-      <Image
-        style={[styles.headingImage]}
-        resizeMode="cover"
-        source={{
-          uri: `${Config.API_URL}/${article.picture}`,
-        }}
-      />
-      <View style={styles.articleContainer}>
-        <Text style={styles.articleTitle}>{article.title}</Text>
-        <Text style={styles.articleDate}>
-          {moment(article.create_at).format('DD/MMM/YYYY')}
-        </Text>
-        <Text style={styles.articleText}>{article.description}</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Image
+          style={[styles.headingImage]}
+          resizeMode="cover"
+          source={{
+            uri: `${Config.API_URL}/${article.picture}`,
+          }}
+        />
+        <View style={styles.articleContainer}>
+          <Text style={styles.articleTitle}>{article.title}</Text>
+          <Text style={styles.articleDate}>
+            {moment(article.create_at).format('DD/MMM/YYYY')}
+          </Text>
+          <Text style={styles.articleText}>{article.description}</Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -39,13 +41,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: 'auto',
-    paddingBottom: '20%',
+    paddingBottom: '70%',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
-    top: 0,
     width: '100%',
-    minHeight: '30%',
+    minHeight: '20%',
   },
   articleContainer: {
     width: '100%',

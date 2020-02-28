@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import FormData from 'form-data';
 import {
+  ScrollView,
   Platform,
   StyleSheet,
   Image,
@@ -145,107 +146,100 @@ export default class ProfileScreen extends Component {
     navigate('EditProfileScreen');
   };
   render() {
-    let data = [
-      {
-        value: 'Male',
-      },
-      {
-        value: 'Female',
-      },
-    ];
     const {navigate} = this.props.navigation;
     return (
-      <View style={styles.container}>
-        <Image
-          style={styles.avatarImage}
-          source={{
-            uri: this.state.picture,
-          }}
-        />
-        <Icon
-          name="user-edit"
-          style={styles.userEdit}
-          onPress={() => this.changePicture()}
-        />
-        {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
-        <Text style={[styles.textTitle]}>
-          {this.state.currentUser.fullname}
-        </Text>
-        <View style={styles.itemContainer}>
-          <Row>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/email.png')}
-            />
-            <Col>
-              <Text style={styles.text}>Email</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Email"
-                underlineColorAndroid={'transparent'}>
-                {this.state.currentUser.email}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/phone.png')}
-            />
-            <Col>
-              <Text style={styles.text}>Phone Number</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Phone Number"
-                underlineColorAndroid={'transparent'}>
-                {this.state.currentUser.phone_number}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/address.png')}
-            />
-            <Col>
-              <Text style={styles.text}>Address</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextArea]}
-                placeholder="Phone Number"
-                underlineColorAndroid={'transparent'}
-                multiline={true}
-                numberOfLines={10}>
-                {this.state.currentUser.address}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/gender.png')}
-            />
-            <Col>
-              <Text style={styles.text}>Gender</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Phone Number"
-                underlineColorAndroid={'transparent'}>
-                {this.state.gender}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        {/* <View style={styles.itemContainer}>
+      <ScrollView>
+        <View style={styles.container}>
+          <Image
+            style={styles.avatarImage}
+            source={{
+              uri: this.state.picture,
+            }}
+          />
+          <Icon
+            name="user-edit"
+            style={styles.userEdit}
+            onPress={() => this.changePicture()}
+          />
+          {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
+          <Text style={[styles.textTitle]}>
+            {this.state.currentUser.fullname}
+          </Text>
+          <View style={styles.itemContainer}>
+            <Row>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/email.png')}
+              />
+              <Col>
+                <Text style={styles.text}>Email</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Email"
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.currentUser.email}
+                </TextInput>
+              </Col>
+            </Row>
+          </View>
+          <View style={styles.itemContainer}>
+            <Row>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/phone.png')}
+              />
+              <Col>
+                <Text style={styles.text}>Phone Number</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Phone Number"
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.currentUser.phone_number}
+                </TextInput>
+              </Col>
+            </Row>
+          </View>
+          <View style={styles.itemContainer}>
+            <Row>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/address.png')}
+              />
+              <Col>
+                <Text style={styles.text}>Address</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextArea]}
+                  placeholder="Phone Number"
+                  underlineColorAndroid={'transparent'}
+                  multiline={true}
+                  numberOfLines={10}>
+                  {this.state.currentUser.address}
+                </TextInput>
+              </Col>
+            </Row>
+          </View>
+          <View style={styles.itemContainer}>
+            <Row>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/gender.png')}
+              />
+              <Col>
+                <Text style={styles.text}>Gender</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Phone Number"
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.gender}
+                </TextInput>
+              </Col>
+            </Row>
+          </View>
+          {/* <View style={styles.itemContainer}>
               <Row>
                 <Image
                   style={styles.itemIconImage}
@@ -265,57 +259,55 @@ export default class ProfileScreen extends Component {
                 </Col>
               </Row>
             </View> */}
-        <View style={styles.itemContainer}>
-          <Row>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/position.png')}
-            />
-            <Col>
-              <Text style={styles.text}>Position</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Position"
-                underlineColorAndroid={'transparent'}>
-                {this.state.currentUser.position}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/agency.png')}
-            />
-            <Col>
-              <Text style={styles.text}>Company/Institution</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Company/Institution"
-                underlineColorAndroid={'transparent'}>
-                {this.state.companyName}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        {/* <TouchableOpacity
+          <View style={styles.itemContainer}>
+            <Row>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/position.png')}
+              />
+              <Col>
+                <Text style={styles.text}>Position</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Position"
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.currentUser.position}
+                </TextInput>
+              </Col>
+            </Row>
+          </View>
+          <View style={styles.itemContainer}>
+            <Row>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/agency.png')}
+              />
+              <Col>
+                <Text style={styles.text}>Company/Institution</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Company/Institution"
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.companyName}
+                </TextInput>
+              </Col>
+            </Row>
+          </View>
+          {/* <TouchableOpacity
           style={[styles.button]}
           onPress={() => this.goToEditProfile()}>
           <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
         </TouchableOpacity> */}
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }
 
-const win = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -387,7 +379,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: 110,
     height: 110,
-    marginTop: -20,
+    marginTop: '5%',
   },
   textTitle: {
     margin: 10,

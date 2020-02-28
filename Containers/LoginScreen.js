@@ -70,13 +70,13 @@ class LoginScreen extends Component {
 
       if (response.status === 422) {
         this.onAlert(
-          'Email atau Password Salah',
-          'Silahkan periksa email atau password Anda kembali.',
+          'Email or password is wrong',
+          'please check your email and password and try again.',
         );
       } else {
         this.onAlert(
-          'Terjadi Kesalahan',
-          'Silahkan tunggu beberapa saat dan coba kembali.',
+          'There is an error',
+          'There is an error, please try again.',
         );
       }
     }
@@ -92,8 +92,8 @@ class LoginScreen extends Component {
       this.onLoginProcess(newLogin);
     } else {
       this.onAlert(
-        'Email atau Password belum terisi',
-        'Silahkan masukkan email atau password Anda terlebih dahulu.',
+        'Email or password is empty',
+        'Please enter your email or password before submit.',
       );
     }
   }

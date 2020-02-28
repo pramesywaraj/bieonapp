@@ -26,7 +26,14 @@ export default class DeviceInfoScreen extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      latitude: JSON.parse(await AsyncStorage.getItem('@userCoordinate'))
+        .latitude,
+      longitude: JSON.parse(await AsyncStorage.getItem('@userCoordinate'))
+        .longitude,
+    });
+
     if (this.state.content.battery < 25) {
       this.onAlert(
         'Battery low',
@@ -46,12 +53,13 @@ export default class DeviceInfoScreen extends Component {
       let response = await axios.patch(
         `${Config.API_URL}/device/device-edit`,
         {
-          main_device_id: 1,
-          device_id: this.state.device_id,
-          counter: this.state.content.count,
-          company_id: 1,
+          device_id: this.state.content.no_seri,
+          counter: parseInt(this.state.content.count),
+          // company_id: 11,
           status_battery: parseInt(this.state.content.battery),
           last_calibration: '2020-12-02T23:00:00+07:00',
+          longitude: this.state.longitude,
+          latitude: this.state.latitude,
         },
         {
           headers: {
@@ -68,7 +76,7 @@ export default class DeviceInfoScreen extends Component {
         'There is an error',
         'Ther is an error when save data. Please try again',
       );
-      console.log('Terjadi kesalahan pada bagian konten', err);
+      console.log('There is an error pada bagian konten', err);
     }
   }
   render() {
@@ -109,24 +117,24 @@ export default class DeviceInfoScreen extends Component {
             </Col>
           </Row>
         </View>
-        {/* <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/devicestatus/location.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Location</Text>
-                  <TextInput
-                    editable={false}
-                    style={[styles.TextInput]}
-                    placeholder="Location"
-                    underlineColorAndroid={'transparent'}>
-                    {this.state.latitude},{this.state.longitude}
-                  </TextInput>
-                </Col>
-              </Row>
-            </View> */}
+        <View style={styles.itemContainer}>
+          <Row>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/devicestatus/location.png')}
+            />
+            <Col>
+              <Text style={styles.text}>Location</Text>
+              <TextInput
+                editable={false}
+                style={[styles.TextInput]}
+                placeholder="Location"
+                underlineColorAndroid={'transparent'}>
+                {this.state.latitude},{this.state.longitude}
+              </TextInput>
+            </Col>
+          </Row>
+        </View>
         <View style={styles.itemContainer}>
           <Row>
             <Image

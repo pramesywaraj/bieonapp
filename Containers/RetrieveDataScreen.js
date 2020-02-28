@@ -1,35 +1,31 @@
 import React, {Component} from 'react';
 import {
   StyleSheet,
-  Image,
-  Text,
   View,
+  AlertTouchableOpacity,
+  Alert,
+  Text,
   TouchableOpacity,
-  Platform,
-  DeviceEventEmitter,
-  NativeEventEmitter,
-  ToastAndroid,
+  Image,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
-import {BluetoothManager} from 'react-native-bluetooth-escpos-printer';
 import LoadingModal from '../Components/Modal/LoadingModal';
 import BluetoothSerial, {
   withSubscription,
 } from 'react-native-bluetooth-serial-next';
 
 export default class RetrieveDataScreen extends Component {
-  _listeners = [];
+  _eventListener = [];
 
   constructor(props) {
     super(props);
     this.state = {
-      devices: null,
-      deviceName: '',
+      isBluetoothEnabled: false,
+      device: {},
       pairedDs: [],
       foundDs: [],
-      loading: false,
+      loading: true,
       boundAddress: '',
       modalVisible: false,
       connected: false,
@@ -40,178 +36,74 @@ export default class RetrieveDataScreen extends Component {
     this.closeModal = this.closeModal.bind(this);
     this.connectToDevice = this.connectToDevice.bind(this);
     this.scan = this.scan.bind(this);
+    this.write = this.write.bind(this);
   }
 
   async componentDidMount() {
-    // check bluetooth status
-    this.setState({isEnabled: await BluetoothSerial.isEnabled()});
+    this._eventListener.push(
+      BluetoothSerial.addListener('bluetoothEnabled', respond => {
+        this.setState({
+          isBluetoothEnabled: true,
+        });
+      }),
+    );
 
-    if (Platform.OS === 'ios') {
-      let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
-      this._listeners.push(
-        bluetoothManagerEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-          rsp => {
-            this.deviceAlreadyPaired(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        bluetoothManagerEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_FOUND,
-          rsp => {
-            this.deviceFoundEvent(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        bluetoothManagerEmitter.addListener(
-          BluetoothManager.EVENT_CONNECTION_LOST,
-          () => {
-            this.setState({
-              deviceName: '',
-              boundAddress: '',
-            });
-          },
-        ),
-      );
-    } else if (Platform.OS === 'android') {
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_ALREADY_PAIRED,
-          rsp => {
-            this.deviceAlreadyPaired(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_FOUND,
-          rsp => {
-            this.deviceFoundEvent(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_DEVICE_DISCOVER_DONE,
-          rsp => {
-            this.deviceFoundEvent(rsp);
-          },
-        ),
-      );
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_CONNECTION_LOST,
-          () => {
-            this.setState({
-              deviceName: '',
-              boundAddress: '',
-            });
-          },
-        ),
-      );
-      this._listeners.push(
-        DeviceEventEmitter.addListener(
-          BluetoothManager.EVENT_BLUETOOTH_NOT_SUPPORT,
-          () => {
-            ToastAndroid.show(
-              'Device Not Support Bluetooth !',
-              ToastAndroid.LONG,
-            );
-          },
-        ),
-      );
-    }
+    this._eventListener.push(
+      BluetoothSerial.addListener('bluetoothDisabled', respond => {
+        this.setState({
+          isBluetoothEnabled: false,
+        });
+      }),
+    );
+
+    this._eventListener.push(
+      BluetoothSerial.addListener('connectionSuccess', response => {
+        this.onAlert('Connected', 'Success to connect bluetooth.');
+        console.log(response.device);
+        this.setState({
+          connected: true,
+          device: response.device,
+        });
+      }),
+    );
+
+    this._eventListener.push(
+      BluetoothSerial.addListener('connectionFailed', response => {
+        this.onAlert(
+          'Failed to connect',
+          'Device failed to connected, please unpair device and try again.',
+        );
+        this.setState({
+          connected: false,
+          device: null,
+        });
+      }),
+    );
+    this._eventListener.push(
+      BluetoothSerial.addListener('connectionLost', response => {
+        this.onAlert('Device disconnected', 'Device has been disconnected.');
+        this.setState({
+          connected: false,
+          device: null,
+        });
+      }),
+    );
+
+    (await BluetoothSerial.isEnabled())
+      ? this.setState({isBluetoothEnabled: true, loading: false})
+      : this.setState({loading: false});
   }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
 
   componentWillUnmount() {
-    console.log('unmount');
-    this._listeners.map(listener => {
+    this._eventListener.map(listener => {
       listener.remove();
     });
-  }
-
-  async scan() {
-    const scanDevices = async () => {
-      const bluetoothResponse = await BluetoothManager.scanDevices();
-      await this.deviceFoundEvent(bluetoothResponse);
-
-      this.setState({
-        loading: false,
-      });
-
-      this.openModal();
-    };
-
-    try {
-      const isBluetoothEnabled = await BluetoothManager.isBluetoothEnabled();
-
-      this.setState({
-        loading: true,
-      });
-
-      if (isBluetoothEnabled) {
-        await scanDevices();
-      } else {
-        await BluetoothManager.enableBluetooth();
-        await scanDevices();
-      }
-    } catch (err) {
-      console.log(err);
-
-      this.setState({
-        loading: false,
-      });
-    }
-  }
-
-  deviceAlreadyPaired(response) {
-    var temp = null;
-    if (typeof response.devices === 'object') {
-      temp = response.devices;
-    } else {
-      try {
-        temp = JSON.parse(response.devices);
-      } catch (e) {}
-    }
-    if (temp && temp.length) {
-      // let paired = this.state.pairedDs;
-      // paired = paired.concat(temp || []);
-      this.setState({
-        pairedDs: temp,
-      });
-    }
-  }
-
-  deviceFoundEvent(rsp) {
-    //alert(JSON.stringify(rsp))
-    var r = null;
-    try {
-      if (typeof rsp.device === 'object') {
-        r = rsp.device;
-      } else {
-        r = JSON.parse(rsp.device);
-      }
-    } catch (e) {
-      console.log('Error detected in TableDataScreen');
-    }
-
-    if (r) {
-      let found = this.state.foundDs || [];
-      if (found.findIndex) {
-        let duplicated = found.findIndex(function(x) {
-          return x.address === r.address;
-        });
-
-        if (duplicated === -1) {
-          found.push(r);
-          this.setState({
-            foundDs: found,
-          });
-        }
-      }
-    }
   }
 
   openModal() {
@@ -222,27 +114,154 @@ export default class RetrieveDataScreen extends Component {
     this.setState({modalVisible: false});
   }
 
-  connectToDevice(item) {
+  async activateBluetooth() {
+    try {
+      await BluetoothSerial.enable();
+    } catch (err) {
+      console.log('Error happen at activateBluetooth()', err);
+      this.onAlert(
+        'There is an error',
+        'There is an error when load data Please try again.',
+      );
+
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  async scanAction() {
+    try {
+      const scanResponse = await Promise.all([
+        BluetoothSerial.list(),
+        BluetoothSerial.discoverUnpairedDevices(),
+      ]);
+
+      let pairedDevices = scanResponse[0];
+      let unPairedDevices = scanResponse[1];
+
+      console.log(unPairedDevices);
+
+      this.setState({
+        pairedDs: pairedDevices,
+        foundDs: unPairedDevices,
+        loading: false,
+        modalVisible: true,
+      });
+    } catch (err) {
+      console.log('Error happened at scanAction Function', err);
+      this.onAlert(
+        'There is an error',
+        'There is an error when load data Please try again.',
+      );
+
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  async scan() {
+    const {navigation} = this.props;
+    this.setState({loading: false});
+    navigation.navigate('ContainDetailIodiumScreen', {
+      contentBluetooth: JSON.stringify({}),
+    });
+    // this.setState({
+    //   loading: true,
+    // });
+
+    // const {isBluetoothEnabled} = this.state;
+
+    // if (isBluetoothEnabled) {
+    //   this.scanAction();
+    // } else {
+    //   this.activateBluetooth();
+    //   this.scanAction();
+    // }
+  }
+
+  async connectToDevice(item) {
+    await BluetoothSerial.disconnectAll();
+
     this.setState({
       loading: true,
     });
-    BluetoothManager.connect(item.address).then(
-      s => {
-        this.setState({
-          loading: false,
-          modalVisible: false,
-          connected: true,
-          boundAddress: item.address,
-          deviceName: item.name || 'UNKNOWN',
-        });
-      },
-      e => {
-        this.setState({
-          modalVisible: false,
-          loading: false,
-        });
-      },
-    );
+
+    try {
+      const connectingResponse = await BluetoothSerial.device(
+        item.id,
+      ).connect();
+
+      this.setState({
+        loading: false,
+        modalVisible: false,
+      });
+    } catch (err) {
+      console.log('Error connecting', err);
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
+  async write(message) {
+    const {device} = this.state;
+    const {navigation} = this.props;
+
+    this.setState({loading: true});
+
+    let tempObj = {};
+
+    try {
+      await BluetoothSerial.device(device.address).write(message);
+      await BluetoothSerial.readFromDevice().then(response => {
+        console.log(response);
+        setTimeout(() => {
+          let bluetoothObj = response;
+
+          switch (message) {
+            case 'Data1':
+              tempObj.nacl = bluetoothObj.nacl;
+              tempObj.battery = bluetoothObj.battery;
+              tempObj.count = bluetoothObj.count;
+              tempObj.no_seri = bluetoothObj.no_seri;
+              tempObj.water_content = bluetoothObj.water_content;
+              tempObj.whiteness = bluetoothObj.whiteness;
+
+              this.setState({loading: false});
+              navigation.navigate('ContainDetailNaclScreen', {
+                contentBluetooth: JSON.stringify(tempObj),
+              });
+              break;
+            case 'Data2':
+              tempObj.iodium = bluetoothObj.iodium;
+              tempObj.battery = bluetoothObj.battery;
+              tempObj.count = bluetoothObj.count;
+              tempObj.no_seri = bluetoothObj.no_seri;
+
+              this.setState({loading: false});
+              navigation.navigate('ContainDetailIodiumScreen', {
+                contentBluetooth: JSON.stringify(tempObj),
+              });
+              break;
+            case 'Device':
+              tempObj.lastcal = bluetoothObj.lastcal;
+              tempObj.battery = bluetoothObj.battery;
+              tempObj.count = bluetoothObj.count;
+              tempObj.no_seri = bluetoothObj.no_seri;
+
+              this.setState({loading: false});
+              navigation.navigate('DeviceInfoScreen', {
+                contentBluetooth: JSON.stringify(tempObj),
+              });
+          }
+        }, 13000);
+      });
+    } catch (err) {
+      console.log('Error happened on write()', err);
+      this.setState({loading: false});
+    }
   }
   async checkBluetooth() {
     const {navigate} = this.props.navigation;
@@ -266,7 +285,7 @@ export default class RetrieveDataScreen extends Component {
         />
         <LoadingModal visible={this.state.loading} />
         <TouchableOpacity
-          style={[styles.button]}
+          style={[styles.topSection]}
           onPress={() => this.checkBluetooth()}>
           <Image
             style={[styles.logo]}
@@ -305,10 +324,11 @@ const styles = StyleSheet.create({
     height: 45,
   },
   topSection: {
-    zIndex: 10,
-    flexDirection: 'row',
-    padding: '5%',
+    zIndex: 20,
+    borderStyle: 'solid',
     marginLeft: 'auto',
+    marginRight: '15%',
+    marginTop: '15%',
     marginBottom: 'auto',
   },
   instructionText: {

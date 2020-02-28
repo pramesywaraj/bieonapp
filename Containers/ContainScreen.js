@@ -24,7 +24,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default class ContainScreen extends Component {
   constructor(props) {
     super(props);
-    this.events = null;
     this.state = {
       isEnabled: false,
       device: null,
@@ -38,8 +37,6 @@ export default class ContainScreen extends Component {
   }
 
   async componentDidMount() {
-    this.events = this.props.events;
-
     try {
       const [isEnabled, devices] = await Promise.all([
         BluetoothSerial.isEnabled(),
@@ -57,50 +54,6 @@ export default class ContainScreen extends Component {
     } catch (e) {
       alert(e.message);
     }
-
-    this.events.on('bluetoothEnabled', () => {
-      alert('Bluetooth enabled');
-      this.setState({isEnabled: true});
-    });
-
-    this.events.on('bluetoothDisabled', () => {
-      alert('Bluetooth disabled');
-      this.setState({isEnabled: false});
-    });
-
-    this.events.on('connectionSuccess', ({device}) => {
-      if (device) {
-        alert(`Device ${device.name}<${device.id}> has been connected`);
-      }
-    });
-
-    this.events.on('connectionFailed', ({device}) => {
-      if (device) {
-        alert(`Failed to connect with device ${device.name}<${device.id}>`);
-      }
-    });
-
-    this.events.on('connectionLost', ({device}) => {
-      if (device) {
-        alert(`Device ${device.name}<${device.id}> connection has been lost`);
-      }
-    });
-
-    this.events.on('data', result => {
-      console.log('result', result);
-
-      if (result) {
-        const {id, data} = result;
-        console.log(`Data from device ${id} : ${data}`);
-      }
-    });
-
-    this.events.on('error', e => {
-      if (e) {
-        console.log(`Error: ${e.message}`);
-        alert(e.message);
-      }
-    });
   }
 
   requestEnable = () => async () => {
@@ -364,10 +317,11 @@ export default class ContainScreen extends Component {
     // for data1
     console.log('mes', message);
     this.setState({loading: true});
+
     if (message === 'Data1') {
       await BluetoothSerial.device(id).write(message);
-      await BluetoothSerial.readFromDevice().then(response => {
-        setTimeout(() => {
+      setTimeout(() => {
+        BluetoothSerial.readFromDevice(id).then(response => {
           console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
@@ -382,12 +336,12 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        }, 30000);
-      });
+        });
+      }, 15000);
     } else if (message === 'Data2') {
-      BluetoothSerial.device(id).write(message);
-      BluetoothSerial.readFromDevice().then(response => {
-        setTimeout(() => {
+      await BluetoothSerial.device(id).write(message);
+      setTimeout(() => {
+        BluetoothSerial.readFromDevice().then(response => {
           console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
@@ -400,26 +354,26 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        }, 30000);
-      });
-    } else {
-      BluetoothSerial.device(id).write(message);
-      BluetoothSerial.readFromDevice().then(response => {
-        setTimeout(() => {
-          console.log('res', response);
-        }, 30000);
-        let objectBluetooth = JSON.parse(response);
-        const newObject = {
-          lastcal: objectBluetooth.lastcal,
-          battery: objectBluetooth.battery,
-          count: objectBluetooth.count,
-          no_seri: objectBluetooth.no_seri,
-        };
-        this.props.navigation.navigate('DeviceInfoScreen', {
-          contentBluetooth: JSON.stringify(newObject),
         });
-        this.setState({loading: false});
-      });
+      }, 15000);
+    } else {
+      await BluetoothSerial.device(id).write(message);
+      setTimeout(() => {
+        BluetoothSerial.readFromDevice().then(response => {
+          console.log('res', response);
+          let objectBluetooth = JSON.parse(response);
+          const newObject = {
+            lastcal: objectBluetooth.lastcal,
+            battery: objectBluetooth.battery,
+            count: objectBluetooth.count,
+            no_seri: objectBluetooth.no_seri,
+          };
+          this.props.navigation.navigate('DeviceInfoScreen', {
+            contentBluetooth: JSON.stringify(newObject),
+          });
+          this.setState({loading: false});
+        });
+      }, 15000);
     }
   };
 
@@ -438,10 +392,10 @@ export default class ContainScreen extends Component {
         <TouchableOpacity
           style={[styles.button]}
           onPress={() => navigate('PopUpBluetoothScreen')}>
-          <Image
+          {/* <Image
             style={[styles.logo]}
             source={require('../assets/icons/retrievedata/bluetoothblue.png')}
-          />
+          /> */}
         </TouchableOpacity>
         {/* loading */}
         <View>
@@ -542,11 +496,10 @@ export default class ContainScreen extends Component {
   }
 }
 
-const win = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 5,
+    top: '20%',
     backgroundColor: '#f3f3f3',
     alignItems: 'center',
     justifyContent: 'center',

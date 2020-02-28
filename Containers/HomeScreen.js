@@ -18,6 +18,7 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 
 import Article from '../Components/Articles/Article';
+import {ScrollView} from 'react-native-gesture-handler';
 const BannerWidth = Dimensions.get('window').width;
 const BannerHeight = 260;
 
@@ -46,7 +47,6 @@ export default class HomeScreen extends Component {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You have acces location');
         Geolocation.getCurrentPosition(
           position => {
             console.log(position.coords);
@@ -109,7 +109,7 @@ export default class HomeScreen extends Component {
         ...this.state.articles,
         refreshing: false,
       });
-      console.log('Terjadi kesalahan pada bagian HomeScreen', err);
+      console.log('There is an error pada bagian HomeScreen', err);
     }
   }
 
@@ -165,21 +165,23 @@ export default class HomeScreen extends Component {
 
         <View style={styles.articleContainer}>
           <Text style={styles.homeScreenTitle}>Headline</Text>
-          <FlatList
-            data={this.state.articles}
-            renderItem={({item}) => (
-              <Article
-                onClick={this.goToArticleDetail.bind(this, item)}
-                title={item.title}
-                imageUri={item.picture}
-                createdAt={item.create_at}
-              />
-            )}
-            ItemSeparatorComponent={this.renderSeparator}
-            keyExtractor={item => item.article_id.toString()}
-            refreshing={this.state.refreshing}
-            onRefresh={this.handleRefresh}
-          />
+          <ScrollView>
+            <FlatList
+              data={this.state.articles}
+              renderItem={({item}) => (
+                <Article
+                  onClick={this.goToArticleDetail.bind(this, item)}
+                  title={item.title}
+                  imageUri={item.picture}
+                  createdAt={item.create_at}
+                />
+              )}
+              ItemSeparatorComponent={this.renderSeparator}
+              keyExtractor={item => item.article_id.toString()}
+              refreshing={this.state.refreshing}
+              onRefresh={this.handleRefresh}
+            />
+          </ScrollView>
         </View>
       </View>
     );
@@ -189,19 +191,14 @@ export default class HomeScreen extends Component {
 const deviceWindow = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
-    top: 0,
     width: '100%',
     height: '40%',
   },
   articleContainer: {
     marginTop: '70%',
     position: 'absolute',
-    height: '100%',
     width: '100%',
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,

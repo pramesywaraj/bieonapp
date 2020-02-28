@@ -118,7 +118,7 @@ export default class EditProfileScreen extends Component {
         'There is an error',
         'There is an error when save data. Please try again',
       );
-      console.log('Terjadi kesalahan pada bagian konten', err);
+      console.log('There is an error pada bagian konten', err);
     }
   }
   render() {

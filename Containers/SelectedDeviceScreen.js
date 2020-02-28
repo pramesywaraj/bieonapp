@@ -317,12 +317,6 @@ export default class SelectedDeviceScreen extends Component {
     return (
       <View style={styles.container}>
         <LoadingModal visible={this.state.loading} />
-        <View style={[styles.button]}>
-          <Image
-            style={[styles.logo]}
-            source={require('../assets/icons/retrievedata/bluetoothblue.png')}
-          />
-        </View>
         <View style={[styles.buttonGoogle]}>
           <Col
             style={{
