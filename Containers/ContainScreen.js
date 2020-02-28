@@ -13,10 +13,7 @@ import {
   ScrollView,
   ProgressBarAndroid,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
-import BluetoothSerial, {
-  withSubscription,
-} from 'react-native-bluetooth-serial-next';
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
 import LoadingModal from '../Components/Modal/LoadingModal';
 import {Buffer} from 'buffer';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -24,6 +21,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default class ContainScreen extends Component {
   constructor(props) {
     super(props);
+    this.events = null;
     this.state = {
       isEnabled: false,
       device: null,
@@ -37,6 +35,8 @@ export default class ContainScreen extends Component {
   }
 
   async componentDidMount() {
+    this.events = this.props.events;
+
     try {
       const [isEnabled, devices] = await Promise.all([
         BluetoothSerial.isEnabled(),
@@ -54,274 +54,61 @@ export default class ContainScreen extends Component {
     } catch (e) {
       alert(e.message);
     }
+
+    this.events.on('bluetoothEnabled', () => {
+      alert('Bluetooth enabled');
+      this.setState({isEnabled: true});
+    });
+
+    this.events.on('bluetoothDisabled', () => {
+      alert('Bluetooth disabled');
+      this.setState({isEnabled: false});
+    });
+
+    this.events.on('connectionSuccess', ({device}) => {
+      if (device) {
+        alert(`Device ${device.name}<${device.id}> has been connected`);
+      }
+    });
+
+    this.events.on('connectionFailed', ({device}) => {
+      if (device) {
+        alert(`Failed to connect with device ${device.name}<${device.id}>`);
+      }
+    });
+
+    this.events.on('connectionLost', ({device}) => {
+      if (device) {
+        alert(`Device ${device.name}<${device.id}> connection has been lost`);
+      }
+    });
+
+    this.events.on('data', result => {
+      console.log('result', result);
+
+      if (result) {
+        const {id, data} = result;
+        console.log(`Data from device ${id} : ${data}`);
+      }
+    });
+
+    this.events.on('error', e => {
+      if (e) {
+        console.log(`Error: ${e.message}`);
+        alert(e.message);
+      }
+    });
   }
 
-  requestEnable = () => async () => {
-    try {
-      await BluetoothSerial.requestEnable();
-      this.setState({isEnabled: true});
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  toggleBluetooth = async value => {
-    try {
-      if (value === 'on') {
-        await BluetoothSerial.enable();
-        this.props.navigation.navigate('ScanningDeviceScreen');
-      } else {
-        await BluetoothSerial.disable();
-        this.props.navigation.navigate('RetrieveDataScreen');
-      }
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  listDevices = async () => {
-    try {
-      const list = await BluetoothSerial.list();
-
-      this.setState(({devices}) => ({
-        devices: devices.map(device => {
-          const found = list.find(v => v.id === device.id);
-
-          if (found) {
-            return {
-              ...found,
-              // paired: true,
-              connected: false,
-            };
-          }
-
-          return device;
-        }),
-      }));
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  discoverUnpairedDevices = async () => {
-    this.setState({scanning: true});
-
-    try {
-      const unpairedDevices = await BluetoothSerial.listUnpaired();
-
-      this.setState(({devices}) => ({
-        scanning: false,
-        devices: devices
-          .map(device => {
-            const found = unpairedDevices.find(d => d.id === device.id);
-
-            if (found) {
-              return {
-                ...device,
-                ...found,
-                connected: false,
-                paired: false,
-              };
-            }
-
-            return device.paired || device.connected ? device : null;
-          })
-          .map(v => v),
-      }));
-    } catch (e) {
-      alert(e.message);
-
-      this.setState(({devices}) => ({
-        scanning: false,
-        devices: devices.filter(device => device.paired || device.connected),
-      }));
-    }
-  };
-
-  cancelDiscovery = () => async () => {
-    try {
-      await BluetoothSerial.cancelDiscovery();
-      this.setState({scanning: false});
-    } catch (e) {
-      alert(e.message);
-    }
-  };
-
-  toggleDevicePairing = async (id, paired) => {
-    console.log(id);
-
-    if (paired) {
-      await this.unpairDevice(id);
-    } else {
-      await this.pairDevice(id);
-    }
-  };
-
-  pairDevice = async id => {
-    this.setState({processing: true});
-
-    try {
-      const paired = await BluetoothSerial.pairDevice(id);
-
-      if (paired) {
-        alert(`Device ${paired.name}<${paired.id}> paired successfully`);
-
-        this.setState(({devices, device}) => ({
-          processing: false,
-          device: {
-            ...device,
-            ...paired,
-            paired: true,
-          },
-          devices: devices.map(v => {
-            if (v.id === paired.id) {
-              return {
-                ...v,
-                ...paired,
-                paired: true,
-              };
-            }
-
-            return v;
-          }),
-        }));
-      } else {
-        alert(`Device <${id}> pairing failed`);
-        this.setState({processing: false});
-      }
-    } catch (e) {
-      alert(e.message);
-      this.setState({processing: false});
-    }
-  };
-
-  unpairDevice = async id => {
-    this.setState({processing: true});
-
-    try {
-      const unpaired = await BluetoothSerial.unpairDevice(id);
-
-      if (unpaired) {
-        alert(`Device ${unpaired.name}<${unpaired.id}> unpaired successfully`);
-
-        this.setState(({devices, device}) => ({
-          processing: false,
-          device: {
-            ...device,
-            ...unpaired,
-            connected: false,
-            paired: false,
-          },
-          devices: devices.map(v => {
-            if (v.id === unpaired.id) {
-              return {
-                ...v,
-                ...unpaired,
-                connected: false,
-                paired: false,
-              };
-            }
-
-            return v;
-          }),
-        }));
-      } else {
-        alert(`Device <${id}> unpairing failed`);
-        this.setState({processing: false});
-      }
-    } catch (e) {
-      alert(e.message);
-      this.setState({processing: false});
-    }
-  };
-
-  toggleDeviceConnection = async ({id, connected}) => {
-    if (connected) {
-      await this.disconnect(id);
-    } else {
-      await this.connect(id);
-    }
-  };
-
-  connect = async id => {
-    this.setState({processing: true});
-
-    try {
-      const connected = await BluetoothSerial.device(id).connect();
-
-      console.log('connect' + connected.address);
-
-      if (connected.address != '') {
-        alert(`Connected to device ${connected.name}<${connected.id}>`);
-
-        this.props.navigation.navigate('ContainScreen');
-        this.setState(({devices, device}) => ({
-          processing: false,
-          device: {
-            ...device,
-            ...connected,
-            connected: true,
-          },
-          devices: devices.map(v => {
-            if (v.id === connected.id) {
-              return {
-                ...v,
-                ...connected,
-                connected: true,
-              };
-            }
-
-            return v;
-          }),
-        }));
-      } else {
-        alert(`Failed to connect to device <${id}>`);
-        this.setState({processing: false});
-      }
-    } catch (e) {
-      alert(e.message);
-      this.setState({processing: false});
-    }
-  };
-
-  disconnect = async id => {
-    this.setState({processing: true});
-
-    try {
-      await BluetoothSerial.device(id).disconnect();
-
-      this.setState(({devices, device}) => ({
-        processing: false,
-        device: {
-          ...device,
-          connected: false,
-        },
-        devices: devices.map(v => {
-          if (v.id === id) {
-            return {
-              ...v,
-              connected: false,
-            };
-          }
-
-          return v;
-        }),
-      }));
-    } catch (e) {
-      alert(e.message);
-      this.setState({processing: false});
-    }
-  };
   write = async (id, message) => {
     // try {
     // for data1
     console.log('mes', message);
     this.setState({loading: true});
-
     if (message === 'Data1') {
       await BluetoothSerial.device(id).write(message);
-      setTimeout(() => {
-        BluetoothSerial.readFromDevice(id).then(response => {
+      await BluetoothSerial.readFromDevice().then(response => {
+        setTimeout(() => {
           console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
@@ -336,12 +123,12 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        });
-      }, 15000);
+        }, 11000);
+      });
     } else if (message === 'Data2') {
-      await BluetoothSerial.device(id).write(message);
-      setTimeout(() => {
-        BluetoothSerial.readFromDevice().then(response => {
+      BluetoothSerial.device(id).write(message);
+      BluetoothSerial.readFromDevice().then(response => {
+        setTimeout(() => {
           console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
@@ -354,12 +141,12 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        });
-      }, 15000);
+        }, 11000);
+      });
     } else {
-      await BluetoothSerial.device(id).write(message);
-      setTimeout(() => {
-        BluetoothSerial.readFromDevice().then(response => {
+      BluetoothSerial.device(id).write(message);
+      BluetoothSerial.readFromDevice().then(response => {
+        setTimeout(() => {
           console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
@@ -372,8 +159,8 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        });
-      }, 15000);
+        }, 13000);
+      });
     }
   };
 
@@ -381,125 +168,116 @@ export default class ContainScreen extends Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
-        <LoadingModal visible={this.state.loading} />
-        <View style={styles.itemContainer}>
-          <Image
-            style={styles.itemIconImage}
-            source={require('../assets/icons/retrievedata/device.png')}
-          />
-          <Text style={styles.itemText}>Save Data</Text>
-        </View>
-        <TouchableOpacity
-          style={[styles.button]}
-          onPress={() => navigate('PopUpBluetoothScreen')}>
-          {/* <Image
-            style={[styles.logo]}
-            source={require('../assets/icons/retrievedata/bluetoothblue.png')}
-          /> */}
-        </TouchableOpacity>
-        {/* loading */}
         <View>
-          <TouchableOpacity
-            style={[styles.buttonGoogle]}
-            onPress={() =>
-              this.write(
-                this.props.navigation.state.params.idBluetooth,
-                'Data1',
-              )
-            }>
-            <Row>
-              <Col
-                size={4}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text style={[styles.textbuttonGoogle]}>
-                  NaCl, Whiteness and Water Content
-                </Text>
-              </Col>
-              <Col
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image
-                  style={styles.itemGoogleImage}
-                  source={require('../assets/icons/retrievedata/searchblue.png')}
-                />
-              </Col>
-            </Row>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.buttonGoogle]}
-            onPress={() =>
-              this.write(
-                this.props.navigation.state.params.idBluetooth,
-                'Data2',
-              )
-            }>
-            <Row>
-              <Col
-                size={4}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text style={[styles.textbuttonGoogle]}>Iodium</Text>
-              </Col>
-              <Col
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image
-                  style={styles.itemGoogleImage}
-                  source={require('../assets/icons/retrievedata/searchblue.png')}
-                />
-              </Col>
-            </Row>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.buttonGoogle]}
-            onPress={() =>
-              this.write(
-                this.props.navigation.state.params.idBluetooth,
-                'Device',
-              )
-            }>
-            <Row>
-              <Col
-                size={4}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text style={[styles.textbuttonGoogle]}>Device Info</Text>
-              </Col>
-              <Col
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Image
-                  style={styles.itemGoogleImage}
-                  source={require('../assets/icons/retrievedata/searchblue.png')}
-                />
-              </Col>
-            </Row>
-          </TouchableOpacity>
+          <View style={styles.itemContainer}>
+            <Image
+              style={styles.itemIconImage}
+              source={require('../assets/icons/retrievedata/device.png')}
+            />
+            <Text style={styles.itemText}>Save Data</Text>
+          </View>
+          {/* loading */}
+          <View>
+            <TouchableOpacity
+              style={[styles.buttonGoogle]}
+              onPress={() =>
+                this.write(
+                  this.props.navigation.state.params.idBluetooth,
+                  'Data1',
+                )
+              }>
+              <View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={[styles.textbuttonGoogle]}>
+                    NaCl, Whiteness and Water Content
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    style={styles.itemGoogleImage}
+                    source={require('../assets/icons/retrievedata/searchblue.png')}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buttonGoogle]}
+              onPress={() =>
+                this.write(
+                  this.props.navigation.state.params.idBluetooth,
+                  'Data2',
+                )
+              }>
+              <View>
+                <View
+                  size={4}
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={[styles.textbuttonGoogle]}>Iodium</Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    style={styles.itemGoogleImage}
+                    source={require('../assets/icons/retrievedata/searchblue.png')}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buttonGoogle]}
+              onPress={() =>
+                this.write(
+                  this.props.navigation.state.params.idBluetooth,
+                  'Device',
+                )
+              }>
+              <View>
+                <View
+                  size={4}
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={[styles.textbuttonGoogle]}>Device Info</Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    style={styles.itemGoogleImage}
+                    source={require('../assets/icons/retrievedata/searchblue.png')}
+                  />
+                </View>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
   }
 }
 
+const win = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
-    flex: 5,
-    top: '20%',
+    flex: 1,
     backgroundColor: '#f3f3f3',
     alignItems: 'center',
     justifyContent: 'center',

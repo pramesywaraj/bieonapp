@@ -1,19 +1,13 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  View,
-  AlertTouchableOpacity,
-  Alert,
-  Text,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {StyleSheet, View, Alert} from 'react-native';
 
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
 import LoadingModal from '../Components/Modal/LoadingModal';
-import BluetoothSerial, {
-  withSubscription,
-} from 'react-native-bluetooth-serial-next';
+import RetrieveDataToolbar from '../Components/Toolbar/RetrieveDataToolbar';
+import NoDeviceConnected from '../Components/RetrieveData/NoDeviceConnected';
+import ContainLayout from '../Components/RetrieveData/ContainLayout';
+
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
 
 export default class RetrieveDataScreen extends Component {
   _eventListener = [];
@@ -29,7 +23,6 @@ export default class RetrieveDataScreen extends Component {
       boundAddress: '',
       modalVisible: false,
       connected: false,
-      isEnabled: false,
     };
 
     this.openModal = this.openModal.bind(this);
@@ -58,8 +51,8 @@ export default class RetrieveDataScreen extends Component {
 
     this._eventListener.push(
       BluetoothSerial.addListener('connectionSuccess', response => {
-        this.onAlert('Connected', 'Success to connect bluetooth.');
-        console.log(response.device);
+        this.onAlert('Terhubung', 'Perangkat berhasil terhubung.');
+        console.log(response);
         this.setState({
           connected: true,
           device: response.device,
@@ -70,8 +63,8 @@ export default class RetrieveDataScreen extends Component {
     this._eventListener.push(
       BluetoothSerial.addListener('connectionFailed', response => {
         this.onAlert(
-          'Failed to connect',
-          'Device failed to connected, please unpair device and try again.',
+          'Gagal Terhubung',
+          'Perangkat gagal terhubung, silahkan coba untuk unpairing secara manual kemudian coba kembali.',
         );
         this.setState({
           connected: false,
@@ -81,7 +74,7 @@ export default class RetrieveDataScreen extends Component {
     );
     this._eventListener.push(
       BluetoothSerial.addListener('connectionLost', response => {
-        this.onAlert('Device disconnected', 'Device has been disconnected.');
+        this.onAlert('Perangkat Terputus', 'Perangkat telah terputus.');
         this.setState({
           connected: false,
           device: null,
@@ -120,8 +113,8 @@ export default class RetrieveDataScreen extends Component {
     } catch (err) {
       console.log('Error happen at activateBluetooth()', err);
       this.onAlert(
-        'There is an error',
-        'There is an error when load data Please try again.',
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika mengaktifkan bluetooth, silahkan ulangi dalam beberapa saat.',
       );
 
       this.setState({
@@ -151,8 +144,8 @@ export default class RetrieveDataScreen extends Component {
     } catch (err) {
       console.log('Error happened at scanAction Function', err);
       this.onAlert(
-        'There is an error',
-        'There is an error when load data Please try again.',
+        'Terjadi Kesalahan',
+        'Telah terjadi kesalahan ketika melakukan pemindaian alat, silahkan ulangi dalam beberapa saat.',
       );
 
       this.setState({
@@ -263,17 +256,8 @@ export default class RetrieveDataScreen extends Component {
       this.setState({loading: false});
     }
   }
-  async checkBluetooth() {
-    const {navigate} = this.props.navigation;
 
-    if (this.state.isEnabled === false) {
-      navigate('PopUpBluetoothScreen');
-    } else if (this.state.isEnabled === true) {
-      navigate('SelectedDeviceScreen');
-    }
-  }
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <BluetoothListModal
@@ -284,30 +268,15 @@ export default class RetrieveDataScreen extends Component {
           onConnect={this.connectToDevice}
         />
         <LoadingModal visible={this.state.loading} />
-        <TouchableOpacity
-          style={[styles.topSection]}
-          onPress={() => this.checkBluetooth()}>
-          <Image
-            style={[styles.logo]}
-            source={require('../assets/icons/retrievedata/bluetoothgray.png')}
-          />
-        </TouchableOpacity>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            style={styles.warningIcon}
-            source={require('../assets/icons/retrievedata/warning.png')}
-          />
-          <Text style={styles.noDeviceConnectedText}>No Device Connected</Text>
-        </View>
-        <View style={styles.bottomSection}>
-          <Text style={styles.instructionText}>
-            Touch Bluetooth symbol on the top right to connect to a probe
-          </Text>
-        </View>
+        <RetrieveDataToolbar
+          isBluetoothEnabled={this.state.isBluetoothEnabled}
+          onScan={this.scan}
+        />
+        {this.state.connected ? (
+          <ContainLayout device={this.state.device} onSelect={this.write} />
+        ) : (
+          <NoDeviceConnected />
+        )}
       </View>
     );
   }
@@ -318,42 +287,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f3f3f3',
     height: '100%',
-  },
-  logo: {
-    width: 45,
-    height: 45,
-  },
-  topSection: {
-    zIndex: 20,
-    borderStyle: 'solid',
-    marginLeft: 'auto',
-    marginRight: '15%',
-    marginTop: '15%',
-    marginBottom: 'auto',
-  },
-  instructionText: {
-    fontSize: 16,
-    margin: 29,
-    textAlign: 'center',
-    color: '#129cd8',
-  },
-  noDeviceConnectedText: {
-    fontSize: 20,
-    color: '#129cd8',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginLeft: 10,
-  },
-  bottomSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#e8e8e8',
-    marginTop: 'auto',
-    width: '100%',
-  },
-  warningIcon: {
-    resizeMode: 'contain',
-    width: 50,
-    height: 50,
   },
 });

@@ -16,50 +16,94 @@ import BluetoothSerial, {
   withSubscription,
 } from 'react-native-bluetooth-serial-next';
 import {Buffer} from 'buffer';
-import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class SelectedDeviceScreen extends Component {
   constructor(props) {
     super(props);
+    this.events = null;
     this.state = {
       isEnabled: false,
       device: null,
       devices: [],
       scanning: false,
       processing: false,
-      loading: false,
+      idPrint: this.props.navigation.state.params.idPrint,
     };
   }
 
   async componentDidMount() {
-    this.setState({loading: true});
+    this.events = this.props.events;
+
     try {
       const [isEnabled, devices] = await Promise.all([
         BluetoothSerial.isEnabled(),
         BluetoothSerial.list(),
       ]);
 
-      devices.map(dev => {
-        console.log('devvdevv', dev);
+      this.setState({
+        isEnabled,
+        devices: devices.map(device => ({
+          ...device,
+          paired: true,
+          connected: false,
+        })),
       });
-
-      setTimeout(() => {
-        this.setState({
-          isEnabled,
-          devices: devices.map(device => ({
-            ...device,
-            paired: true,
-            connected: false,
-          })),
-        });
-        this.setState({loading: false});
-      }, 3000);
     } catch (e) {
       alert(e.message);
     }
 
+    this.events.on('bluetoothEnabled', () => {
+      alert('Bluetooth enabled');
+      this.setState({isEnabled: true});
+    });
+
+    this.events.on('bluetoothDisabled', () => {
+      alert('Bluetooth disabled');
+      this.setState({isEnabled: false});
+    });
+
+    this.events.on('connectionSuccess', ({device}) => {
+      if (device) {
+        alert(`Device ${device.name}<${device.id}> has been connected`);
+      }
+    });
+
+    this.events.on('connectionFailed', ({device}) => {
+      if (device) {
+        alert(`Failed to connect with device ${device.name}<${device.id}>`);
+      }
+    });
+
+    this.events.on('connectionLost', ({device}) => {
+      if (device) {
+        alert(`Device ${device.name}<${device.id}> connection has been lost`);
+      }
+    });
+
+    this.events.on('data', result => {
+      if (result) {
+        const {id, data} = result;
+        console.log(`Data from device ${id} : ${data}`);
+      }
+    });
+
+    this.events.on('error', e => {
+      if (e) {
+        console.log(`Error: ${e.message}`);
+        alert(e.message);
+      }
+    });
     this.listDevices();
   }
+
+  requestEnable = () => async () => {
+    try {
+      await BluetoothSerial.requestEnable();
+      this.setState({isEnabled: true});
+    } catch (e) {
+      alert(e.message);
+    }
+  };
 
   toggleBluetooth = async value => {
     try {
@@ -249,9 +293,16 @@ export default class SelectedDeviceScreen extends Component {
 
       if (connected.address !== '') {
         alert(`Connected to device ${connected.name}<${connected.id}>`);
-        this.props.navigation.navigate('ContainScreen', {
-          idBluetooth: connected.address,
-        });
+        if (connected.name === 'idPrint') {
+          this.props.navigation.navigate('TableDataScreen', {
+            idBluetooth: connected.address,
+          });
+        } else if (this.state.idPrint === 'idFieldDevice') {
+          this.props.navigation.navigate('ContainScreen', {
+            idBluetooth: connected.address,
+          });
+        }
+
         this.setState(({devices, device}) => ({
           processing: false,
           device: {
@@ -310,46 +361,86 @@ export default class SelectedDeviceScreen extends Component {
     }
   };
 
+  write = async (id, message) => {
+    try {
+      await BluetoothSerial.device(id).write(message);
+      alert('Successfuly wrote to device');
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  writePackets = async (id, message, packetSize = 64) => {
+    try {
+      const device = BluetoothSerial.device(id);
+      // eslint-disable-next-line no-undef
+      const toWrite = iconv.encode(message, 'cp852');
+      const writePromises = [];
+      const packetCount = Math.ceil(toWrite.length / packetSize);
+
+      for (var i = 0; i < packetCount; i++) {
+        const packet = new Buffer(packetSize);
+        packet.fill(' ');
+        toWrite.copy(packet, 0, i * packetSize, (i + 1) * packetSize);
+        writePromises.push(device.write(packet));
+      }
+
+      await Promise.all(writePromises).then(() => alert('Writed packets'));
+    } catch (e) {
+      alert(e.message);
+    }
+  };
   render() {
     console.log(this.state.devices);
 
     const {navigate} = this.props.navigation;
     return (
-      <View style={styles.container}>
-        <LoadingModal visible={this.state.loading} />
-        <View style={[styles.buttonGoogle]}>
-          <Col
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Text style={[styles.textbuttonGoogle]}>Selected a Device</Text>
-            <Text style={[styles.textbuttontitle]}>
-              You must be paired with your device to see it in the list. Pull to
-              refresh the list. If device not found, click “Search Device”
-            </Text>
-            <ScrollView>
-              <View>
-                {this.state.devices.map((val, i) => (
+      <Grid>
+        <Row size={13}>
+          <View style={styles.container}>
+            <View style={[styles.button]}>
+              <Image
+                style={[styles.logo]}
+                source={require('../assets/icons/retrievedata/bluetoothblue.png')}
+              />
+            </View>
+            <View style={[styles.buttonGoogle]}>
+              <Col
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={[styles.textbuttonGoogle]}>Selected a Device</Text>
+                <Text style={[styles.textbuttontitle]}>
+                  You must be paired with your device to see it in the list.
+                  Pull to refresh the list. If device not found, click “Search
+                  Device”
+                </Text>
+                <ScrollView>
                   <View>
-                    <View style={[styles.BorderTop]} />
-                    <TouchableOpacity onPress={() => this.connect(val.address)}>
-                      <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>{val.name}</Text>
+                    {this.state.devices.map((val, i) => (
+                      <View>
+                        <View style={[styles.BorderTop]} />
+                        <TouchableOpacity
+                          onPress={() => this.connect(val.address)}>
+                          <View style={styles.itemContainer}>
+                            <Text style={styles.itemText}>{val.name}</Text>
+                          </View>
+                        </TouchableOpacity>
                       </View>
-                    </TouchableOpacity>
+                    ))}
                   </View>
-                ))}
-              </View>
-            </ScrollView>
-          </Col>
-        </View>
-        <TouchableOpacity
-          style={[styles.buttonsearch]}
-          onPress={() => navigate('ScanningDeviceScreen')}>
-          <Text style={[styles.textbuttonsearch]}>Search Device</Text>
-        </TouchableOpacity>
-      </View>
+                </ScrollView>
+              </Col>
+            </View>
+            <TouchableOpacity
+              style={[styles.buttonsearch]}
+              onPress={() => navigate('ScanningDeviceScreen')}>
+              <Text style={[styles.textbuttonsearch]}>Search Device</Text>
+            </TouchableOpacity>
+          </View>
+        </Row>
+      </Grid>
     );
   }
 }

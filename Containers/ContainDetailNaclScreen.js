@@ -12,8 +12,6 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
-import BluetoothSerial from 'react-native-bluetooth-serial-next';
-import LoadingModal from '../Components/Modal/LoadingModal';
 
 import SmallButton from '../Components/Buttons/SmallButton';
 
@@ -24,7 +22,6 @@ export default class ContainDetailNaclScreen extends Component {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       sample_name: '',
       token: '',
-      loading: false,
     };
 
     this.saveData = this.saveData.bind(this);
@@ -32,9 +29,10 @@ export default class ContainDetailNaclScreen extends Component {
   }
   componentDidMount() {
     if (this.state.content.battery < 25) {
+      alert('Baterai lemah, harap segera mengisi baterai.');
       this.onAlert(
-        'Battery low',
-        'Battery under 25%, please recharge the device.',
+        'Baterai Lemah',
+        'Harap isi baterai karena telah kurang dari batas minimum',
       );
     }
   }
@@ -42,28 +40,6 @@ export default class ContainDetailNaclScreen extends Component {
     return Alert.alert(title, message, [
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
-  };
-  write = async (id, message) => {
-    console.log('mes', message);
-    this.setState({loading: true});
-    await BluetoothSerial.device(id).write(message);
-    setTimeout(() => {
-      BluetoothSerial.readFromDevice(id).then(response => {
-        console.log('res', response);
-        let objectBluetooth = JSON.parse(response);
-        const newObject = {
-          nacl: objectBluetooth.nacl,
-          battery: objectBluetooth.battery,
-          count: objectBluetooth.count,
-          no_seri: objectBluetooth.no_seri,
-          water_content: objectBluetooth.water_content,
-          whiteness: objectBluetooth.whiteness,
-        };
-        this.setState({newData: newObject});
-        this.setState({loading: false});
-        alert('response : ' + JSON.parse(newObject));
-      });
-    }, 15000);
   };
 
   async saveData() {
@@ -87,7 +63,6 @@ export default class ContainDetailNaclScreen extends Component {
           longitude: 0.0,
           status_battery: parseInt(this.state.content.battery),
           sample_name: this.state.sample_name,
-          counter: this.state.content.count,
         },
         {
           headers: {
@@ -96,24 +71,25 @@ export default class ContainDetailNaclScreen extends Component {
           },
         },
       );
-      this.onAlert('Success', 'Data has been uploaded.');
-      goBack('ContainScreen');
-      console.log('what?', response);
+
+      this.onAlert('Data Tersimpan', 'Anda berhasil menyimpan data.');
+      goBack();
     } catch (err) {
-      this.onAlert('Sample name blank', 'You must fill the sample name.');
-      console.log('There is an error pada bagian konten', err);
+      console.log('Error happened at saveData()', err);
+      this.onAlert('Terjadi Kesalahan', 'Silakan coba kembali.');
     }
   }
 
   reMeasure() {
-    this.write(this.props.navigation.state.params.idBluetooth, 'Data1');
+    const {goBack} = this.props.navigation;
+
+    goBack();
   }
 
   render() {
     const {nacl, whiteness, water_content} = this.state.content;
     return (
       <View style={styles.container}>
-        <LoadingModal visible={this.state.loading} />
         <View style={styles.wrapper}>
           <Image
             style={[styles.logosearch]}
