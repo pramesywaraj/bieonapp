@@ -133,6 +133,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
+    }
+    dexOptions {
+        jumboMode = true
     }
     splits {
         abi {
@@ -190,6 +194,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-html-to-pdf')
+    compile project(':react-native-html-to-pdf')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-bluetooth-escpos-printer')
     implementation project(':@react-native-community_async-storage')
@@ -222,7 +228,6 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 project.ext.envConfigFiles = [
-        debug: ".env",
-        release: ".env",
+    debug: ".env.development",
+    release: ".env.production",
 ]
-

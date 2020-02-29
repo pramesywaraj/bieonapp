@@ -203,7 +203,7 @@ export default class RetrieveDataScreen extends Component {
 
     try {
       await BluetoothSerial.device(device.address).write(message);
-      await BluetoothSerial.readFromDevice().then(response => {
+      await BluetoothSerial.readFromDevice(device.address).then(response => {
         console.log(response);
         setTimeout(() => {
           let bluetoothObj = response;
@@ -243,6 +243,7 @@ export default class RetrieveDataScreen extends Component {
               navigation.navigate('DeviceInfoScreen', {
                 contentBluetooth: JSON.stringify(tempObj),
               });
+              break;
           }
         }, 13000);
       });

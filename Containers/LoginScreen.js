@@ -57,6 +57,7 @@ class LoginScreen extends Component {
   };
 
   async onLoginProcess(payload) {
+    console.log(`${Config.API_URL}`);
     try {
       let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
 
@@ -73,12 +74,13 @@ class LoginScreen extends Component {
           'Email atau Password Salah',
           'Silahkan periksa email atau password Anda kembali.',
         );
-      } else {
-        this.onAlert(
-          'Terjadi Kesalahan',
-          'Silahkan tunggu beberapa saat dan coba kembali.',
-        );
+
+        return;
       }
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Silahkan tunggu beberapa saat dan coba kembali.',
+      );
     }
   }
 

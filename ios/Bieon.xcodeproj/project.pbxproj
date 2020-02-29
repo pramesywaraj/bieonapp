@@ -38,6 +38,14 @@
 		9F8CA30485CA466A875BFF4C /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF9722D15FC94386A032E173 /* Zocial.ttf */; };
 		7F223C4327FA432EBF792A2C /* libRCTBluetoothSerial.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CD410DCB397449A98DD2044 /* libRCTBluetoothSerial.a */; };
 		365EAF5A36054F2B982431E8 /* libRNBluetoothEscposPrinter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AD11E6DC5DA485DB147215E /* libRNBluetoothEscposPrinter.a */; };
+		D42DF5FEE8C44BE6AA0D2A60 /* Futura Bk BT Book Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 68089D0F8743476B93ADF2BC /* Futura Bk BT Book Italic.ttf */; };
+		1733EA73969A4699BAE02A8A /* Futura Bk BT Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B12F52CC62D411FA1E862B1 /* Futura Bk BT Book.ttf */; };
+		1851C5C552E64518A4930F6D /* Futura Md BT Bold Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F690BE837011408AA571D1B8 /* Futura Md BT Bold Italic.ttf */; };
+		D69034436C6A4E70B89AAF55 /* Futura Md BT Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB576FB486F34E6C975339A4 /* Futura Md BT Bold.ttf */; };
+		B146837E48904BCDA2C97AD7 /* Futura Md BT Medium Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3C2720D00324C91B71F9F7D /* Futura Md BT Medium Italic.ttf */; };
+		79F45156330F486098493A10 /* Futura Md BT Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31E68D954C994B09B046BCEB /* Futura Md BT Medium.ttf */; };
+		EC3E67B7ABFA4F289DC2E322 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE580832D40844F9AEF2BD06 /* Montserrat-Regular.ttf */; };
+		8D6CFE97228E41A28E0B83B8 /* Times New Roman.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D61718EEBCF4E52A9D1E70C /* Times New Roman.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +113,14 @@
 		5CD410DCB397449A98DD2044 /* libRCTBluetoothSerial.a */ = {isa = PBXFileReference; name = "libRCTBluetoothSerial.a"; path = "libRCTBluetoothSerial.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		A3F44F4F1DFF4F3AA46FB40C /* RNBluetoothEscposPrinter.xcodeproj */ = {isa = PBXFileReference; name = "RNBluetoothEscposPrinter.xcodeproj"; path = "../node_modules/react-native-bluetooth-escpos-printer/ios/RNBluetoothEscposPrinter.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		2AD11E6DC5DA485DB147215E /* libRNBluetoothEscposPrinter.a */ = {isa = PBXFileReference; name = "libRNBluetoothEscposPrinter.a"; path = "libRNBluetoothEscposPrinter.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		68089D0F8743476B93ADF2BC /* Futura Bk BT Book Italic.ttf */ = {isa = PBXFileReference; name = "Futura Bk BT Book Italic.ttf"; path = "../assets/font/Futura Bk BT Book Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5B12F52CC62D411FA1E862B1 /* Futura Bk BT Book.ttf */ = {isa = PBXFileReference; name = "Futura Bk BT Book.ttf"; path = "../assets/font/Futura Bk BT Book.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F690BE837011408AA571D1B8 /* Futura Md BT Bold Italic.ttf */ = {isa = PBXFileReference; name = "Futura Md BT Bold Italic.ttf"; path = "../assets/font/Futura Md BT Bold Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DB576FB486F34E6C975339A4 /* Futura Md BT Bold.ttf */ = {isa = PBXFileReference; name = "Futura Md BT Bold.ttf"; path = "../assets/font/Futura Md BT Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D3C2720D00324C91B71F9F7D /* Futura Md BT Medium Italic.ttf */ = {isa = PBXFileReference; name = "Futura Md BT Medium Italic.ttf"; path = "../assets/font/Futura Md BT Medium Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		31E68D954C994B09B046BCEB /* Futura Md BT Medium.ttf */ = {isa = PBXFileReference; name = "Futura Md BT Medium.ttf"; path = "../assets/font/Futura Md BT Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DE580832D40844F9AEF2BD06 /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; name = "Montserrat-Regular.ttf"; path = "../assets/font/Montserrat-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3D61718EEBCF4E52A9D1E70C /* Times New Roman.ttf */ = {isa = PBXFileReference; name = "Times New Roman.ttf"; path = "../node_modules/react-native-pdf-lib/assets/Times New Roman.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,6 +276,14 @@
 				9B99534F7FB6431FBD4DC0CF /* Octicons.ttf */,
 				E4AEB2A31652482ABE820352 /* SimpleLineIcons.ttf */,
 				EF9722D15FC94386A032E173 /* Zocial.ttf */,
+				68089D0F8743476B93ADF2BC /* Futura Bk BT Book Italic.ttf */,
+				5B12F52CC62D411FA1E862B1 /* Futura Bk BT Book.ttf */,
+				F690BE837011408AA571D1B8 /* Futura Md BT Bold Italic.ttf */,
+				DB576FB486F34E6C975339A4 /* Futura Md BT Bold.ttf */,
+				D3C2720D00324C91B71F9F7D /* Futura Md BT Medium Italic.ttf */,
+				31E68D954C994B09B046BCEB /* Futura Md BT Medium.ttf */,
+				DE580832D40844F9AEF2BD06 /* Montserrat-Regular.ttf */,
+				3D61718EEBCF4E52A9D1E70C /* Times New Roman.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -421,6 +445,14 @@
 				2FE17BC7297740EC8DD7D640 /* Octicons.ttf in Resources */,
 				3C222E6983B54453ADE24895 /* SimpleLineIcons.ttf in Resources */,
 				9F8CA30485CA466A875BFF4C /* Zocial.ttf in Resources */,
+				D42DF5FEE8C44BE6AA0D2A60 /* Futura Bk BT Book Italic.ttf in Resources */,
+				1733EA73969A4699BAE02A8A /* Futura Bk BT Book.ttf in Resources */,
+				1851C5C552E64518A4930F6D /* Futura Md BT Bold Italic.ttf in Resources */,
+				D69034436C6A4E70B89AAF55 /* Futura Md BT Bold.ttf in Resources */,
+				B146837E48904BCDA2C97AD7 /* Futura Md BT Medium Italic.ttf in Resources */,
+				79F45156330F486098493A10 /* Futura Md BT Medium.ttf in Resources */,
+				EC3E67B7ABFA4F289DC2E322 /* Montserrat-Regular.ttf in Resources */,
+				8D6CFE97228E41A28E0B83B8 /* Times New Roman.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

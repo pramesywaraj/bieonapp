@@ -8,6 +8,8 @@ import {
   ScrollView,
   View,
   Share,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import Config from 'react-native-config';
 import {
@@ -25,6 +27,8 @@ import NaclTable from '../Components/Table/NaclTable';
 import IodiumTable from '../Components/Table/IodiumTable';
 import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
 import TableDataHeader from '../Components/Toolbar/TableDataHeader';
+
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
 const printSaltA = (saltDatas, userOperator) => {
   try {
@@ -258,6 +262,7 @@ export default class HomeScreen extends Component {
       filteredData: [],
       filter: false,
       modalVisibleFilter: false,
+      filePath: '',
     };
 
     this.openModal = this.openModal.bind(this);
@@ -277,7 +282,14 @@ export default class HomeScreen extends Component {
     this.handleFilterModal = this.handleFilterModal.bind(this);
     this.onApplyFilter = this.onApplyFilter.bind(this);
     this.onRemoveFilter = this.onRemoveFilter.bind(this);
+    this.makePdf = this.makePdf.bind(this);
   }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
 
   async componentDidMount() {
     await this.fetchSaltData();
@@ -366,17 +378,6 @@ export default class HomeScreen extends Component {
       listener.remove();
     });
   }
-  // onShare() {
-  // htmlToImage
-  //   .toJpeg(document.getElementById('my-node'), {quality: 0.95})
-  //   .then(function(dataUrl) {
-  //     console.log('dataurl', dataUrl);
-  //     var link = document.createElement('a');
-  //     link.download = 'my-image-name.jpeg';
-  //     link.href = dataUrl;
-  //     link.click();
-  //   });
-  // }
   onShare = async () => {
     // try {
     //   const result = await Share.share({
@@ -395,6 +396,30 @@ export default class HomeScreen extends Component {
     //   alert(error.message);
     // }
   };
+
+  // Trying html to pdf
+  async makePdf() {
+    let options = {
+      html: '<h1>PDF TEST</h1>',
+      fileName: 'test',
+      directory: 'Documents',
+    };
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Izin Akses Penyimpanan Anda',
+        message:
+          'Bieon App mencoba mendapatkan izin Anda ' +
+          'untuk mengakses penyimpanan Anda. ',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+
+    let file = await RNHTMLtoPDF.convert(options);
+    // console.log(file.filePath);
+    console.log(file.filePath);
+  }
 
   async fetchSaltData() {
     let userData = await AsyncStorage.getItem('@userData');
@@ -762,7 +787,7 @@ export default class HomeScreen extends Component {
           </View>
           <View>
             <TableDataToolbar
-              onShare={this.onShare}
+              onShare={this.makePdf}
               onRefresh={this.onRefreshData}
               onPrint={this.onPrint}
               onFilter={() => console.log('Filtered')}
