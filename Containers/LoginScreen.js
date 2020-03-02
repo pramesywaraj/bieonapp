@@ -134,7 +134,7 @@ class LoginScreen extends Component {
                   onChangeText={email => this.setState({email: email})}
                 />
               </View>
-              <View style={styles.blankMargin}></View>
+              <View style={styles.blankMargin} />
               <View style={styles.inputTextContainer}>
                 <Image
                   style={styles.itemIconImage}
