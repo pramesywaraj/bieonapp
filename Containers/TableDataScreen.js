@@ -433,7 +433,7 @@ export default class HomeScreen extends Component {
                         `<tr>
                           <td>${i + 1}</td>
                           <td>${moment(item.create_at).format(
-                            'DD MM YYYY / T',
+                            'DD MM YYYY / TT',
                           )}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.nacl}</td>
@@ -595,7 +595,7 @@ export default class HomeScreen extends Component {
                         `<tr>
                           <td>${i + 1}</td>
                           <td>${moment(item.create_at).format(
-                            'DD MM YYYY / T',
+                            'DD MM YYYY / TT',
                           )}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.iodium}</td>
@@ -711,17 +711,17 @@ export default class HomeScreen extends Component {
     });
   }
 
-  onShare = async (filepath, filename) => {
+  onShare = async (base64, filename) => {
     let options = {
-      url: `file://${filepath}`,
+      url: `data:application/pdf;base64,${base64}`,
+      filename: filename,
       title: 'Share on other apps',
       showAppsToView: true,
-      fileName: filename,
-      type: 'application/pdf',
+      mimeType: 'application/pdf',
     };
     try {
       await Share.open(options)
-        .then(r => console.log(r))
+        .then(r => this.onAlert('Sukses', 'Telah sukses membagikan file.'))
         .catch(err => console.log(err));
       // console.log(response);
     } catch (error) {
@@ -770,6 +770,7 @@ export default class HomeScreen extends Component {
         directory: 'Documents',
         width: 595,
         height: 842,
+        base64: true,
       };
 
       // Request permission if have not
@@ -787,9 +788,10 @@ export default class HomeScreen extends Component {
 
       // The data maker
       let file = await RNHTMLtoPDF.convert(options);
-      await this.onShare('/storage/emulated/0/Documents/', fileName);
+      await this.onShare(file.base64, fileName);
+
       this.setState({loading: false});
-      this.onAlert('', 'File berhasil dibuat.');
+      // this.onAlert('', 'File berhasil dibuat.');
     } catch (err) {
       console.log('Error', err);
       this.onAlert(
