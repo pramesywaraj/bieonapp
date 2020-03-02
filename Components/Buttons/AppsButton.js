@@ -27,7 +27,13 @@ export default function AppsButton({
             {label}
           </Text>
         )}
-        <ActivityIndicator animating={loading} color={textColor} size="small" />
+        {loading && (
+          <ActivityIndicator
+            animating={loading}
+            color={textColor}
+            size="small"
+          />
+        )}
       </View>
     </TouchableNativeFeedback>
   );

@@ -22,6 +22,7 @@ export default class ForgetPasswordScreen extends Component {
     super(props);
     this.state = {
       email: '',
+      loading: false,
     };
 
     this.onBackToLogin = this.onBackToLogin.bind(this);
@@ -36,6 +37,7 @@ export default class ForgetPasswordScreen extends Component {
   };
 
   onSendForgotPassword() {
+    this.setState({loading: true});
     if (this.state.email !== '') {
       let forgotPassObj = {
         email: this.state.email,
@@ -47,6 +49,7 @@ export default class ForgetPasswordScreen extends Component {
         'Email atau Password belum terisi',
         'Silahkan masukkan email atau password Anda terlebih dahulu.',
       );
+      this.setState({loading: false});
     }
   }
 
@@ -64,20 +67,24 @@ export default class ForgetPasswordScreen extends Component {
           'Silahkan cek email Anda dan ikuti prosedur penggantian password.',
         );
         goBack();
+        this.setState({loading: false});
       }
     } catch (err) {
       const {response} = err;
       console.log(err);
       if (response.status === 422) {
         this.onAlert('Terjadi kesalahan', 'Silahkan ulangi kembali.');
+        this.setState({loading: false});
         return;
       } else if (response.status === 400) {
         this.onAlert(
           'Email Salah',
           'Email yang Anda masukkan tidak terdaftar, silahkan cek kembali email Anda.',
         );
+        this.setState({loading: false});
         return;
       }
+      this.setState({loading: false});
     }
   }
 
@@ -116,6 +123,7 @@ export default class ForgetPasswordScreen extends Component {
             </View>
 
             <AppsButton
+              loading={this.state.loading}
               action={this.onSendForgotPassword}
               label={'Send'}
               buttonColor={'#fff'}
