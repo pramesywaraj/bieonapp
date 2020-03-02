@@ -47,6 +47,7 @@ export default class DeviceInfoScreen extends Component {
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
+
   async saveData() {
     try {
       const {navigate} = this.props.navigation;
@@ -70,7 +71,6 @@ export default class DeviceInfoScreen extends Component {
       );
       this.onAlert('Success', 'Data has been uploaded.');
       navigate('ContainScreen');
-      console.log('what?', response.config.data);
     } catch (err) {
       this.onAlert(
         'There is an error',
@@ -80,7 +80,6 @@ export default class DeviceInfoScreen extends Component {
     }
   }
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.itemContainer}>

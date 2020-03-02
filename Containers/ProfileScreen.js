@@ -14,7 +14,6 @@ import {
   KeyboardAvoidingView,
   Button,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
 import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -65,7 +64,7 @@ export default class ProfileScreen extends Component {
       console.log(err);
     }
   }
-  // te
+
   createFormData = (photo, body) => {
     const data = new FormData();
 
@@ -146,7 +145,6 @@ export default class ProfileScreen extends Component {
     navigate('EditProfileScreen');
   };
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -157,7 +155,7 @@ export default class ProfileScreen extends Component {
             }}
           />
           <Icon
-            name="user-edit"
+            name="image"
             style={styles.userEdit}
             onPress={() => this.changePicture()}
           />
@@ -166,12 +164,12 @@ export default class ProfileScreen extends Component {
             {this.state.currentUser.fullname}
           </Text>
           <View style={styles.itemContainer}>
-            <Row>
+            <View>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/email.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Email</Text>
                 <TextInput
                   editable={false}
@@ -180,16 +178,16 @@ export default class ProfileScreen extends Component {
                   underlineColorAndroid={'transparent'}>
                   {this.state.currentUser.email}
                 </TextInput>
-              </Col>
-            </Row>
+              </View>
+            </View>
           </View>
           <View style={styles.itemContainer}>
-            <Row>
+            <View>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/phone.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Phone Number</Text>
                 <TextInput
                   editable={false}
@@ -198,16 +196,16 @@ export default class ProfileScreen extends Component {
                   underlineColorAndroid={'transparent'}>
                   {this.state.currentUser.phone_number}
                 </TextInput>
-              </Col>
-            </Row>
+              </View>
+            </View>
           </View>
           <View style={styles.itemContainer}>
-            <Row>
+            <View>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/address.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Address</Text>
                 <TextInput
                   editable={false}
@@ -218,16 +216,16 @@ export default class ProfileScreen extends Component {
                   numberOfLines={10}>
                   {this.state.currentUser.address}
                 </TextInput>
-              </Col>
-            </Row>
+              </View>
+            </View>
           </View>
           <View style={styles.itemContainer}>
-            <Row>
+            <View>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/gender.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Gender</Text>
                 <TextInput
                   editable={false}
@@ -236,36 +234,16 @@ export default class ProfileScreen extends Component {
                   underlineColorAndroid={'transparent'}>
                   {this.state.gender}
                 </TextInput>
-              </Col>
-            </Row>
+              </View>
+            </View>
           </View>
-          {/* <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/gender.png')}
-                />
-                <Col>
-                  <Text style={styles.text}>Gender</Text>
-                  <Dropdown
-                    data={data}
-                    style={[styles.Dropdown]}
-                    pickerStyle={{
-                      borderBottomColor: 'transparent',
-                      borderWidth: 0,
-                    }}
-                    dropdownOffset={{top: 10}}
-                    placeholder="Gender"></Dropdown>
-                </Col>
-              </Row>
-            </View> */}
           <View style={styles.itemContainer}>
-            <Row>
+            <View>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/position.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Position</Text>
                 <TextInput
                   editable={false}
@@ -274,16 +252,16 @@ export default class ProfileScreen extends Component {
                   underlineColorAndroid={'transparent'}>
                   {this.state.currentUser.position}
                 </TextInput>
-              </Col>
-            </Row>
+              </View>
+            </View>
           </View>
           <View style={styles.itemContainer}>
-            <Row>
+            <View>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/agency.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Company/Institution</Text>
                 <TextInput
                   editable={false}
@@ -292,8 +270,8 @@ export default class ProfileScreen extends Component {
                   underlineColorAndroid={'transparent'}>
                   {this.state.companyName}
                 </TextInput>
-              </Col>
-            </Row>
+              </View>
+            </View>
           </View>
           {/* <TouchableOpacity
           style={[styles.button]}
@@ -308,12 +286,13 @@ export default class ProfileScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
   TextInput: {
-    fontSize: 18,
+    fontSize: 16,
     alignSelf: 'stretch',
     width: 320,
     height: 50,

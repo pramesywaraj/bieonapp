@@ -7,8 +7,6 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Button,
   Alert,
 } from 'react-native';
 import {Col, Row, Grid} from 'react-native-easy-grid';
@@ -122,7 +120,6 @@ export default class EditProfileScreen extends Component {
     }
   }
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.itemContainer}>
