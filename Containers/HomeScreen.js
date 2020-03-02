@@ -17,9 +17,8 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 
 import Article from '../Components/Articles/Article';
-import {ScrollView} from 'react-native-gesture-handler';
-const BannerWidth = Dimensions.get('window').width;
-const BannerHeight = 260;
+const dimension = Dimensions.get('window');
+const bannerHeight = 260;
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -142,7 +141,7 @@ export default class HomeScreen extends Component {
     return (
       <View key={index}>
         <Image
-          style={{width: BannerWidth, height: BannerHeight}}
+          style={{width: dimension.width, height: bannerHeight}}
           source={{uri: image}}
         />
       </View>
@@ -157,7 +156,7 @@ export default class HomeScreen extends Component {
           autoplayTimeout={5000}
           loop
           index={0}
-          pageSize={BannerWidth}>
+          pageSize={dimension.width}>
           {this.state.banners.map((bann, index) =>
             this.renderPage(`${Config.API_URL}/` + bann.picture, index),
           )}
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
     marginTop: '60%',
     position: 'absolute',
     width: '100%',
-    height: 'auto',
+    height: dimension.height,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     backgroundColor: 'white',
