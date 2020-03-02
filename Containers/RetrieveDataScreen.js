@@ -155,23 +155,18 @@ export default class RetrieveDataScreen extends Component {
   }
 
   async scan() {
-    const {navigation} = this.props;
-    this.setState({loading: false});
-    navigation.navigate('ContainDetailIodiumScreen', {
-      contentBluetooth: JSON.stringify({}),
+    this.setState({
+      loading: true,
     });
-    // this.setState({
-    //   loading: true,
-    // });
 
-    // const {isBluetoothEnabled} = this.state;
+    const {isBluetoothEnabled} = this.state;
 
-    // if (isBluetoothEnabled) {
-    //   this.scanAction();
-    // } else {
-    //   this.activateBluetooth();
-    //   this.scanAction();
-    // }
+    if (isBluetoothEnabled) {
+      this.scanAction();
+    } else {
+      this.activateBluetooth();
+      this.scanAction();
+    }
   }
 
   async connectToDevice(item) {
@@ -208,7 +203,7 @@ export default class RetrieveDataScreen extends Component {
 
     try {
       await BluetoothSerial.device(device.address).write(message);
-      await BluetoothSerial.readFromDevice().then(response => {
+      await BluetoothSerial.readFromDevice(device.address).then(response => {
         console.log(response);
         setTimeout(() => {
           let bluetoothObj = response;
@@ -248,6 +243,7 @@ export default class RetrieveDataScreen extends Component {
               navigation.navigate('DeviceInfoScreen', {
                 contentBluetooth: JSON.stringify(tempObj),
               });
+              break;
           }
         }, 13000);
       });

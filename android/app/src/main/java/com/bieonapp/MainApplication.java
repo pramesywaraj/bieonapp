@@ -9,6 +9,7 @@ import cn.jystudio.bluetooth.RNBluetoothEscposPrinterPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.nuttawutmalee.RCTBluetoothSerial.RCTBluetoothSerialPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;

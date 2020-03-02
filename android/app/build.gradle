@@ -194,6 +194,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-html-to-pdf')
+    compile project(':react-native-html-to-pdf')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-bluetooth-escpos-printer')
     implementation project(':@react-native-community_async-storage')

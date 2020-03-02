@@ -5,44 +5,134 @@ import {
   ImageBackground,
   Text,
   View,
-  Dimensions,
   TextInput,
+  Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
+
+import AppsButton from '../Components/Buttons/AppsButton';
+
+import Config from 'react-native-config';
+import axios from 'axios';
 
 export default class ForgetPasswordScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      loading: false,
+    };
+
+    this.onBackToLogin = this.onBackToLogin.bind(this);
+    this.onSendForgotPassword = this.onSendForgotPassword.bind(this);
+    this.onForgotPasswordProcess = this.onForgotPasswordProcess.bind(this);
+  }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
+  onSendForgotPassword() {
+    this.setState({loading: true});
+    if (this.state.email !== '') {
+      let forgotPassObj = {
+        email: this.state.email,
+      };
+
+      this.onForgotPasswordProcess(forgotPassObj);
+    } else {
+      this.onAlert(
+        'Email atau Password belum terisi',
+        'Silahkan masukkan email atau password Anda terlebih dahulu.',
+      );
+      this.setState({loading: false});
+    }
+  }
+
+  async onForgotPasswordProcess(payload) {
+    const {goBack} = this.props.navigation;
+    try {
+      let response = await axios.post(
+        `${Config.API_URL}/auth/forgot/password`,
+        payload,
+      );
+
+      if (response.status === 202) {
+        this.onAlert(
+          'Sukses',
+          'Silahkan cek email Anda dan ikuti prosedur penggantian password.',
+        );
+        goBack();
+        this.setState({loading: false});
+      }
+    } catch (err) {
+      const {response} = err;
+      console.log(err);
+      if (response.status === 422) {
+        this.onAlert('Terjadi kesalahan', 'Silahkan ulangi kembali.');
+        this.setState({loading: false});
+        return;
+      } else if (response.status === 400) {
+        this.onAlert(
+          'Email Salah',
+          'Email yang Anda masukkan tidak terdaftar, silahkan cek kembali email Anda.',
+        );
+        this.setState({loading: false});
+        return;
+      }
+      this.setState({loading: false});
+    }
+  }
+
+  onBackToLogin() {
+    const {goBack} = this.props.navigation;
+    goBack();
+  }
+
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <ImageBackground
-          style={[styles.background]}
-          source={require('../assets/background/3.png')}>
+          style={styles.background}
+          source={require('../assets/background/background.png')}>
           <KeyboardAvoidingView
             behavior="padding"
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+            style={{alignItems: 'center', justifyContent: 'center'}}>
             <Image
               style={[styles.logo]}
-              source={require('../assets/logo/loginwhite.png')}></Image>
-            <View style={styles.itemContainer}>
-              <Image
-                style={styles.itemIconImage}
-                source={require('../assets/icons/signup/email.png')}
-              />
-              <TextInput
-                style={[styles.TextInput]}
-                underlineColorAndroid={'transparent'}
-                placeholder={'Email'}></TextInput>
+              source={require('../assets/logo/loginwhite.png')}
+            />
+            <View style={styles.inputContainer}>
+              <View style={styles.inputTextContainer}>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/signup/email.png')}
+                />
+                <TextInput
+                  style={[styles.textInput]}
+                  value={this.state.email}
+                  underlineColorAndroid="transparent"
+                  placeholder={'Email'}
+                  onChangeText={email => this.setState({email: email})}
+                />
+              </View>
             </View>
+
+            <AppsButton
+              loading={this.state.loading}
+              action={this.onSendForgotPassword}
+              label={'Send'}
+              buttonColor={'#fff'}
+              textColor={'#129cd8'}
+            />
             <TouchableOpacity
-              style={[styles.button]}
-              onPress={() => navigate('LoginScreen')}>
-              <Text style={[styles.textbutton]}>FORGET PASSWORD</Text>
+              style={styles.backToLogin}
+              onPress={this.onBackToLogin}>
+              <Text style={styles.backToLoginText}>Back to Login</Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
         </ImageBackground>
@@ -51,45 +141,28 @@ export default class ForgetPasswordScreen extends Component {
   }
 }
 
-const win = Dimensions.get('window');
+const win = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    margin: 0,
+    padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
   logo: {
-    width: 360,
-    marginTop: -150,
-    marginBottom: 120,
-  },
-  Row: {
-    height: 40,
-    marginTop: -25,
-  },
-  ColLeft: {
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: -50,
-  },
-  ColRight: {
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: -50,
+    resizeMode: 'contain',
+    width: 200,
   },
   background: {
-    width: win.width,
+    resizeMode: 'contain',
+    width: '100%',
     height: win.height,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -5,
   },
   text: {
-    color: '#fff',
     fontSize: 10,
     marginTop: 50,
     color: '#f8f8f8',
@@ -97,47 +170,44 @@ const styles = StyleSheet.create({
   textsign: {
     color: '#fff',
     fontSize: 13,
-    marginTop: 80,
+    marginTop: 60,
+    textAlign: 'center',
   },
-  itemContainer: {
+  inputContainer: {
+    maxWidth: '100%',
+    marginRight: '8%',
+    marginLeft: '8%',
+    marginBottom: '10%',
+  },
+  inputTextContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    alignSelf: 'stretch',
+    width: '100%',
+    paddingRight: '5%',
+    paddingLeft: '5%',
+    backgroundColor: 'rgba(74, 74, 74, 0.1)',
+    borderRadius: 10,
   },
   itemIconImage: {
     resizeMode: 'contain',
+    alignItems: 'center',
     width: 30,
     height: 30,
-    marginLeft: 30,
-    marginTop: -15,
   },
-  TextInput: {
-    fontSize: 18,
-    alignSelf: 'stretch',
-    width: 380,
-    height: 40,
-    marginBottom: 20,
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 0.7,
-    fontStyle: 'italic',
-    marginLeft: 15,
+  textInput: {
+    flex: 2,
+    fontSize: 16,
+    paddingLeft: 10,
+    color: '#424242',
   },
-  button: {
-    alignSelf: 'center',
-    alignItems: 'center',
-    borderRadius: 40,
-    width: 260,
-    height: 60,
-    padding: 17,
-    backgroundColor: '#fff',
-    marginTop: 40,
+  blankMargin: {
+    margin: '2%',
   },
-  textbutton: {
-    fontSize: 17,
-    color: '#129cd8',
-    fontWeight: '700',
-    textAlign: 'center',
+  backToLogin: {
+    marginTop: '5%',
+    padding: '2%',
+  },
+  backToLoginText: {
+    color: 'white',
   },
 });

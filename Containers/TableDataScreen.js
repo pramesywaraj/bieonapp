@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Share,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import Config from 'react-native-config';
 import {
@@ -16,6 +17,7 @@ import {
 } from 'react-native-bluetooth-escpos-printer';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
+import Share from 'react-native-share';
 import moment from 'moment';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import BluetoothListModal from '../Components/Modal/BluetoothListModal';
@@ -25,6 +27,8 @@ import NaclTable from '../Components/Table/NaclTable';
 import IodiumTable from '../Components/Table/IodiumTable';
 import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
 import TableDataHeader from '../Components/Toolbar/TableDataHeader';
+
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
 const printSaltA = (saltDatas, userOperator) => {
   try {
@@ -258,6 +262,7 @@ export default class HomeScreen extends Component {
       filteredData: [],
       filter: false,
       modalVisibleFilter: false,
+      filePath: '',
     };
 
     this.openModal = this.openModal.bind(this);
@@ -277,7 +282,346 @@ export default class HomeScreen extends Component {
     this.handleFilterModal = this.handleFilterModal.bind(this);
     this.onApplyFilter = this.onApplyFilter.bind(this);
     this.onRemoveFilter = this.onRemoveFilter.bind(this);
+    this.makePdf = this.makePdf.bind(this);
+    this.pdfTemplate = this.pdfTemplate.bind(this);
   }
+
+  // HTML template for making the pdf file....
+  pdfTemplate(obj) {
+    const {selectedSaltType} = this.state;
+
+    if (selectedSaltType === 0) {
+      return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          <style type="text/css">
+            .document-wrapper {
+              display: flex;
+              flex-direction: column;
+              max-width: 100vw;
+              margin: 3%;
+            }
+    
+            .document-header {
+              left: 0px;
+              top: 0px;
+              height: auto;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+            }
+    
+            .border-line {
+              border-bottom: 3px solid;
+              padding: 10px;
+            }
+    
+            .document-content-container {
+              height: 80vh;
+              padding: 1vh 3vw;
+            }
+    
+            .document-footer {
+              bottom: 0;
+    
+              border-top: 1px solid;
+            }
+    
+            .document-detail {
+                display: flex;
+                width: 100%;
+            }
+    
+            .document-detail > h4 {
+                font-weight: 300;
+                margin: 5px;
+            }
+    
+            .document-table {
+                margin-top: 5vh;
+                width: 100%;
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+    
+            th {
+              border: 1px solid black;
+            }
+    
+            td {
+                border-right: 1px solid black;
+            }
+    
+            .document-table > th,td {
+                text-align: center;
+            }
+          </style>
+        </head>
+    
+        <body>
+          <div class="document-wrapper">
+            <div class="document-header">
+              <div>
+                <img
+                  src="http://dashboard.matraindonesia.com/static/media/black.a8106b47.svg"
+                  style="width: 150px;height: auto;"
+                />
+              </div>
+    
+              <div style="align-self: center;">
+                <p>
+                  <a href="http://www.bieon.matraindonesia.co.id/"
+                    >www.bieon.matraindonesia.co.id</a
+                  >
+                </p>
+              </div>
+            </div>
+    
+            <div class="border-line"></div>
+    
+            <div class="document-content-container">
+              <h1>Probe Information</h1>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Probe Model</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">No Seri</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Battery Condition</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Last Calibration</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Location</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">User</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Recorded At</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <table class="document-table">
+                  <tr>
+                      <th>No</th>
+                      <th>Date / Time</th>
+                      <th>Sample Name</th>
+                      <th>NaCl</th>
+                      <th>Whiteness</th>
+                      <th>Water Content</th>
+                  </tr>
+                  ${obj
+                    .map(
+                      (item, i) =>
+                        `<tr>
+                          <td>${i + 1}</td>
+                          <td>${moment(item.create_at).format(
+                            'DD MM YYYY / TT',
+                          )}</td>
+                          <td>${item.sample_name}</td>
+                          <td>${item.nacl}</td>
+                          <td>${item.whiteness}</td>
+                          <td>${item.water_content}</td>
+                        </tr>`,
+                    )
+                    .join('')}
+              </table>
+            </div>
+            <footer class="document-footer">
+              <small
+                >This data was obtained from measurements using BIEON Smart Salt
+                Detector</span
+              >
+            </footer>
+          </div>
+        </body>
+      </html>
+    `;
+    } else {
+      return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+          <style type="text/css">
+            .document-wrapper {
+              display: flex;
+              flex-direction: column;
+              max-width: 100vw;
+              margin: 3%;
+            }
+    
+            .document-header {
+              left: 0px;
+              top: 0px;
+              height: auto;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+            }
+    
+            .border-line {
+              border-bottom: 3px solid;
+              padding: 10px;
+            }
+    
+            .document-content-container {
+              height: 80vh;
+              padding: 1vh 3vw;
+            }
+    
+            .document-footer {
+              bottom: 0;
+    
+              border-top: 1px solid;
+            }
+    
+            .document-detail {
+                display: flex;
+                width: 100%;
+            }
+    
+            .document-detail > h4 {
+                font-weight: 300;
+                margin: 5px;
+            }
+    
+            .document-table {
+                margin-top: 5vh;
+                width: 100%;
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+    
+            th {
+              border: 1px solid black;
+            }
+    
+            td {
+                border-right: 1px solid black;
+            }
+    
+            .document-table > th,td {
+                text-align: center;
+            }
+          </style>
+        </head>
+    
+        <body>
+          <div class="document-wrapper">
+            <div class="document-header">
+              <div>
+                <img
+                  src="http://dashboard.matraindonesia.com/static/media/black.a8106b47.svg"
+                  style="width: 150px;height: auto;"
+                />
+              </div>
+    
+              <div style="align-self: center;">
+                <p>
+                  <a href="http://www.bieon.matraindonesia.co.id/"
+                    >www.bieon.matraindonesia.co.id</a
+                  >
+                </p>
+              </div>
+            </div>
+    
+            <div class="border-line"></div>
+    
+            <div class="document-content-container">
+              <h1>Probe Information</h1>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Probe Model</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">No Seri</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Battery Condition</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Last Calibration</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Location</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">User</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <div class="document-detail">
+                  <h4 style="flex: 1;">Recorded At</h4>
+                  <h4>:</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+              </div>
+              <table class="document-table">
+                  <tr>
+                      <th>No</th>
+                      <th>Date / Time</th>
+                      <th>Sample Name</th>
+                      <th>Iodine Level (ppm)</th>
+                  </tr>
+                  ${obj
+                    .map(
+                      (item, i) =>
+                        `<tr>
+                          <td>${i + 1}</td>
+                          <td>${moment(item.create_at).format(
+                            'DD MM YYYY / TT',
+                          )}</td>
+                          <td>${item.sample_name}</td>
+                          <td>${item.iodium}</td>
+                        </tr>`,
+                    )
+                    .join('')}
+              </table>
+            </div>
+            <footer class="document-footer">
+              <small
+                >This data was obtained from measurements using BIEON Smart Salt
+                Detector</span
+              >
+            </footer>
+          </div>
+        </body>
+      </html>
+    `;
+    }
+  }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
 
   async componentDidMount() {
     await this.fetchSaltData();
@@ -366,35 +710,96 @@ export default class HomeScreen extends Component {
       listener.remove();
     });
   }
-  // onShare() {
-  // htmlToImage
-  //   .toJpeg(document.getElementById('my-node'), {quality: 0.95})
-  //   .then(function(dataUrl) {
-  //     console.log('dataurl', dataUrl);
-  //     var link = document.createElement('a');
-  //     link.download = 'my-image-name.jpeg';
-  //     link.href = dataUrl;
-  //     link.click();
-  //   });
-  // }
-  onShare = async () => {
-    // try {
-    //   const result = await Share.share({
-    //     message: 'test',
-    //   });
-    //   if (result.action === Share.sharedAction) {
-    //     if (result.activityType) {
-    //       // shared with activity type of result.activityType
-    //     } else {
-    //       // shared
-    //     }
-    //   } else if (result.action === Share.dismissedAction) {
-    //     // dismissed
-    //   }
-    // } catch (error) {
-    //   alert(error.message);
-    // }
+
+  onShare = async (base64, filename) => {
+    let options = {
+      url: `data:application/pdf;base64,${base64}`,
+      filename: filename,
+      title: 'Share on other apps',
+      showAppsToView: true,
+      mimeType: 'application/pdf',
+    };
+    try {
+      await Share.open(options)
+        .then(r => this.onAlert('Sukses', 'Telah sukses membagikan file.'))
+        .catch(err => console.log(err));
+      // console.log(response);
+    } catch (error) {
+      console.log('onShare error', error);
+      return error;
+    }
   };
+
+  // Trying html to pdf
+  async makePdf() {
+    this.setState({loading: true});
+
+    try {
+      const {selectedSaltType, salts_a, salts_b} = this.state;
+      let temp = selectedSaltType === 0 ? salts_a : salts_b;
+      let selectedDataArray = temp.filter(data => data.isChecked === true);
+      let date = new Date().toISOString();
+      let fileName = `Bieon-${
+        selectedSaltType === 0 ? 'NaCl' : 'Iodine'
+      }-${moment(date)
+        .format('DD_MM_YYYY')
+        .toString()}`;
+
+      // Check if data === 0
+      if (selectedDataArray.length === 0) {
+        this.onAlert(
+          'Terjadi kesalahan.',
+          'Harap pilih data yang akan Anda ubah ke dalam bentuk PDF.',
+        );
+
+        this.setState({loading: false});
+        return;
+      } else if (selectedDataArray.length > 20) {
+        this.onAlert(
+          'Perhatian.',
+          'Gagal membuat file. Harap hanya memilih 20 data, silahkan ulangi kembali.',
+        );
+
+        this.setState({loading: false});
+        return;
+      }
+
+      let options = {
+        html: this.pdfTemplate(selectedDataArray),
+        fileName: fileName,
+        directory: 'Documents',
+        width: 595,
+        height: 842,
+        base64: true,
+      };
+
+      // Request permission if have not
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Izin Akses Penyimpanan Anda',
+          message:
+            'Bieon App mencoba mendapatkan izin Anda ' +
+            'untuk mengakses penyimpanan Anda. ',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+
+      // The data maker
+      let file = await RNHTMLtoPDF.convert(options);
+      await this.onShare(file.base64, fileName);
+
+      this.setState({loading: false});
+      // this.onAlert('', 'File berhasil dibuat.');
+    } catch (err) {
+      console.log('Error', err);
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'File gagal dibuat, silahkan ulangi kembali dan cek data yang akan Anda buat menjadi PDF.',
+      );
+    }
+  }
 
   async fetchSaltData() {
     let userData = await AsyncStorage.getItem('@userData');
@@ -535,7 +940,6 @@ export default class HomeScreen extends Component {
 
     tempSalts[foundIndex].isChecked = !tempSalts[foundIndex].isChecked;
 
-    console.log('tempSalts', tempSalts);
     if (this.state.selectedSaltType === 0) {
       this.setState({
         salts_a: tempSalts,
@@ -762,7 +1166,7 @@ export default class HomeScreen extends Component {
           </View>
           <View>
             <TableDataToolbar
-              onShare={this.onShare}
+              onShare={this.makePdf}
               onRefresh={this.onRefreshData}
               onPrint={this.onPrint}
               onFilter={() => console.log('Filtered')}
