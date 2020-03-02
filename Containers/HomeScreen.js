@@ -11,7 +11,6 @@ import {
   FlatList,
   View,
   Dimensions,
-  TouchableHighlight,
   Alert,
   PermissionsAndroid,
 } from 'react-native';
@@ -153,6 +152,7 @@ export default class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         <Carousel
+          pageIndicatorContainerStyle={styles.imageIndicator}
           autoplay
           autoplayTimeout={5000}
           loop
@@ -165,41 +165,36 @@ export default class HomeScreen extends Component {
 
         <View style={styles.articleContainer}>
           <Text style={styles.homeScreenTitle}>Headline</Text>
-          <ScrollView>
-            <FlatList
-              data={this.state.articles}
-              renderItem={({item}) => (
-                <Article
-                  onClick={this.goToArticleDetail.bind(this, item)}
-                  title={item.title}
-                  imageUri={item.picture}
-                  createdAt={item.create_at}
-                />
-              )}
-              ItemSeparatorComponent={this.renderSeparator}
-              keyExtractor={item => item.article_id.toString()}
-              refreshing={this.state.refreshing}
-              onRefresh={this.handleRefresh}
-            />
-          </ScrollView>
+          <FlatList
+            data={this.state.articles}
+            renderItem={({item}) => (
+              <Article
+                onClick={this.goToArticleDetail.bind(this, item)}
+                title={item.title}
+                imageUri={item.picture}
+                createdAt={item.create_at}
+              />
+            )}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={item => item.article_id.toString()}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
+          />
         </View>
       </View>
     );
   }
 }
 
-const deviceWindow = Dimensions.get('window');
-
 const styles = StyleSheet.create({
-  headingImage: {
-    backgroundColor: 'rgba(77,77,77,0.5)',
-    width: '100%',
-    height: '40%',
+  imageIndicator: {
+    paddingBottom: '13%',
   },
   articleContainer: {
-    marginTop: '70%',
+    marginTop: '60%',
     position: 'absolute',
     width: '100%',
+    height: 'auto',
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     backgroundColor: 'white',
