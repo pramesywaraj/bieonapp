@@ -24,6 +24,7 @@ class LoginScreen extends Component {
     this.state = {
       email: '',
       password: '',
+      loading: false,
     };
 
     this.onPressLogin = this.onPressLogin.bind(this);
@@ -40,14 +41,16 @@ class LoginScreen extends Component {
     const {navigate} = this.props.navigation;
 
     try {
-      console.log('data:', data);
-      console.log('token:', token);
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
       await AsyncStorage.setItem('@userAuth', token);
       if (data.role_user === 2) {
-        alert('Anda tidak dapat login dengan akun ini.');
+        this.onAlert(
+          'Tidak dapat Login.',
+          'Akun Anda tidak diperbolehkan login ke dalam aplikasi, silahkan menggunakan akun yang sesuai.',
+        );
       } else {
         navigate('HomeScreen');
+        this.setState({loading: false});
       }
     } catch (err) {
       console.log(err);
@@ -55,6 +58,7 @@ class LoginScreen extends Component {
         'Terjadi Kesalahan',
         'Telah terjadi kesalahan ketika menyimpan data, silahkan restart aplikasi.',
       );
+      this.setState({loading: false});
     }
   };
 
@@ -82,10 +86,12 @@ class LoginScreen extends Component {
         'Terjadi Kesalahan',
         'Silahkan tunggu beberapa saat dan coba kembali.',
       );
+      this.setState({loading: false});
     }
   }
 
   onPressLogin() {
+    this.setState({loading: true});
     if (this.state.email !== '' && this.state.password !== '') {
       let newLogin = {
         email: this.state.email,
@@ -98,6 +104,7 @@ class LoginScreen extends Component {
         'Email atau Password belum terisi',
         'Silahkan masukkan email atau password Anda terlebih dahulu.',
       );
+      this.setState({loading: false});
     }
   }
 
@@ -151,6 +158,7 @@ class LoginScreen extends Component {
             </View>
 
             <AppsButton
+              loading={this.state.loading}
               action={this.onPressLogin}
               label={'Login'}
               buttonColor={'#fff'}
