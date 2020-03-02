@@ -69,11 +69,11 @@ export default class ForgetPasswordScreen extends Component {
       const {response} = err;
       console.log(err);
       if (response.status === 422) {
-        this.onAlert('Terjadi kesalahan.', 'Silahkan ulangi kembali.');
+        this.onAlert('Terjadi kesalahan', 'Silahkan ulangi kembali.');
         return;
       } else if (response.status === 400) {
         this.onAlert(
-          'Terjadi Kesalahan',
+          'Email Salah',
           'Email yang Anda masukkan tidak terdaftar, silahkan cek kembali email Anda.',
         );
         return;
