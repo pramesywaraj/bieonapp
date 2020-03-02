@@ -67,15 +67,17 @@ export default class ForgetPasswordScreen extends Component {
       }
     } catch (err) {
       const {response} = err;
+      console.log(err);
       if (response.status === 422) {
         this.onAlert('Terjadi kesalahan.', 'Silahkan ulangi kembali.');
-
+        return;
+      } else if (response.status === 400) {
+        this.onAlert(
+          'Terjadi Kesalahan',
+          'Email yang Anda masukkan tidak terdaftar, silahkan cek kembali email Anda.',
+        );
         return;
       }
-      this.onAlert(
-        'Terjadi Kesalahan',
-        'Silahkan tunggu beberapa saat dan coba kembali.',
-      );
     }
   }
 
