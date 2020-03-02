@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -9,6 +8,8 @@ import {
   Dimensions,
   TextInput,
   KeyboardAvoidingView,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 
 import AppsButton from '../Components/Buttons/AppsButton';
@@ -113,39 +114,46 @@ class LoginScreen extends Component {
               style={[styles.logo]}
               source={require('../assets/logo/loginwhite.png')}
             />
-            <View style={styles.inputTextContainer}>
-              <Image
-                style={styles.itemIconImage}
-                source={require('../assets/icons/signup/email.png')}
-              />
-              <TextInput
-                style={[styles.textInput]}
-                value={this.state.email}
-                underlineColorAndroid="transparent"
-                placeholder={'Email'}
-                onChangeText={email => this.setState({email: email})}
-              />
+            <View style={styles.inputContainer}>
+              <View style={styles.inputTextContainer}>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/signup/email.png')}
+                />
+                <TextInput
+                  style={[styles.textInput]}
+                  value={this.state.email}
+                  underlineColorAndroid="transparent"
+                  placeholder={'Email'}
+                  onChangeText={email => this.setState({email: email})}
+                />
+              </View>
+              <View style={styles.blankMargin}></View>
+              <View style={styles.inputTextContainer}>
+                <Image
+                  style={styles.itemIconImage}
+                  source={require('../assets/icons/signup/password.png')}
+                />
+                <TextInput
+                  style={[styles.textInput]}
+                  secureTextEntry={true}
+                  value={this.state.password}
+                  underlineColorAndroid={'transparent'}
+                  placeholder={'Password'}
+                  onChangeText={password => this.setState({password: password})}
+                />
+              </View>
             </View>
-            <View style={styles.inputTextContainer}>
-              <Image
-                style={styles.itemIconImage}
-                source={require('../assets/icons/signup/password.png')}
-              />
-              <TextInput
-                style={[styles.textInput]}
-                secureTextEntry={true}
-                value={this.state.password}
-                underlineColorAndroid={'transparent'}
-                placeholder={'Password'}
-                onChangeText={password => this.setState({password: password})}
-              />
-            </View>
+
             <AppsButton
               action={this.onPressLogin}
               label={'Login'}
               buttonColor={'#fff'}
               textColor={'#129cd8'}
             />
+            <TouchableOpacity style={styles.forgetPassword}>
+              <Text style={styles.forgetPasswordText}>Forget Password</Text>
+            </TouchableOpacity>
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
@@ -185,16 +193,18 @@ const styles = StyleSheet.create({
     marginTop: 60,
     textAlign: 'center',
   },
-  inputTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  inputContainer: {
     maxWidth: '100%',
-    paddingRight: '5%',
-    paddingLeft: '5%',
     marginRight: '8%',
     marginLeft: '8%',
     marginBottom: '10%',
+  },
+  inputTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingRight: '5%',
+    paddingLeft: '5%',
     backgroundColor: 'rgba(74, 74, 74, 0.1)',
     borderRadius: 10,
   },
@@ -203,17 +213,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 30,
     height: 30,
-    padding: 10,
   },
   textInput: {
-    flex: 1,
+    flex: 2,
     fontSize: 16,
-    paddingTop: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
     paddingLeft: 10,
     color: '#424242',
-    width: '80%',
+  },
+  blankMargin: {
+    margin: '2%',
+  },
+  forgetPassword: {
+    margin: '10%',
+  },
+  forgetPasswordText: {
+    color: 'white',
   },
 });
 

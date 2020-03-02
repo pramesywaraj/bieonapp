@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
 
 export default class ForgetPasswordScreen extends Component {
   render() {
