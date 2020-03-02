@@ -26,6 +26,7 @@ export default class ForgetPasswordScreen extends Component {
 
     this.onBackToLogin = this.onBackToLogin.bind(this);
     this.onSendForgotPassword = this.onSendForgotPassword.bind(this);
+    this.onForgotPasswordProcess = this.onForgotPasswordProcess.bind(this);
   }
 
   onAlert = (title, message) => {
@@ -113,7 +114,7 @@ export default class ForgetPasswordScreen extends Component {
             </View>
 
             <AppsButton
-              action={this.onPressLogin}
+              action={this.onSendForgotPassword}
               label={'Send'}
               buttonColor={'#fff'}
               textColor={'#129cd8'}
