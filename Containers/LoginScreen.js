@@ -27,6 +27,7 @@ class LoginScreen extends Component {
     };
 
     this.onPressLogin = this.onPressLogin.bind(this);
+    this.onForgotPassword = this.onForgotPassword.bind(this);
   }
 
   onAlert = (title, message) => {
@@ -101,6 +102,11 @@ class LoginScreen extends Component {
     }
   }
 
+  onForgotPassword() {
+    const {navigate} = this.props.navigation;
+    navigate('ForgetPasswordScreen');
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -151,7 +157,9 @@ class LoginScreen extends Component {
               buttonColor={'#fff'}
               textColor={'#129cd8'}
             />
-            <TouchableOpacity style={styles.forgetPassword}>
+            <TouchableOpacity
+              style={styles.forgetPassword}
+              onPress={this.onForgotPassword}>
               <Text style={styles.forgetPasswordText}>Forget Password</Text>
             </TouchableOpacity>
           </KeyboardAvoidingView>
@@ -224,7 +232,8 @@ const styles = StyleSheet.create({
     margin: '2%',
   },
   forgetPassword: {
-    margin: '10%',
+    marginTop: '5%',
+    padding: '2%',
   },
   forgetPasswordText: {
     color: 'white',

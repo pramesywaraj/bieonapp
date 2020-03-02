@@ -12,7 +12,6 @@ import LoginScreen from '../Containers/LoginScreen';
 import EditProfileScreen from '../Containers/EditProfileScreen';
 import HomeScreen from '../Containers/HomeScreen';
 import ArticleDetailScreen from '../Containers/ArticleDetailScreen';
-// import ForgetPasswordScreen from '../Containers/ForgetPasswordScreen';
 import SettingScreen from '../Containers/SettingScreen';
 import DeviceInfoScreen from '../Containers/DeviceInfoScreen';
 import PrivacyPolicyScreen from '../Containers/PrivacyPolicyScreen';
@@ -26,6 +25,7 @@ import TableDataScreen from '../Containers/TableDataScreen';
 import ContainScreen from '../Containers/ContainScreen';
 import ContainDetailNaclScreen from '../Containers/ContainDetailNaclScreen';
 import ContainDetailIodiumScreen from '../Containers/ContainDetailIodiumScreen';
+import ForgetPasswordScreen from '../Containers/ForgetPasswordScreen';
 
 // App path stack
 const HomeNavigator = createStackNavigator({
@@ -244,11 +244,27 @@ const AppNavigator = createBottomTabNavigator(
   },
 );
 
+// Login Stack Navigator
+const LoginNavigator = createStackNavigator({
+  LoginScreen: {
+    screen: LoginScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ForgetPasswordScreen: {
+    screen: ForgetPasswordScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+});
+
 // The Initial branch
 const InitialNavigator = createSwitchNavigator(
   {
     Splash: SplashScreen,
-    Auth: LoginScreen,
+    Auth: LoginNavigator,
     App: AppNavigator,
   },
   {
