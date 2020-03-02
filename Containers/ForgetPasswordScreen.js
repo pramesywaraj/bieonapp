@@ -9,11 +9,11 @@ import {
   Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 
 import AppsButton from '../Components/Buttons/AppsButton';
 
-import AsyncStorage from '@react-native-community/async-storage';
 import Config from 'react-native-config';
 import axios from 'axios';
 
@@ -25,6 +25,57 @@ export default class ForgetPasswordScreen extends Component {
     };
 
     this.onBackToLogin = this.onBackToLogin.bind(this);
+    this.onSendForgotPassword = this.onSendForgotPassword.bind(this);
+  }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
+  onSendForgotPassword() {
+    if (this.state.email !== '') {
+      let forgotPassObj = {
+        email: this.state.email,
+      };
+
+      this.onForgotPasswordProcess(forgotPassObj);
+    } else {
+      this.onAlert(
+        'Email atau Password belum terisi',
+        'Silahkan masukkan email atau password Anda terlebih dahulu.',
+      );
+    }
+  }
+
+  async onForgotPasswordProcess(payload) {
+    const {goBack} = this.props.navigation;
+    try {
+      let response = await axios.post(
+        `${Config.API_URL}/auth/forgot/password`,
+        payload,
+      );
+
+      if (response.status === 202) {
+        this.onAlert(
+          'Sukses',
+          'Silahkan cek email Anda dan ikuti prosedur penggantian password.',
+        );
+        goBack();
+      }
+    } catch (err) {
+      const {response} = err;
+      if (response.status === 422) {
+        this.onAlert('Terjadi kesalahan.', 'Silahkan ulangi kembali.');
+
+        return;
+      }
+      this.onAlert(
+        'Terjadi Kesalahan',
+        'Silahkan tunggu beberapa saat dan coba kembali.',
+      );
+    }
   }
 
   onBackToLogin() {

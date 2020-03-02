@@ -59,7 +59,6 @@ class LoginScreen extends Component {
   };
 
   async onLoginProcess(payload) {
-    console.log(`${Config.API_URL}`);
     try {
       let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
 
