@@ -1,17 +1,33 @@
 import React from 'react';
-import {TouchableNativeFeedback, View, Text, StyleSheet} from 'react-native';
+import {
+  TouchableNativeFeedback,
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 
 // import {vw} from 'react-native-viewport-units';
 
-export default function AppsButton({action, label, textColor, buttonColor}) {
+export default function AppsButton({
+  action,
+  label,
+  textColor,
+  buttonColor,
+  loading,
+}) {
   return (
     <TouchableNativeFeedback
       onPress={action}
+      disabled={loading}
       background={TouchableNativeFeedback.SelectableBackground()}>
       <View style={[buttonStyle.button, {backgroundColor: buttonColor}]}>
-        <Text style={[buttonStyle.textbutton, {color: textColor}]}>
-          {label}
-        </Text>
+        {!loading && (
+          <Text style={[buttonStyle.textbutton, {color: textColor}]}>
+            {label}
+          </Text>
+        )}
+        <ActivityIndicator animating={loading} color={textColor} size="small" />
       </View>
     </TouchableNativeFeedback>
   );
@@ -19,6 +35,7 @@ export default function AppsButton({action, label, textColor, buttonColor}) {
 
 const buttonStyle = StyleSheet.create({
   button: {
+    flexDirection: 'row',
     alignSelf: 'center',
     alignItems: 'center',
     borderRadius: 15,
