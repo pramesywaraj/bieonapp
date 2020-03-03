@@ -11,16 +11,14 @@ import {
   FlatList,
   View,
   Dimensions,
-  TouchableHighlight,
   Alert,
   PermissionsAndroid,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 import Article from '../Components/Articles/Article';
-import {ScrollView} from 'react-native-gesture-handler';
-const BannerWidth = Dimensions.get('window').width;
-const BannerHeight = 260;
+const dimension = Dimensions.get('window');
+const bannerHeight = 260;
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -143,7 +141,7 @@ export default class HomeScreen extends Component {
     return (
       <View key={index}>
         <Image
-          style={{width: BannerWidth, height: BannerHeight}}
+          style={{width: dimension.width, height: bannerHeight}}
           source={{uri: image}}
         />
       </View>
@@ -153,11 +151,12 @@ export default class HomeScreen extends Component {
     return (
       <View style={styles.container}>
         <Carousel
+          pageIndicatorContainerStyle={styles.imageIndicator}
           autoplay
           autoplayTimeout={5000}
           loop
           index={0}
-          pageSize={BannerWidth}>
+          pageSize={dimension.width}>
           {this.state.banners.map((bann, index) =>
             this.renderPage(`${Config.API_URL}/` + bann.picture, index),
           )}
@@ -165,41 +164,36 @@ export default class HomeScreen extends Component {
 
         <View style={styles.articleContainer}>
           <Text style={styles.homeScreenTitle}>Headline</Text>
-          <ScrollView>
-            <FlatList
-              data={this.state.articles}
-              renderItem={({item}) => (
-                <Article
-                  onClick={this.goToArticleDetail.bind(this, item)}
-                  title={item.title}
-                  imageUri={item.picture}
-                  createdAt={item.create_at}
-                />
-              )}
-              ItemSeparatorComponent={this.renderSeparator}
-              keyExtractor={item => item.article_id.toString()}
-              refreshing={this.state.refreshing}
-              onRefresh={this.handleRefresh}
-            />
-          </ScrollView>
+          <FlatList
+            data={this.state.articles}
+            renderItem={({item}) => (
+              <Article
+                onClick={this.goToArticleDetail.bind(this, item)}
+                title={item.title}
+                imageUri={item.picture}
+                createdAt={item.create_at}
+              />
+            )}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={item => item.article_id.toString()}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
+          />
         </View>
       </View>
     );
   }
 }
 
-const deviceWindow = Dimensions.get('window');
-
 const styles = StyleSheet.create({
-  headingImage: {
-    backgroundColor: 'rgba(77,77,77,0.5)',
-    width: '100%',
-    height: '40%',
+  imageIndicator: {
+    paddingBottom: '13%',
   },
   articleContainer: {
-    marginTop: '70%',
+    marginTop: '60%',
     position: 'absolute',
     width: '100%',
+    height: dimension.height,
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     backgroundColor: 'white',
