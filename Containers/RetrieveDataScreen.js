@@ -206,7 +206,7 @@ export default class RetrieveDataScreen extends Component {
       await BluetoothSerial.readFromDevice(device.address).then(response => {
         console.log(response);
         setTimeout(() => {
-          let bluetoothObj = response;
+          let bluetoothObj = JSON.parse(response);
 
           switch (message) {
             case 'Data1':
@@ -216,11 +216,11 @@ export default class RetrieveDataScreen extends Component {
               tempObj.no_seri = bluetoothObj.no_seri;
               tempObj.water_content = bluetoothObj.water_content;
               tempObj.whiteness = bluetoothObj.whiteness;
-
               this.setState({loading: false});
               navigation.navigate('ContainDetailNaclScreen', {
                 contentBluetooth: JSON.stringify(tempObj),
               });
+              console.log('Data1:', tempObj);
               break;
             case 'Data2':
               tempObj.iodium = bluetoothObj.iodium;
@@ -232,6 +232,7 @@ export default class RetrieveDataScreen extends Component {
               navigation.navigate('ContainDetailIodiumScreen', {
                 contentBluetooth: JSON.stringify(tempObj),
               });
+              console.log('Data2:', tempObj);
               break;
             case 'Device':
               tempObj.lastcal = bluetoothObj.lastcal;
@@ -243,9 +244,10 @@ export default class RetrieveDataScreen extends Component {
               navigation.navigate('DeviceInfoScreen', {
                 contentBluetooth: JSON.stringify(tempObj),
               });
+              console.log('Device:', tempObj);
               break;
           }
-        }, 13000);
+        }, 15000);
       });
     } catch (err) {
       console.log('Error happened on write()', err);

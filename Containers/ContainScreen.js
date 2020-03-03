@@ -123,7 +123,7 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        }, 11000);
+        }, 30000);
       });
     } else if (message === 'Data2') {
       BluetoothSerial.device(id).write(message);
@@ -141,7 +141,7 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        }, 11000);
+        }, 30000);
       });
     } else {
       BluetoothSerial.device(id).write(message);
@@ -159,7 +159,7 @@ export default class ContainScreen extends Component {
             contentBluetooth: JSON.stringify(newObject),
           });
           this.setState({loading: false});
-        }, 13000);
+        }, 30000);
       });
     }
   };

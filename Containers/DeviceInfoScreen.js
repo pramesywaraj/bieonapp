@@ -27,6 +27,10 @@ export default class DeviceInfoScreen extends Component {
   }
 
   async componentDidMount() {
+    await AsyncStorage.setItem(
+      '@deviceInfo',
+      JSON.stringify(this.state.content),
+    );
     this.setState({
       latitude: JSON.parse(await AsyncStorage.getItem('@userCoordinate'))
         .latitude,
@@ -48,6 +52,7 @@ export default class DeviceInfoScreen extends Component {
     ]);
   };
   async saveData() {
+    const {goBack} = this.props.navigation;
     try {
       const {navigate} = this.props.navigation;
       let response = await axios.patch(
@@ -69,7 +74,7 @@ export default class DeviceInfoScreen extends Component {
         },
       );
       this.onAlert('Success', 'Data has been uploaded.');
-      navigate('ContainScreen');
+      goBack();
       console.log('what?', response.config.data);
     } catch (err) {
       this.onAlert(

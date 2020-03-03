@@ -12,6 +12,8 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
+import LoadingModal from '../Components/Modal/LoadingModal';
 
 import SmallButton from '../Components/Buttons/SmallButton';
 
@@ -22,6 +24,7 @@ export default class ContainDetailNaclScreen extends Component {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       sample_name: '',
       token: '',
+      loading: false,
     };
 
     this.saveData = this.saveData.bind(this);
@@ -29,10 +32,9 @@ export default class ContainDetailNaclScreen extends Component {
   }
   componentDidMount() {
     if (this.state.content.battery < 25) {
-      alert('Baterai lemah, harap segera mengisi baterai.');
       this.onAlert(
-        'Baterai Lemah',
-        'Harap isi baterai karena telah kurang dari batas minimum',
+        'Battery low',
+        'Battery under 25%, please recharge the device.',
       );
     }
   }
@@ -46,7 +48,7 @@ export default class ContainDetailNaclScreen extends Component {
     const {goBack} = this.props.navigation;
 
     if (this.state.sample_name === '') {
-      this.onAlert('Nama Sample Tidak Terisi', 'Harap isi nama sample.');
+      this.onAlert('Sample name is blank', 'Please fill the sample name');
       return;
     }
 
@@ -72,24 +74,52 @@ export default class ContainDetailNaclScreen extends Component {
         },
       );
 
-      this.onAlert('Data Tersimpan', 'Anda berhasil menyimpan data.');
+      this.onAlert('Success', 'Data has been uploaded.');
       goBack();
     } catch (err) {
       console.log('Error happened at saveData()', err);
-      this.onAlert('Terjadi Kesalahan', 'Silakan coba kembali.');
+      this.onAlert(
+        'There is an error',
+        'Ther is an error when save data. Please try again',
+      );
     }
   }
 
   reMeasure() {
-    const {goBack} = this.props.navigation;
-
-    goBack();
+    this.write(this.props.navigation.state.params.idBluetooth, 'Data1');
   }
+
+  write = async (id, message) => {
+    // try {
+    // for data1
+    this.setState({loading: true});
+    console.log('mes', message);
+    BluetoothSerial.device(id).write(message);
+    BluetoothSerial.readFromDevice().then(response => {
+      setTimeout(() => {
+        console.log('res', response);
+        let objectBluetooth = JSON.parse(response);
+        const newObject = {
+          nacl: objectBluetooth.nacl,
+          battery: objectBluetooth.battery,
+          count: objectBluetooth.count,
+          no_seri: objectBluetooth.no_seri,
+          water_content: objectBluetooth.water_content,
+          whiteness: objectBluetooth.whiteness,
+        };
+        this.setState({content: newObject});
+        this.props.navigation.navigate('ContainDetailNaclScreen');
+        this.setState({loading: false});
+      }, 11000);
+    });
+  };
 
   render() {
     const {nacl, whiteness, water_content} = this.state.content;
     return (
       <View style={styles.container}>
+        <LoadingModal visible={this.state.loading} />
+
         <View style={styles.wrapper}>
           <Image
             style={[styles.logosearch]}

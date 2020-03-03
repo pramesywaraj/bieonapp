@@ -10,7 +10,13 @@ import {
 import Modal from 'react-native-modal';
 
 function DeviceRows({items, onConnect}) {
-  const itemCollection = items.map((item, index) => (
+  const newArray = [];
+  items.map(item => {
+    if (!newArray.some(o => o.name === item.name)) {
+      newArray.push({...item});
+    }
+  });
+  const itemCollection = newArray.map((item, index) => (
     <View style={styles.deviceItem} key={item.address}>
       <TouchableOpacity onPress={() => onConnect(item)}>
         <Text style={styles.deviceText}>{item.name || 'UNKNOWN'}</Text>

@@ -79,7 +79,7 @@ const printSaltA = (saltDatas, userOperator) => {
           'Hari/Tanggal',
           ':',
           moment(data.create_at)
-            .format('ddd,DD/MM/YYYY')
+            .format('DD/MM/YYYY HH:mm')
             .toString(),
         ],
         {},
@@ -193,7 +193,7 @@ const printSaltB = (saltDatas, userOperator) => {
           'Hari/Tanggal',
           ':',
           moment(data.create_at)
-            .format('ddd,DD/MM/YYYY')
+            .format('DD/MM/YYYY HH:mm')
             .toString(),
         ],
         {},
@@ -263,6 +263,9 @@ export default class HomeScreen extends Component {
       filter: false,
       modalVisibleFilter: false,
       filePath: '',
+      device_info: {},
+      coordinate: {},
+      currentUser: {},
     };
 
     this.openModal = this.openModal.bind(this);
@@ -287,7 +290,7 @@ export default class HomeScreen extends Component {
   }
 
   // HTML template for making the pdf file....
-  pdfTemplate(obj) {
+  pdfTemplate(obj, device_info) {
     const {selectedSaltType} = this.state;
 
     if (selectedSaltType === 0) {
@@ -384,39 +387,39 @@ export default class HomeScreen extends Component {
             <div class="document-content-container">
               <h1>Probe Information</h1>
               <div class="document-detail">
-                  <h4 style="flex: 1;">Probe Model</h4>
-                  <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
-              </div>
-              <div class="document-detail">
                   <h4 style="flex: 1;">No Seri</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.device_info.no_seri
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Battery Condition</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.device_info.battery
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
-              </div>
-              <div class="document-detail">
-                  <h4 style="flex: 1;">Location</h4>
-                  <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.device_info.lastcal
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">User</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.currentUser.fullname
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Recorded At</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.today
+                  }</h4>
               </div>
               <table class="document-table">
                   <tr>
@@ -433,7 +436,7 @@ export default class HomeScreen extends Component {
                         `<tr>
                           <td>${i + 1}</td>
                           <td>${moment(item.create_at).format(
-                            'DD MM YYYY / TT',
+                            'DD-MM-YYYY HH:mm',
                           )}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.nacl}</td>
@@ -548,39 +551,39 @@ export default class HomeScreen extends Component {
             <div class="document-content-container">
               <h1>Probe Information</h1>
               <div class="document-detail">
-                  <h4 style="flex: 1;">Probe Model</h4>
-                  <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
-              </div>
-              <div class="document-detail">
                   <h4 style="flex: 1;">No Seri</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.device_info.no_seri
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Battery Condition</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.device_info.battery
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
-              </div>
-              <div class="document-detail">
-                  <h4 style="flex: 1;">Location</h4>
-                  <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.device_info.lastcal
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">User</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.currentUser.fullname
+                  }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Recorded At</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">Hasil</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${
+                    this.state.today
+                  }</h4>
               </div>
               <table class="document-table">
                   <tr>
@@ -595,7 +598,7 @@ export default class HomeScreen extends Component {
                         `<tr>
                           <td>${i + 1}</td>
                           <td>${moment(item.create_at).format(
-                            'DD MM YYYY / TT',
+                            'DD-MM-YYYY HH:mm',
                           )}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.iodium}</td>
@@ -622,9 +625,19 @@ export default class HomeScreen extends Component {
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
-
+  async getDateforPDF() {
+    this.setState({
+      device_info: JSON.parse(await AsyncStorage.getItem('@deviceInfo')),
+      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
+      today: moment(new Date()).format('DD-MM-YYYY HH:ss'),
+    });
+    console.log('dev', this.state.currentUser);
+  }
   async componentDidMount() {
+    this.getDateforPDF();
+
     await this.fetchSaltData();
+
     if (Platform.OS === 'ios') {
       let bluetoothManagerEmitter = new NativeEventEmitter(BluetoothManager);
       this._listeners.push(
@@ -721,7 +734,9 @@ export default class HomeScreen extends Component {
     };
     try {
       await Share.open(options)
-        .then(r => this.onAlert('Sukses', 'Telah sukses membagikan file.'))
+        .then(r =>
+          this.onAlert('Success', 'You has been success to share data.'),
+        )
         .catch(err => console.log(err));
       // console.log(response);
     } catch (error) {
@@ -742,22 +757,22 @@ export default class HomeScreen extends Component {
       let fileName = `Bieon-${
         selectedSaltType === 0 ? 'NaCl' : 'Iodine'
       }-${moment(date)
-        .format('DD_MM_YYYY')
+        .format('DD-MM-YYYY')
         .toString()}`;
 
       // Check if data === 0
       if (selectedDataArray.length === 0) {
         this.onAlert(
-          'Terjadi kesalahan.',
-          'Harap pilih data yang akan Anda ubah ke dalam bentuk PDF.',
+          'There is an error.',
+          'Please choose data to convert as PDF.',
         );
 
         this.setState({loading: false});
         return;
       } else if (selectedDataArray.length > 20) {
         this.onAlert(
-          'Perhatian.',
-          'Gagal membuat file. Harap hanya memilih 20 data, silahkan ulangi kembali.',
+          'Notice.',
+          'Failed to share data, please select under 20 data and try again.',
         );
 
         this.setState({loading: false});
@@ -765,7 +780,7 @@ export default class HomeScreen extends Component {
       }
 
       let options = {
-        html: this.pdfTemplate(selectedDataArray),
+        html: this.pdfTemplate(selectedDataArray, this.state.device_info),
         fileName: fileName,
         directory: 'Documents',
         width: 595,
@@ -777,10 +792,8 @@ export default class HomeScreen extends Component {
       await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         {
-          title: 'Izin Akses Penyimpanan Anda',
-          message:
-            'Bieon App mencoba mendapatkan izin Anda ' +
-            'untuk mengakses penyimpanan Anda. ',
+          title: 'Please give the permission',
+          message: 'Give the application to access your storage',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
         },
@@ -795,8 +808,8 @@ export default class HomeScreen extends Component {
     } catch (err) {
       console.log('Error', err);
       this.onAlert(
-        'Terjadi Kesalahan',
-        'File gagal dibuat, silahkan ulangi kembali dan cek data yang akan Anda buat menjadi PDF.',
+        'There is an error',
+        'Failed to convert data as PDF, please check the data and try again',
       );
     }
   }
