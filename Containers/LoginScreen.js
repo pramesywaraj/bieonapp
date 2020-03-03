@@ -45,8 +45,8 @@ class LoginScreen extends Component {
       await AsyncStorage.setItem('@userAuth', token);
       if (data.role_user === 2) {
         this.onAlert(
-          'Tidak dapat Login.',
-          'Akun Anda tidak diperbolehkan login ke dalam aplikasi, silahkan menggunakan akun yang sesuai.',
+          "You can't login.",
+          "You can't login with this account, please contact our provider",
         );
       } else {
         navigate('HomeScreen');
@@ -82,10 +82,7 @@ class LoginScreen extends Component {
 
         return;
       }
-      this.onAlert(
-        'Terjadi Kesalahan',
-        'Silahkan tunggu beberapa saat dan coba kembali.',
-      );
+      this.onAlert('There is an error', 'Please try again.');
       this.setState({loading: false});
     }
     this.setState({loading: false});
