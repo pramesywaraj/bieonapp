@@ -110,6 +110,9 @@ export default class RetrieveDataScreen extends Component {
   async activateBluetooth() {
     try {
       await BluetoothSerial.enable();
+      this.setState({
+        loading: false,
+      });
     } catch (err) {
       console.log('Error happen at activateBluetooth()', err);
       this.onAlert(
