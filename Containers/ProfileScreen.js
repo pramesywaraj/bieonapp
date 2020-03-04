@@ -166,7 +166,7 @@ export default class ProfileScreen extends Component {
           </TouchableOpacity>
           <Text style={styles.textName}>{this.state.currentUser.fullname}</Text>
         </View>
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollviewContainer}>
           <View style={styles.itemContainer}>
             <View style={styles.textContainer}>
               <Image
@@ -177,101 +177,99 @@ export default class ProfileScreen extends Component {
                 <Text style={styles.text}>Email</Text>
                 <TextInput
                   editable={false}
-                  style={[styles.TextInput]}
+                  style={styles.TextInput}
                   placeholder="Email"
+                  underlineColorAndroid={'transparent'}
+                  value={this.state.currentUser.email}
+                />
+              </View>
+            </View>
+            <View style={styles.textContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/phone.png')}
+              />
+              <View>
+                <Text style={styles.text}>Phone Number</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Phone Number"
                   underlineColorAndroid={'transparent'}>
-                  {this.state.currentUser.email}
+                  {this.state.currentUser.phone_number}
                 </TextInput>
               </View>
             </View>
-          </View>
-          <View style={styles.textContainer}>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/phone.png')}
-            />
-            <View>
-              <Text style={styles.text}>Phone Number</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Phone Number"
-                underlineColorAndroid={'transparent'}>
-                {this.state.currentUser.phone_number}
-              </TextInput>
+            <View style={styles.textContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/address.png')}
+              />
+              <View>
+                <Text style={styles.text}>Address</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  underlineColorAndroid={'transparent'}
+                  multiline={false}
+                  numberOfLines={2}>
+                  {this.state.currentUser.address}
+                </TextInput>
+              </View>
             </View>
-          </View>
-          <View style={styles.textContainer}>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/address.png')}
-            />
-            <View>
-              <Text style={styles.text}>Address</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextArea]}
-                placeholder="Phone Number"
-                underlineColorAndroid={'transparent'}
-                multiline={false}
-                numberOfLines={10}>
-                {this.state.currentUser.address}
-              </TextInput>
+            <View style={styles.textContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/gender.png')}
+              />
+              <View>
+                <Text style={styles.text}>Gender</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.gender}
+                </TextInput>
+              </View>
             </View>
-          </View>
-          <View style={styles.textContainer}>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/gender.png')}
-            />
-            <View>
-              <Text style={styles.text}>Gender</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Phone Number"
-                underlineColorAndroid={'transparent'}>
-                {this.state.gender}
-              </TextInput>
+            <View style={styles.textContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/position.png')}
+              />
+              <View>
+                <Text style={styles.text}>Position</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Position"
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.currentUser.position}
+                </TextInput>
+              </View>
             </View>
-          </View>
-          <View style={styles.textContainer}>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/position.png')}
-            />
-            <View>
-              <Text style={styles.text}>Position</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Position"
-                underlineColorAndroid={'transparent'}>
-                {this.state.currentUser.position}
-              </TextInput>
+            <View style={styles.textContainer}>
+              <Image
+                style={styles.itemIconImage}
+                source={require('../assets/icons/editprofile/agency.png')}
+              />
+              <View>
+                <Text style={styles.text}>Company/Institution</Text>
+                <TextInput
+                  editable={false}
+                  style={[styles.TextInput]}
+                  placeholder="Company/Institution"
+                  underlineColorAndroid={'transparent'}>
+                  {this.state.companyName}
+                </TextInput>
+              </View>
             </View>
-          </View>
-          <View style={styles.textContainer}>
-            <Image
-              style={styles.itemIconImage}
-              source={require('../assets/icons/editprofile/agency.png')}
-            />
-            <View>
-              <Text style={styles.text}>Company/Institution</Text>
-              <TextInput
-                editable={false}
-                style={[styles.TextInput]}
-                placeholder="Company/Institution"
-                underlineColorAndroid={'transparent'}>
-                {this.state.companyName}
-              </TextInput>
-            </View>
-          </View>
-          {/* <TouchableOpacity
+            {/* <TouchableOpacity
           style={[styles.button]}
           onPress={() => this.goToEditProfile()}>
           <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
         </TouchableOpacity> */}
+          </View>
         </ScrollView>
       </View>
     );
@@ -284,13 +282,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   headerContainer: {
     top: '-1%',
     alignItems: 'center',
-    width: '90%',
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
     shadowColor: '#000',
@@ -337,46 +332,39 @@ const styles = StyleSheet.create({
     top: '-4%',
     paddingBottom: '5%',
   },
+  scrollviewContainer: {
+    width: 'auto',
+  },
   itemContainer: {
-    alignItems: 'center',
+    width: '100%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
     marginBottom: 20,
+    marginTop: 10,
   },
   textContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: '5%',
+    borderColor: '#b5b5b5',
+    borderBottomWidth: 1,
   },
   TextInput: {
     fontSize: 16,
-    alignSelf: 'stretch',
-    width: 320,
-    height: 50,
-    marginBottom: -10,
     color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
-  },
-  TextArea: {
-    fontSize: 18,
-    alignSelf: 'stretch',
-    width: 320,
-    height: 100,
-    marginBottom: -10,
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
+    width: '100%',
+    padding: 0,
   },
   itemIconImage: {
     resizeMode: 'contain',
-    width: 35,
-    height: 35,
-    marginLeft: 20,
-    marginTop: 10,
+    width: 30,
+    height: 30,
+    marginRight: '5%',
   },
   text: {
-    marginLeft: 15,
-    marginBottom: -8,
     fontSize: 12,
+    color: '#757575',
   },
   button: {
     alignSelf: 'center',
