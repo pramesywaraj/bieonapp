@@ -19,7 +19,7 @@ import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {white} from 'color-name';
+
 export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
@@ -288,6 +288,8 @@ export default class ProfileScreen extends Component {
   }
 }
 
+const dim = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -296,9 +298,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerContainer: {
+    top: '-1%',
     alignItems: 'center',
-    borderWidth: 1,
-    width: '100%',
+    width: '90%',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
   userEditButton: {
     zIndex: 15,
