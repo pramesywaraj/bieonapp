@@ -195,9 +195,9 @@ export default class ProfileScreen extends Component {
                   editable={false}
                   style={[styles.TextInput]}
                   placeholder="Phone Number"
-                  underlineColorAndroid={'transparent'}>
-                  {this.state.currentUser.phone_number}
-                </TextInput>
+                  underlineColorAndroid={'transparent'}
+                  value={this.state.currentUser.phone_number}
+                />
               </View>
             </View>
             <View style={styles.textContainer}>
@@ -212,9 +212,9 @@ export default class ProfileScreen extends Component {
                   style={[styles.TextInput]}
                   underlineColorAndroid={'transparent'}
                   multiline={false}
-                  numberOfLines={2}>
-                  {this.state.currentUser.address}
-                </TextInput>
+                  numberOfLines={2}
+                  value={this.state.currentUser.address}
+                />
               </View>
             </View>
             <View style={styles.textContainer}>
@@ -227,9 +227,9 @@ export default class ProfileScreen extends Component {
                 <TextInput
                   editable={false}
                   style={[styles.TextInput]}
-                  underlineColorAndroid={'transparent'}>
-                  {this.state.gender}
-                </TextInput>
+                  underlineColorAndroid={'transparent'}
+                  value={this.state.gender}
+                />
               </View>
             </View>
             <View style={styles.textContainer}>
@@ -259,9 +259,9 @@ export default class ProfileScreen extends Component {
                   editable={false}
                   style={[styles.TextInput]}
                   placeholder="Company/Institution"
-                  underlineColorAndroid={'transparent'}>
-                  {this.state.companyName}
-                </TextInput>
+                  underlineColorAndroid={'transparent'}
+                  value={this.state.companyName}
+                />
               </View>
             </View>
             {/* <TouchableOpacity
