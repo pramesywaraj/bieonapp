@@ -112,6 +112,7 @@ export default class ProfileScreen extends Component {
         mediaType: 'photo',
         maxWidth: 1000,
         maxHeight: 1000,
+        quality: 0,
       };
       const data = new FormData();
 
@@ -122,7 +123,6 @@ export default class ProfileScreen extends Component {
             type: response.type,
             uri: response.uri,
           });
-
           this.imageUpload(data);
         } else if (response.didCancel) {
           this.setState({loading: false});
