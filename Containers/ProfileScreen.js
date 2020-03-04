@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import FormData from 'form-data';
 import {
   ScrollView,
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -27,6 +26,7 @@ export default class ProfileScreen extends Component {
     super(props);
     this.state = {
       loading: false,
+      isUploadingPhoto: false,
       // User things
       email: '',
       fullname: '',
@@ -50,6 +50,7 @@ export default class ProfileScreen extends Component {
   };
 
   async getUserInfo() {
+    this.setState({loading: true});
     try {
       let [userData, userAuth] = await Promise.all([
         AsyncStorage.getItem('@userData'),
@@ -91,6 +92,7 @@ export default class ProfileScreen extends Component {
       });
     } catch (err) {
       console.log(err);
+      this.setState({loading: false});
       this.onAlert(
         'There is an error',
         'An error has occurred, please try again later.',
@@ -99,12 +101,11 @@ export default class ProfileScreen extends Component {
   }
 
   async componentDidMount() {
-    console.log('render');
     this.getUserInfo();
   }
 
   async changePicture() {
-    this.setState({loading: true});
+    this.setState({loading: true, isUploadingPhoto: true});
     try {
       const options = {
         noData: true,
@@ -125,14 +126,14 @@ export default class ProfileScreen extends Component {
           });
           this.imageUpload(data);
         } else if (response.didCancel) {
-          this.setState({loading: false});
+          this.setState({loading: false, isUploadingPhoto: false});
         }
 
         console.log(response);
       });
     } catch (err) {
       console.log(err);
-      this.setState({loading: false});
+      this.setState({loading: false, isUploadingPhoto: false});
       this.onAlert(
         'There is an error',
         'An error has occurred, please try again later.',
@@ -155,7 +156,7 @@ export default class ProfileScreen extends Component {
       let imageUri = data.data;
       this.savePicture(imageUri);
     } catch (err) {
-      this.setState({loading: false});
+      this.setState({loading: false, isUploadingPhoto: false});
       console.log('Error happen while uploading Image', err);
       this.onAlert(
         'There is an error',
@@ -214,7 +215,16 @@ export default class ProfileScreen extends Component {
 
   goToEditProfile = () => {
     const {navigate} = this.props.navigation;
-    navigate('EditProfileScreen');
+    const {fullname, phone_number, address} = this.state;
+    let tempObj = {
+      fullname,
+      phone_number,
+      address,
+    };
+    navigate('EditProfileScreen', {
+      refresh: this.getUserInfo.bind(this),
+      data: tempObj,
+    });
   };
 
   render() {
@@ -228,11 +238,19 @@ export default class ProfileScreen extends Component {
       picture_user,
       gender,
       loading,
+      isUploadingPhoto,
     } = this.state;
 
     return (
       <View style={styles.container}>
-        <LoadingModal visible={loading} label="Uploading the photo" />
+        <LoadingModal
+          visible={loading}
+          label={
+            isUploadingPhoto
+              ? 'Uploading photo...'
+              : 'Gathering user information...'
+          }
+        />
         <View style={styles.headerContainer}>
           <TouchableOpacity
             style={styles.userEditButton}

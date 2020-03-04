@@ -38,53 +38,7 @@ export default class EditProfileScreen extends Component {
     } else {
       this.setState({gender: 'Male'});
     }
-    this.getCompanyDetail();
   }
-  async getCompanyDetail() {
-    try {
-      let response = await axios.get(
-        `${Config.API_URL}/company/detail/` + this.state.currentUser.company_id,
-        {
-          headers: {
-            token: await AsyncStorage.getItem('@userAuth'),
-          },
-        },
-      );
-      const companyName = response.data.data;
-      console.log('company', response.data.data);
-      this.setState({companyName: companyName.name});
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  // te
-  changeLogo = () => {
-    console.log('click');
-    const options = {
-      noData: true,
-    };
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.uri) {
-        // this.setState({photo: response});
-        console.log('respo', response);
-        axios
-          .post(`${Config.API_URL}/upload-image/user`, response.uri, {
-            headers: {'content-type': 'multipart/form-data'},
-          })
-          .then(response2 => {
-            console.log('lol', response2.data.data);
-            // this.setState({picture: response.data.data});
-          })
-          .catch(function(error) {
-            console.log('er', error);
-          });
-      }
-    });
-  };
-  goToEditProfile = () => {
-    const {navigate} = this.props.navigation;
-    navigate('EditProfileScreen');
-  };
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
@@ -93,31 +47,34 @@ export default class EditProfileScreen extends Component {
   };
 
   async saveProfile() {
-    try {
-      const {navigate} = this.props.navigation;
-      let response = await axios.patch(
-        `${Config.API_URL}/auth/update`,
-        {
-          fullname: 'a',
-          Address: 'Test',
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            token: await AsyncStorage.getItem('@userAuth'),
-          },
-        },
-      );
-      this.onAlert('Success', 'Data has been edited.');
-      navigate('ProfileScreen');
-      console.log('what?', response.config.data);
-    } catch (err) {
-      this.onAlert(
-        'There is an error',
-        'There is an error when save data. Please try again',
-      );
-      console.log('There is an error pada bagian konten', err);
-    }
+    const {state, goBack} = this.props.navigation;
+    state.params.refresh();
+    goBack();
+    // try {
+    //   const {navigate} = this.props.navigation;
+    //   let response = await axios.patch(
+    //     `${Config.API_URL}/auth/update`,
+    //     {
+    //       fullname: 'a',
+    //       Address: 'Test',
+    //     },
+    //     {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         token: await AsyncStorage.getItem('@userAuth'),
+    //       },
+    //     },
+    //   );
+    //   this.onAlert('Success', 'Data has been edited.');
+    //   navigate('ProfileScreen');
+    //   console.log('what?', response.config.data);
+    // } catch (err) {
+    //   this.onAlert(
+    //     'There is an error',
+    //     'There is an error when save data. Please try again',
+    //   );
+    //   console.log('There is an error pada bagian konten', err);
+    // }
   }
   render() {
     return (
