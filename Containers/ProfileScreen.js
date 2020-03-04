@@ -110,6 +110,8 @@ export default class ProfileScreen extends Component {
         noData: true,
         title: 'Choose an image',
         mediaType: 'photo',
+        maxWidth: 1000,
+        maxHeight: 1000,
       };
       const data = new FormData();
 
@@ -122,7 +124,11 @@ export default class ProfileScreen extends Component {
           });
 
           this.imageUpload(data);
+        } else if (response.didCancel) {
+          this.setState({loading: false});
         }
+
+        console.log(response);
       });
     } catch (err) {
       console.log(err);
