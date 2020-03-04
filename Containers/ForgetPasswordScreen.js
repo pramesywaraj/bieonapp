@@ -46,8 +46,8 @@ export default class ForgetPasswordScreen extends Component {
       this.onForgotPasswordProcess(forgotPassObj);
     } else {
       this.onAlert(
-        'Email atau Password belum terisi',
-        'Silahkan masukkan email atau password Anda terlebih dahulu.',
+        'Email or Password not yet filled',
+        'Please enter your email or password first.',
       );
       this.setState({loading: false});
     }
@@ -63,8 +63,8 @@ export default class ForgetPasswordScreen extends Component {
 
       if (response.status === 202) {
         this.onAlert(
-          'Sukses',
-          'Silahkan cek email Anda dan ikuti prosedur penggantian password.',
+          'Success',
+          'Please check your email to reset the password.',
         );
         goBack();
         this.setState({loading: false});
@@ -73,14 +73,11 @@ export default class ForgetPasswordScreen extends Component {
       const {response} = err;
       console.log(err);
       if (response.status === 422) {
-        this.onAlert('Terjadi kesalahan', 'Silahkan ulangi kembali.');
+        this.onAlert('There is an error', 'Please try again.');
         this.setState({loading: false});
         return;
       } else if (response.status === 400) {
-        this.onAlert(
-          'Email Salah',
-          'Email yang Anda masukkan tidak terdaftar, silahkan cek kembali email Anda.',
-        );
+        this.onAlert('Email not found', 'Email not found, please try again.');
         this.setState({loading: false});
         return;
       }

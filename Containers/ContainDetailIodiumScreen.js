@@ -5,6 +5,8 @@ import {StyleSheet, Image, Alert, Text, View, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
+import BluetoothSerial from 'react-native-bluetooth-serial-next';
+import LoadingModal from '../Components/Modal/LoadingModal';
 
 import SmallButton from '../Components/Buttons/SmallButton';
 
@@ -15,13 +17,17 @@ export default class ContainDetailIoduiScreen extends Component {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       sample_name: '',
       token: '',
+      loading: false,
     };
     this.saveData = this.saveData.bind(this);
     this.reMeasure = this.reMeasure.bind(this);
   }
   componentDidMount() {
     if (this.state.content.battery < 25) {
-      alert('Baterai lemah, harap segera mengisi baterai.');
+      this.onAlert(
+        'Battery low',
+        'Battery under 25%, please recharge the device.',
+      );
     }
   }
   onAlert = (title, message) => {
@@ -34,7 +40,7 @@ export default class ContainDetailIoduiScreen extends Component {
     const {goBack} = this.props.navigation;
 
     if (this.state.sample_name === '') {
-      this.onAlert('Nama Sample Tidak Terisi', 'Harap isi nama sample.');
+      this.onAlert('Sample name is blank', 'Please fill the sample name');
       return;
     }
 
@@ -61,21 +67,47 @@ export default class ContainDetailIoduiScreen extends Component {
       goBack();
     } catch (err) {
       console.log('Error happened at saveData()', err);
-      this.onAlert('Terjadi Kesalahan', 'Silakan coba kembali.');
+      this.onAlert(
+        'There is an error',
+        'Ther is an error when save data. Please try again',
+      );
     }
   }
 
   reMeasure() {
-    const {goBack} = this.props.navigation;
-
-    goBack();
+    this.write(this.props.navigation.state.params.idBluetooth, 'Data2');
   }
+
+  write = async (id, message) => {
+    // try {
+    // for data1
+    this.setState({loading: true});
+    console.log('mes', message);
+    BluetoothSerial.device(id).write(message);
+    BluetoothSerial.readFromDevice().then(response => {
+      setTimeout(() => {
+        console.log('res', response);
+        let objectBluetooth = JSON.parse(response);
+        const newObject = {
+          iodium: objectBluetooth.iodium,
+          battery: objectBluetooth.battery,
+          count: objectBluetooth.count,
+          no_seri: objectBluetooth.no_seri,
+        };
+        this.setState({content: newObject});
+        this.props.navigation.navigate('ContainDetailIodiumScreen');
+        this.setState({loading: false});
+      }, 11000);
+    });
+  };
 
   render() {
     const {iodium} = this.state.content;
 
     return (
       <View style={styles.container}>
+        <LoadingModal visible={this.state.loading} />
+
         <View style={styles.wrapper}>
           <Image
             style={[styles.logosearch]}

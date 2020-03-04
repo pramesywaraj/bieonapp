@@ -51,7 +51,7 @@ export default class RetrieveDataScreen extends Component {
 
     this._eventListener.push(
       BluetoothSerial.addListener('connectionSuccess', response => {
-        this.onAlert('Terhubung', 'Perangkat berhasil terhubung.');
+        this.onAlert('Success', 'Device has been connected.');
         console.log(response);
         this.setState({
           connected: true,
@@ -63,8 +63,8 @@ export default class RetrieveDataScreen extends Component {
     this._eventListener.push(
       BluetoothSerial.addListener('connectionFailed', response => {
         this.onAlert(
-          'Gagal Terhubung',
-          'Perangkat gagal terhubung, silahkan coba untuk unpairing secara manual kemudian coba kembali.',
+          'Failed to connected',
+          'Failed to connected, please to unpair bluetooth and try again.',
         );
         this.setState({
           connected: false,
@@ -74,7 +74,7 @@ export default class RetrieveDataScreen extends Component {
     );
     this._eventListener.push(
       BluetoothSerial.addListener('connectionLost', response => {
-        this.onAlert('Perangkat Terputus', 'Perangkat telah terputus.');
+        this.onAlert('Device disconnected', 'Device has been disconnected.');
         this.setState({
           connected: false,
           device: null,
@@ -113,8 +113,8 @@ export default class RetrieveDataScreen extends Component {
     } catch (err) {
       console.log('Error happen at activateBluetooth()', err);
       this.onAlert(
-        'Terjadi Kesalahan',
-        'Telah terjadi kesalahan ketika mengaktifkan bluetooth, silahkan ulangi dalam beberapa saat.',
+        'There is an error',
+        'There is an error when activate bluetooth, please try again.',
       );
 
       this.setState({
@@ -144,8 +144,8 @@ export default class RetrieveDataScreen extends Component {
     } catch (err) {
       console.log('Error happened at scanAction Function', err);
       this.onAlert(
-        'Terjadi Kesalahan',
-        'Telah terjadi kesalahan ketika melakukan pemindaian alat, silahkan ulangi dalam beberapa saat.',
+        'There is an error',
+        'There is an error when scanning, please try again.',
       );
 
       this.setState({
@@ -204,48 +204,55 @@ export default class RetrieveDataScreen extends Component {
     try {
       await BluetoothSerial.device(device.address).write(message);
       await BluetoothSerial.readFromDevice(device.address).then(response => {
-        console.log(response);
-        setTimeout(() => {
-          let bluetoothObj = response;
+        if (!response) {
+          this.onAlert('Failed to get data', 'Please try again');
+          this.setState({loading: false});
+        } else {
+          console.log(response);
+          setTimeout(() => {
+            let bluetoothObj = JSON.parse(response);
 
-          switch (message) {
-            case 'Data1':
-              tempObj.nacl = bluetoothObj.nacl;
-              tempObj.battery = bluetoothObj.battery;
-              tempObj.count = bluetoothObj.count;
-              tempObj.no_seri = bluetoothObj.no_seri;
-              tempObj.water_content = bluetoothObj.water_content;
-              tempObj.whiteness = bluetoothObj.whiteness;
+            switch (message) {
+              case 'Data1':
+                tempObj.nacl = bluetoothObj.nacl;
+                tempObj.battery = bluetoothObj.battery;
+                tempObj.count = bluetoothObj.count;
+                tempObj.no_seri = bluetoothObj.no_seri;
+                tempObj.water_content = bluetoothObj.water_content;
+                tempObj.whiteness = bluetoothObj.whiteness;
+                this.setState({loading: false});
+                navigation.navigate('ContainDetailNaclScreen', {
+                  contentBluetooth: JSON.stringify(tempObj),
+                });
+                console.log('Data1:', tempObj);
+                break;
+              case 'Data2':
+                tempObj.iodium = bluetoothObj.iodium;
+                tempObj.battery = bluetoothObj.battery;
+                tempObj.count = bluetoothObj.count;
+                tempObj.no_seri = bluetoothObj.no_seri;
 
-              this.setState({loading: false});
-              navigation.navigate('ContainDetailNaclScreen', {
-                contentBluetooth: JSON.stringify(tempObj),
-              });
-              break;
-            case 'Data2':
-              tempObj.iodium = bluetoothObj.iodium;
-              tempObj.battery = bluetoothObj.battery;
-              tempObj.count = bluetoothObj.count;
-              tempObj.no_seri = bluetoothObj.no_seri;
+                this.setState({loading: false});
+                navigation.navigate('ContainDetailIodiumScreen', {
+                  contentBluetooth: JSON.stringify(tempObj),
+                });
+                console.log('Data2:', tempObj);
+                break;
+              case 'Device':
+                tempObj.lastcal = bluetoothObj.lastcal;
+                tempObj.battery = bluetoothObj.battery;
+                tempObj.count = bluetoothObj.count;
+                tempObj.no_seri = bluetoothObj.no_seri;
 
-              this.setState({loading: false});
-              navigation.navigate('ContainDetailIodiumScreen', {
-                contentBluetooth: JSON.stringify(tempObj),
-              });
-              break;
-            case 'Device':
-              tempObj.lastcal = bluetoothObj.lastcal;
-              tempObj.battery = bluetoothObj.battery;
-              tempObj.count = bluetoothObj.count;
-              tempObj.no_seri = bluetoothObj.no_seri;
-
-              this.setState({loading: false});
-              navigation.navigate('DeviceInfoScreen', {
-                contentBluetooth: JSON.stringify(tempObj),
-              });
-              break;
-          }
-        }, 13000);
+                this.setState({loading: false});
+                navigation.navigate('DeviceInfoScreen', {
+                  contentBluetooth: JSON.stringify(tempObj),
+                });
+                console.log('Device:', tempObj);
+                break;
+            }
+          }, 15000);
+        }
       });
     } catch (err) {
       console.log('Error happened on write()', err);
