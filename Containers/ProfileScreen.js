@@ -5,14 +5,11 @@ import {
   Platform,
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
   View,
   Dimensions,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Button,
 } from 'react-native';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -24,30 +21,68 @@ export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      articles: [],
-      refreshing: true,
+      loading: false,
+      // User things
+      email: '',
+      fullname: '',
+      phone_number: '',
+      position: '',
+      company_name: '',
+      address: '',
+      picture_user: '',
+      gender: '',
       token: '',
-      banner: [],
-      currentUser: [],
-      gender: 0,
-      picture: '',
     };
   }
-  async componentDidMount() {
-    this.setState({
-      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
-      token: await AsyncStorage.getItem('@userAuth'),
-      picture:
-        'http://bieonbe.defuture.tech/' +
-        JSON.parse(await AsyncStorage.getItem('@userData')).picture_user,
-    });
-    if (this.state.currentUser.gender === 0) {
-      this.setState({gender: 'Female'});
-    } else {
-      this.setState({gender: 'Male'});
+
+  async getUserInfo() {
+    try {
+      const storageResponse = Promise.all([
+        await AsyncStorage.getItem('@userData'),
+        await AsyncStorage.getItem('@userAuth'),
+      ]);
+      const {
+        email,
+        fullname,
+        phone_number,
+        position,
+        company_id,
+        address,
+        picture_user,
+        gender,
+      } = storageResponse[0];
+      const token = storageResponse[1];
+
+      const companyDetail = await axios.get(
+        `${Config.API_URL}/company/detail/` + company_id,
+        {
+          headers: {
+            token: token,
+          },
+        },
+      );
+
+      let company_name = companyDetail.name;
+      this.setState({
+        loading: false,
+        email: email,
+        fullname: fullname,
+        phone_number: phone_number,
+        position: position,
+        company_name: company_name,
+        address: address,
+        picture_user: picture_user,
+        gender: gender === 0 ? 'Female' : 'Male',
+      });
+    } catch (err) {
+      console.log(err);
     }
-    this.getCompanyDetail();
   }
+
+  async componentDidMount() {
+    this.getUserInfo();
+  }
+
   async getCompanyDetail() {
     try {
       let response = await axios.get(
@@ -80,8 +115,8 @@ export default class ProfileScreen extends Component {
     console.log('dataupload', JSON.stringify(data));
     return data;
   };
+
   async changePicture() {
-    console.log('click');
     const options = {
       noData: true,
     };
@@ -112,6 +147,7 @@ export default class ProfileScreen extends Component {
       }
     });
   }
+
   savePicture(picture_user) {
     console.log('tok', this.state.token);
 
@@ -141,10 +177,12 @@ export default class ProfileScreen extends Component {
         console.log('error change picture', error);
       });
   }
+
   goToEditProfile = () => {
     const {navigate} = this.props.navigation;
     navigate('EditProfileScreen');
   };
+
   render() {
     return (
       <View style={styles.container}>
@@ -158,11 +196,7 @@ export default class ProfileScreen extends Component {
           <TouchableOpacity
             style={styles.userEditButton}
             onPress={() => this.changePicture()}>
-            <Icon
-              name="image"
-              style={styles.userEditIcon}
-              onPress={() => this.changePicture()}
-            />
+            <Icon name="image" style={styles.userEditIcon} />
           </TouchableOpacity>
           <Text style={styles.textName}>{this.state.currentUser.fullname}</Text>
         </View>
@@ -264,11 +298,11 @@ export default class ProfileScreen extends Component {
                 />
               </View>
             </View>
-            {/* <TouchableOpacity
-          style={[styles.button]}
-          onPress={() => this.goToEditProfile()}>
-          <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
-        </TouchableOpacity> */}
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => this.goToEditProfile()}>
+              <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>

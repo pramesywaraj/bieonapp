@@ -79,7 +79,7 @@ class LoginScreen extends Component {
           'Email or password is wrong',
           'please check your email and password and try again.',
         );
-
+        this.setState({loading: false});
         return;
       }
       this.onAlert(
