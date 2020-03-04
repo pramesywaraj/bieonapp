@@ -4,19 +4,21 @@ import {
   ScrollView,
   Platform,
   StyleSheet,
-  Image,
   Text,
   View,
+  Image,
   Dimensions,
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {Image as RImage} from 'react-native-elements';
 
 export default class ProfileScreen extends Component {
   constructor(props) {
@@ -192,11 +194,15 @@ export default class ProfileScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <Image
+          <RImage
+            borderRadius={100}
+            containerStyle={styles.avatarImageContainer}
             style={styles.avatarImage}
+            resizeMode="cover"
             source={{
               uri: `${Config.API_URL}/${picture_user}`,
             }}
+            PlaceholderContent={<ActivityIndicator />}
           />
           <TouchableOpacity
             style={styles.userEditButton}
@@ -357,12 +363,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#129cd8',
   },
+  avatarImageContainer: {
+    borderRadius: 100,
+    marginTop: '10%',
+  },
   avatarImage: {
     borderRadius: 100,
     width: 110,
     height: 110,
-    marginTop: '10%',
-    borderWidth: 1,
   },
   textName: {
     color: '#000',
