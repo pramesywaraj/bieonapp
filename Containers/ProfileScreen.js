@@ -44,10 +44,11 @@ export default class ProfileScreen extends Component {
 
   async getUserInfo() {
     try {
-      const storageResponse = Promise.all([
-        await AsyncStorage.getItem('@userData'),
-        await AsyncStorage.getItem('@userAuth'),
+      let [userData, userAuth] = await Promise.all([
+        AsyncStorage.getItem('@userData'),
+        AsyncStorage.getItem('@userAuth'),
       ]);
+      console.log(JSON.parse(userData));
       const {
         email,
         fullname,
@@ -57,10 +58,10 @@ export default class ProfileScreen extends Component {
         address,
         picture_user,
         gender,
-      } = storageResponse[0];
-      const token = storageResponse[1];
+      } = JSON.parse(userData);
+      const token = userAuth;
 
-      const companyDetail = await axios.get(
+      const {data} = await axios.get(
         `${Config.API_URL}/company/detail/` + company_id,
         {
           headers: {
@@ -68,8 +69,7 @@ export default class ProfileScreen extends Component {
           },
         },
       );
-
-      let company_name = companyDetail.name;
+      let company_name = data.data.name;
       this.setState({
         loading: false,
         email: email,
@@ -92,24 +92,6 @@ export default class ProfileScreen extends Component {
 
   async componentDidMount() {
     this.getUserInfo();
-  }
-
-  async getCompanyDetail() {
-    try {
-      let response = await axios.get(
-        `${Config.API_URL}/company/detail/` + this.state.currentUser.company_id,
-        {
-          headers: {
-            token: this.state.token,
-          },
-        },
-      );
-      const companyName = response.data.data;
-      console.log('company', response.data.data);
-      this.setState({companyName: companyName.name});
-    } catch (err) {
-      console.log(err);
-    }
   }
 
   createFormData = (photo, body) => {
@@ -195,13 +177,25 @@ export default class ProfileScreen extends Component {
   };
 
   render() {
+    const {
+      email,
+      fullname,
+      phone_number,
+      position,
+      company_name,
+      address,
+      picture_user,
+      gender,
+      token,
+    } = this.state;
+
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Image
             style={styles.avatarImage}
             source={{
-              uri: this.state.picture,
+              uri: `${Config.API_URL}/${picture_user}`,
             }}
           />
           <TouchableOpacity
@@ -209,7 +203,7 @@ export default class ProfileScreen extends Component {
             onPress={() => this.changePicture()}>
             <Icon name="image" style={styles.userEditIcon} />
           </TouchableOpacity>
-          <Text style={styles.textName}>{this.state.currentUser.fullname}</Text>
+          <Text style={styles.textName}>{fullname}</Text>
         </View>
         <ScrollView contentContainerStyle={styles.scrollviewContainer}>
           <View style={styles.itemContainer}>
@@ -225,7 +219,7 @@ export default class ProfileScreen extends Component {
                   style={styles.TextInput}
                   placeholder="Email"
                   underlineColorAndroid={'transparent'}
-                  value={this.state.currentUser.email}
+                  value={email}
                 />
               </View>
             </View>
@@ -241,7 +235,7 @@ export default class ProfileScreen extends Component {
                   style={[styles.TextInput]}
                   placeholder="Phone Number"
                   underlineColorAndroid={'transparent'}
-                  value={this.state.currentUser.phone_number}
+                  value={phone_number}
                 />
               </View>
             </View>
@@ -258,7 +252,7 @@ export default class ProfileScreen extends Component {
                   underlineColorAndroid={'transparent'}
                   multiline={false}
                   numberOfLines={2}
-                  value={this.state.currentUser.address}
+                  value={address}
                 />
               </View>
             </View>
@@ -273,7 +267,7 @@ export default class ProfileScreen extends Component {
                   editable={false}
                   style={[styles.TextInput]}
                   underlineColorAndroid={'transparent'}
-                  value={this.state.gender}
+                  value={gender}
                 />
               </View>
             </View>
@@ -289,7 +283,7 @@ export default class ProfileScreen extends Component {
                   style={[styles.TextInput]}
                   placeholder="Position"
                   underlineColorAndroid={'transparent'}>
-                  {this.state.currentUser.position}
+                  {position}
                 </TextInput>
               </View>
             </View>
@@ -302,10 +296,10 @@ export default class ProfileScreen extends Component {
                 <Text style={styles.text}>Company/Institution</Text>
                 <TextInput
                   editable={false}
-                  style={[styles.TextInput]}
+                  style={styles.TextInput}
                   placeholder="Company/Institution"
                   underlineColorAndroid={'transparent'}
-                  value={this.state.companyName}
+                  value={company_name}
                 />
               </View>
             </View>
