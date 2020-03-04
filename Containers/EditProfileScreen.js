@@ -29,7 +29,6 @@ export default class EditProfileScreen extends Component {
       picture_user: '',
       token: '',
     };
-    this.handleChange = this.handleChange.bind(this);
   }
 
   async componentDidMount() {
@@ -60,9 +59,9 @@ export default class EditProfileScreen extends Component {
     getParam();
   }
 
-  handleChange(name, value) {
+  handleChange = (name, value) => {
     this.setState({[name]: value});
-  }
+  };
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
@@ -72,33 +71,51 @@ export default class EditProfileScreen extends Component {
 
   async saveProfile() {
     const {state, goBack} = this.props.navigation;
-    state.params.refresh();
-    goBack();
-    // try {
-    //   const {navigate} = this.props.navigation;
-    //   let response = await axios.patch(
-    //     `${Config.API_URL}/auth/update`,
-    //     {
-    //       fullname: 'a',
-    //       Address: 'Test',
-    //     },
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         token: await AsyncStorage.getItem('@userAuth'),
-    //       },
-    //     },
-    //   );
-    //   this.onAlert('Success', 'Data has been edited.');
-    //   navigate('ProfileScreen');
-    //   console.log('what?', response.config.data);
-    // } catch (err) {
-    //   this.onAlert(
-    //     'There is an error',
-    //     'There is an error when save data. Please try again',
-    //   );
-    //   console.log('There is an error pada bagian konten', err);
-    // }
+    const {
+      email,
+      fullname,
+      phone_number,
+      address,
+      company_id,
+      position,
+      picture_user,
+      token,
+    } = this.state;
+
+    let tempObj = {
+      email,
+      fullname,
+      phone_number,
+      address,
+      company_id,
+      position,
+      picture_user,
+    };
+
+    try {
+      let response = await axios.patch(
+        `${Config.API_URL}/auth/update`,
+        tempObj,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            token: token,
+          },
+        },
+      );
+
+      const {data} = response.data;
+      await AsyncStorage.setItem('@userData', JSON.stringify(data));
+      this.onAlert('Success', 'Data has been edited.');
+      state.params.refresh();
+      goBack();
+    } catch (err) {
+      this.onAlert(
+        'There is an error',
+        'There is an error when save data. Please try again. (403)',
+      );
+      console.log('There is an error', err);
+    }
   }
 
   render() {
@@ -120,7 +137,7 @@ export default class EditProfileScreen extends Component {
                 placeholder="Full Name"
                 underlineColorAndroid={'transparent'}
                 value={fullname}
-                onChange={value => this.handleChange('fullname', value)}
+                onChangeText={value => this.handleChange('fullname', value)}
               />
             </View>
           </View>
@@ -137,7 +154,7 @@ export default class EditProfileScreen extends Component {
                 placeholder="Phone Number"
                 underlineColorAndroid={'transparent'}
                 value={phone_number}
-                onChange={value => this.handleChange('phone_number', value)}
+                onChangeText={value => this.handleChange('phone_number', value)}
               />
             </View>
           </View>
@@ -155,7 +172,7 @@ export default class EditProfileScreen extends Component {
                 multiline={true}
                 numberOfLines={3}
                 value={address}
-                onChange={value => this.handleChange('address', value)}
+                onChangeText={value => this.handleChange('address', value)}
               />
             </View>
           </View>
@@ -169,8 +186,6 @@ export default class EditProfileScreen extends Component {
     );
   }
 }
-
-const win = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -217,17 +232,16 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: 'center',
     alignItems: 'center',
-    borderRadius: 40,
-    width: 200,
-    height: 50,
-    padding: 10,
+    borderRadius: 100,
+    width: '100%',
+    padding: '3%',
     backgroundColor: '#129cd8',
-    marginTop: 25,
+    marginTop: '15%',
   },
   textbutton: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#fff',
-    fontWeight: '700',
+    fontWeight: '600',
     textAlign: 'center',
   },
 });
