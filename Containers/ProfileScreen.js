@@ -20,6 +20,8 @@ import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Image as RImage} from 'react-native-elements';
 
+import LoadingModal from '../Components/Modal/LoadingModal';
+
 export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
@@ -76,6 +78,7 @@ export default class ProfileScreen extends Component {
       let company_name = data.data.name;
       this.setState({
         loading: false,
+        token: token,
         email: email,
         fullname: fullname,
         phone_number: phone_number,
@@ -101,6 +104,7 @@ export default class ProfileScreen extends Component {
   }
 
   async changePicture() {
+    this.setState({loading: true});
     try {
       const options = {
         noData: true,
@@ -122,6 +126,7 @@ export default class ProfileScreen extends Component {
       });
     } catch (err) {
       console.log(err);
+      this.setState({loading: false});
       this.onAlert(
         'There is an error',
         'An error has occurred, please try again later.',
@@ -144,6 +149,7 @@ export default class ProfileScreen extends Component {
       let imageUri = data.data;
       this.savePicture(imageUri);
     } catch (err) {
+      this.setState({loading: false});
       console.log('Error happen while uploading Image', err);
       this.onAlert(
         'There is an error',
@@ -188,8 +194,10 @@ export default class ProfileScreen extends Component {
 
       await AsyncStorage.setItem('@userData', JSON.stringify(tempObj));
 
+      this.setState({loading: false, picture_user: picturePath});
       this.onAlert('Success', 'User Picture has been updated.');
     } catch (error) {
+      this.setState({loading: false});
       console.log('error change picture', error);
       this.onAlert(
         'There is an error',
@@ -213,10 +221,12 @@ export default class ProfileScreen extends Component {
       address,
       picture_user,
       gender,
+      loading,
     } = this.state;
 
     return (
       <View style={styles.container}>
+        <LoadingModal visible={loading} label="Uploading the photo" />
         <View style={styles.headerContainer}>
           <TouchableOpacity
             style={styles.userEditButton}
