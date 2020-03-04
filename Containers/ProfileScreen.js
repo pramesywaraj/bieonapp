@@ -6,7 +6,6 @@ import {
   Text,
   View,
   Image,
-  Dimensions,
   TextInput,
   TouchableOpacity,
   Alert,
@@ -215,11 +214,26 @@ export default class ProfileScreen extends Component {
 
   goToEditProfile = () => {
     const {navigate} = this.props.navigation;
-    const {fullname, phone_number, address} = this.state;
-    let tempObj = {
+    const {
+      email,
       fullname,
       phone_number,
       address,
+      company_id,
+      position,
+      picture_user,
+      token,
+    } = this.state;
+    // Parameter obj for the routes
+    let tempObj = {
+      email,
+      fullname,
+      phone_number,
+      address,
+      company_id,
+      position,
+      picture_user,
+      token,
     };
     navigate('EditProfileScreen', {
       refresh: this.getUserInfo.bind(this),
@@ -378,9 +392,6 @@ export default class ProfileScreen extends Component {
     );
   }
 }
-
-const dim = Dimensions.get('window');
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

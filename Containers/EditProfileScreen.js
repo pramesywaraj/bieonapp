@@ -20,24 +20,48 @@ export default class EditProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      articles: [],
-      refreshing: true,
+      email: '',
+      fullname: '',
+      phone_number: '',
+      address: '',
+      company_id: '',
+      position: '',
+      picture_user: '',
       token: '',
-      banner: [],
-      currentUser: [],
-      gender: 0,
     };
+    this.handleChange = this.handleChange.bind(this);
   }
+
   async componentDidMount() {
-    this.setState({
-      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
-    });
-    console.log('user', this.state.currentUser);
-    if (this.state.currentUser.gender === 0) {
-      this.setState({gender: 'Female'});
-    } else {
-      this.setState({gender: 'Male'});
-    }
+    const getParam = () => {
+      const {data} = this.props.navigation.state.params;
+      const {
+        email,
+        fullname,
+        phone_number,
+        address,
+        company_id,
+        position,
+        picture_user,
+        token,
+      } = data;
+      this.setState({
+        email,
+        fullname,
+        phone_number,
+        address,
+        company_id,
+        position,
+        picture_user,
+        token,
+      });
+    };
+
+    getParam();
+  }
+
+  handleChange(name, value) {
+    this.setState({[name]: value});
   }
 
   onAlert = (title, message) => {
@@ -76,61 +100,65 @@ export default class EditProfileScreen extends Component {
     //   console.log('There is an error pada bagian konten', err);
     // }
   }
+
   render() {
+    const {phone_number, fullname, address} = this.state;
     return (
       <View style={styles.container}>
+        <Text style={styles.titleText}>Edit User Profile</Text>
         <View style={styles.itemContainer}>
-          <Row>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/editprofile/profile.png')}
             />
-            <Col>
-              <Text style={styles.text}>Name</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.text}>Full Name</Text>
               <TextInput
+                editable={true}
                 style={[styles.TextInput]}
-                placeholder="Name"
-                underlineColorAndroid={'transparent'}>
-                {this.state.currentUser.fullname}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
+                placeholder="Full Name"
+                underlineColorAndroid={'transparent'}
+                value={fullname}
+                onChange={value => this.handleChange('fullname', value)}
+              />
+            </View>
+          </View>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/editprofile/phone.png')}
             />
-            <Col>
+            <View style={styles.textWrapper}>
               <Text style={styles.text}>Phone Number</Text>
               <TextInput
+                editable={true}
                 style={[styles.TextInput]}
                 placeholder="Phone Number"
-                underlineColorAndroid={'transparent'}>
-                {this.state.currentUser.phone_number}
-              </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
+                underlineColorAndroid={'transparent'}
+                value={phone_number}
+                onChange={value => this.handleChange('phone_number', value)}
+              />
+            </View>
+          </View>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/editprofile/address.png')}
             />
-            <Col>
+            <View style={styles.textWrapper}>
               <Text style={styles.text}>Address</Text>
               <TextInput
-                style={[styles.TextArea]}
-                placeholder="Phone Number"
+                editable={true}
+                style={[styles.TextInput]}
                 underlineColorAndroid={'transparent'}
                 multiline={true}
-                numberOfLines={10}>
-                {this.state.currentUser.address}
-              </TextInput>
-            </Col>
-          </Row>
+                numberOfLines={3}
+                value={address}
+                onChange={value => this.handleChange('address', value)}
+              />
+            </View>
+          </View>
         </View>
         <TouchableOpacity
           style={[styles.button]}
@@ -148,55 +176,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: '5%',
   },
-  TextInput: {
-    fontSize: 18,
-    alignSelf: 'stretch',
-    width: 320,
-    height: 50,
-    marginBottom: -10,
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
-  },
-  TextArea: {
-    fontSize: 18,
-    alignSelf: 'stretch',
-    width: 320,
-    height: 100,
-    marginBottom: -10,
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
-  },
-
-  Dropdown: {
-    fontSize: 18,
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   itemContainer: {
+    // width: '100%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    marginBottom: '5%',
+    marginTop: '10%',
+  },
+  textContainer: {
     flexDirection: 'row',
+    maxWidth: '100%',
     alignItems: 'center',
-    marginBottom: 20,
-    alignSelf: 'stretch',
+    marginBottom: '5%',
+    borderColor: '#b5b5b5',
+    borderBottomWidth: 1,
+  },
+  textWrapper: {width: '80%'},
+  TextInput: {
+    fontSize: 16,
+    color: '#000',
+    padding: 0,
+    borderWidth: 1,
   },
   itemIconImage: {
     resizeMode: 'contain',
-    width: 35,
-    height: 35,
-    marginLeft: 20,
-    marginTop: 10,
+    width: 30,
+    height: 30,
+    marginRight: '5%',
   },
   text: {
-    marginLeft: 15,
-    marginBottom: -8,
     fontSize: 12,
+    color: '#757575',
   },
   button: {
     alignSelf: 'center',
@@ -213,43 +229,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     textAlign: 'center',
-  },
-  avatarImage: {
-    borderRadius: 600,
-    resizeMode: 'contain',
-    width: 110,
-    height: 110,
-    marginTop: -20,
-  },
-  textTitle: {
-    margin: 10,
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 17,
-    marginTop: 10,
-    marginBottom: 30,
-  },
-  itemMenuImage: {
-    resizeMode: 'contain',
-    width: 25,
-    height: 25,
-    marginTop: 3,
-  },
-  col: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f8f8f8',
-  },
-  textmenu: {
-    fontSize: 10,
-    marginTop: 5,
-    color: '#808080',
-  },
-  userEdit: {
-    fontSize: 20,
-    top: -20,
-    right: -60,
-    color: '#129cd8',
-    zIndex: 15,
   },
 });
