@@ -31,6 +31,7 @@ export default class ProfileScreen extends Component {
       phone_number: '',
       position: '',
       company_name: '',
+      company_id: '',
       address: '',
       picture_user: '',
       gender: '',
@@ -52,7 +53,6 @@ export default class ProfileScreen extends Component {
         AsyncStorage.getItem('@userData'),
         AsyncStorage.getItem('@userAuth'),
       ]);
-      console.log(JSON.parse(userData));
       const {
         email,
         fullname,
@@ -81,6 +81,7 @@ export default class ProfileScreen extends Component {
         phone_number: phone_number,
         position: position,
         company_name: company_name,
+        company_id: company_id,
         address: address,
         picture_user: picture_user,
         gender: gender === 0 ? 'Female' : 'Male',
@@ -95,84 +96,106 @@ export default class ProfileScreen extends Component {
   }
 
   async componentDidMount() {
+    console.log('render');
     this.getUserInfo();
   }
 
-  createFormData = (photo, body) => {
-    const data = new FormData();
-
-    data.append('image', {
-      name: photo.fileName,
-      type: photo.type,
-      uri:
-        Platform.OS === 'android'
-          ? photo.uri
-          : photo.uri.replace('file://', ''),
-    });
-    console.log('dataupload', JSON.stringify(data));
-    return data;
-  };
-
   async changePicture() {
-    const options = {
-      noData: true,
-    };
-    const data = new FormData();
+    try {
+      const options = {
+        noData: true,
+        title: 'Choose an image',
+        mediaType: 'photo',
+      };
+      const data = new FormData();
 
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.uri) {
-        this.setState({picture: response.uri});
-        data.append('image', {
-          name: response.fileName,
-          type: response.type,
-          uri: response.uri,
-        });
-        // this.setState({photo: response});
-        console.log('respo', response);
-        axios
-          .post('http://bieonbe.defuture.tech/upload-image/user', data, {
-            headers: {
-              'content-type': 'multipart/form-data',
-            },
-          })
-          .then(respo => {
-            this.savePicture(respo.data.data);
-          })
-          .catch(function(error) {
-            console.log('er', error);
+      await ImagePicker.launchImageLibrary(options, response => {
+        if (response.uri) {
+          data.append('image', {
+            name: response.fileName,
+            type: response.type,
+            uri: response.uri,
           });
-      }
-    });
+
+          this.imageUpload(data);
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      this.onAlert(
+        'There is an error',
+        'An error has occurred, please try again later.',
+      );
+    }
   }
 
-  savePicture(picture_user) {
-    console.log('tok', this.state.token);
-
-    axios
-      .patch(
-        'http://bieonbe.defuture.tech/auth/update',
+  async imageUpload(formData) {
+    try {
+      const {data} = await axios.post(
+        `${Config.API_URL}/upload-image/user`,
+        formData,
         {
-          picture_user: picture_user,
-          email: this.state.currentUser.email,
-          fullname: this.state.currentUser.fullname,
-          phone_number: this.state.currentUser.phone_number,
-          company_id: this.state.currentUser.company_id,
-          position: this.state.currentUser.position,
-          address: this.state.currentUser.address,
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        },
+      );
+
+      let imageUri = data.data;
+      this.savePicture(imageUri);
+    } catch (err) {
+      console.log('Error happen while uploading Image', err);
+      this.onAlert(
+        'There is an error',
+        'An error has occurred while uploading the Image, please try again later.',
+      );
+    }
+  }
+
+  async savePicture(picturePath) {
+    const {
+      email,
+      fullname,
+      phone_number,
+      position,
+      company_id,
+      address,
+      token,
+    } = this.state;
+
+    try {
+      await axios.patch(
+        `${Config.API_URL}/auth/update`,
+        {
+          picture_user: picturePath,
+          email: email,
+          fullname: fullname,
+          phone_number: phone_number,
+          company_id: company_id,
+          position: position,
+          address: address,
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            token: this.state.token,
+            token: token,
           },
         },
-      )
-      .then(resp => {
-        console.log('change picture', resp.data);
-      })
-      .catch(function(error) {
-        console.log('error change picture', error);
-      });
+      );
+
+      let tempObj = JSON.parse(await AsyncStorage.getItem('@userData'));
+      tempObj.picture_user = picturePath;
+
+      await AsyncStorage.setItem('@userData', JSON.stringify(tempObj));
+
+      this.onAlert('Success', 'User Picture has been updated.');
+    } catch (error) {
+      console.log('error change picture', error);
+      this.onAlert(
+        'There is an error',
+        'An error has occurred while uploading the Image, please try again later.',
+      );
+    }
   }
 
   goToEditProfile = () => {
@@ -351,7 +374,7 @@ const styles = StyleSheet.create({
     right: 15,
     top: 15,
     position: 'absolute',
-    borderRadius: 100,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
