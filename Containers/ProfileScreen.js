@@ -36,6 +36,8 @@ export default class ProfileScreen extends Component {
       gender: '',
       token: '',
     };
+
+    this.goToEditProfile = this.goToEditProfile.bind();
   }
 
   onAlert = (title, message) => {
@@ -188,12 +190,16 @@ export default class ProfileScreen extends Component {
       address,
       picture_user,
       gender,
-      token,
     } = this.state;
 
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={styles.userEditButton}
+            onPress={this.goToEditProfile}>
+            <Icon name="user-cog" style={styles.userEditIcon} />
+          </TouchableOpacity>
           <RImage
             borderRadius={100}
             containerStyle={styles.avatarImageContainer}
@@ -205,7 +211,7 @@ export default class ProfileScreen extends Component {
             PlaceholderContent={<ActivityIndicator />}
           />
           <TouchableOpacity
-            style={styles.userEditButton}
+            style={styles.userImageEditButton}
             onPress={() => this.changePicture()}>
             <Icon name="image" style={styles.userEditIcon} />
           </TouchableOpacity>
@@ -309,11 +315,6 @@ export default class ProfileScreen extends Component {
                 />
               </View>
             </View>
-            <TouchableOpacity
-              style={[styles.button]}
-              onPress={() => this.goToEditProfile()}>
-              <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
@@ -343,6 +344,25 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   userEditButton: {
+    padding: '3%',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    right: 15,
+    top: 15,
+    position: 'absolute',
+    borderRadius: 100,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  userImageEditButton: {
     zIndex: 15,
     padding: '2%',
     backgroundColor: 'white',
@@ -365,7 +385,7 @@ const styles = StyleSheet.create({
   },
   avatarImageContainer: {
     borderRadius: 100,
-    marginTop: '10%',
+    marginTop: '5%',
   },
   avatarImage: {
     borderRadius: 100,

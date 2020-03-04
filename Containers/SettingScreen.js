@@ -28,6 +28,7 @@ class SettingScreen extends Component {
     const {navigate} = this.props.navigation;
 
     try {
+      await AsyncStorage.removeItem('@userCoordinate');
       await AsyncStorage.removeItem('@userData');
       await AsyncStorage.removeItem('@userAuth');
       this.onAlert('Logout', 'You are logout from application');
