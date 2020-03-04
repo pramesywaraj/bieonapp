@@ -19,6 +19,7 @@ import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {white} from 'color-name';
 export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
@@ -146,23 +147,26 @@ export default class ProfileScreen extends Component {
   };
   render() {
     return (
-      <ScrollView>
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
           <Image
             style={styles.avatarImage}
             source={{
               uri: this.state.picture,
             }}
           />
-          <Icon
-            name="image"
-            style={styles.userEdit}
-            onPress={() => this.changePicture()}
-          />
-          {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
-          <Text style={[styles.textTitle]}>
-            {this.state.currentUser.fullname}
-          </Text>
+          <TouchableOpacity
+            style={styles.userEditButton}
+            onPress={() => this.changePicture()}>
+            <Icon
+              name="image"
+              style={styles.userEditIcon}
+              onPress={() => this.changePicture()}
+            />
+          </TouchableOpacity>
+          <Text style={styles.textName}>{this.state.currentUser.fullname}</Text>
+        </View>
+        <ScrollView>
           <View style={styles.itemContainer}>
             <View>
               <Image
@@ -278,8 +282,8 @@ export default class ProfileScreen extends Component {
           onPress={() => this.goToEditProfile()}>
           <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
         </TouchableOpacity> */}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -290,6 +294,46 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerContainer: {
+    alignItems: 'center',
+    borderWidth: 1,
+    width: '100%',
+  },
+  userEditButton: {
+    zIndex: 15,
+    padding: '2%',
+    backgroundColor: 'white',
+    left: 40,
+    bottom: 20,
+    borderRadius: 100,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  userEditIcon: {
+    fontSize: 20,
+    color: '#129cd8',
+  },
+  avatarImage: {
+    borderRadius: 100,
+    width: 110,
+    height: 110,
+    marginTop: '10%',
+    borderWidth: 1,
+  },
+  textName: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 17,
+    top: '-4%',
+    paddingBottom: '5%',
   },
   TextInput: {
     fontSize: 16,
@@ -354,20 +398,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
   },
-  avatarImage: {
-    borderRadius: 100,
-    width: 110,
-    height: 110,
-    marginTop: '5%',
-  },
-  textTitle: {
-    margin: 10,
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 17,
-    marginTop: 10,
-    marginBottom: 30,
-  },
   itemMenuImage: {
     resizeMode: 'contain',
     width: 25,
@@ -383,12 +413,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginTop: 5,
     color: '#808080',
-  },
-  userEdit: {
-    fontSize: 20,
-    top: -20,
-    right: -60,
-    color: '#129cd8',
-    zIndex: 15,
   },
 });
