@@ -217,7 +217,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
     padding: 0,
-    borderWidth: 1,
   },
   itemIconImage: {
     resizeMode: 'contain',
