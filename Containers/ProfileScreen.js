@@ -10,6 +10,7 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -34,6 +35,12 @@ export default class ProfileScreen extends Component {
       token: '',
     };
   }
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
 
   async getUserInfo() {
     try {
@@ -76,6 +83,10 @@ export default class ProfileScreen extends Component {
       });
     } catch (err) {
       console.log(err);
+      this.onAlert(
+        'There is an error',
+        'An error has occurred, please try again later.',
+      );
     }
   }
 
