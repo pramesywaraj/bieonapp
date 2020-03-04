@@ -51,6 +51,7 @@ export default class DeviceInfoScreen extends Component {
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
+
   async saveData() {
     const {goBack} = this.props.navigation;
     try {
@@ -74,18 +75,16 @@ export default class DeviceInfoScreen extends Component {
         },
       );
       this.onAlert('Success', 'Data has been uploaded.');
-      goBack();
-      console.log('what?', response.config.data);
+      navigate('ContainScreen');
     } catch (err) {
       this.onAlert(
         'There is an error',
         'Ther is an error when save data. Please try again',
       );
-      console.log('There is an error pada bagian konten', err);
+      console.log('There is an error', err);
     }
   }
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.itemContainer}>

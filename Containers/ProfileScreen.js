@@ -2,362 +2,504 @@ import React, {Component} from 'react';
 import FormData from 'form-data';
 import {
   ScrollView,
-  Platform,
   StyleSheet,
-  Image,
-  ImageBackground,
   Text,
   View,
-  Dimensions,
+  Image,
   TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
-  Button,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
 import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {Image as RImage} from 'react-native-elements';
+
+import LoadingModal from '../Components/Modal/LoadingModal';
+
 export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      articles: [],
-      refreshing: true,
+      loading: false,
+      isUploadingPhoto: false,
+      // User things
+      email: '',
+      fullname: '',
+      phone_number: '',
+      position: '',
+      company_name: '',
+      company_id: '',
+      address: '',
+      picture_user: '',
+      gender: '',
       token: '',
-      banner: [],
-      currentUser: [],
-      gender: 0,
-      picture: '',
     };
+
+    this.goToEditProfile = this.goToEditProfile.bind();
   }
-  async componentDidMount() {
-    this.setState({
-      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
-      token: await AsyncStorage.getItem('@userAuth'),
-      picture:
-        'http://bieonbe.defuture.tech/' +
-        JSON.parse(await AsyncStorage.getItem('@userData')).picture_user,
-    });
-    if (this.state.currentUser.gender === 0) {
-      this.setState({gender: 'Female'});
-    } else {
-      this.setState({gender: 'Male'});
-    }
-    this.getCompanyDetail();
-  }
-  async getCompanyDetail() {
+
+  onAlert = (title, message) => {
+    return Alert.alert(title, message, [
+      {text: 'Ok', onPress: () => console.log('Pressed')},
+    ]);
+  };
+
+  async getUserInfo() {
+    this.setState({loading: true});
     try {
-      let response = await axios.get(
-        `${Config.API_URL}/company/detail/` + this.state.currentUser.company_id,
+      let [userData, userAuth] = await Promise.all([
+        AsyncStorage.getItem('@userData'),
+        AsyncStorage.getItem('@userAuth'),
+      ]);
+      const {
+        email,
+        fullname,
+        phone_number,
+        position,
+        company_id,
+        address,
+        picture_user,
+        gender,
+      } = JSON.parse(userData);
+      const token = userAuth;
+
+      const {data} = await axios.get(
+        `${Config.API_URL}/company/detail/` + company_id,
         {
           headers: {
-            token: this.state.token,
+            token: token,
           },
         },
       );
-      const companyName = response.data.data;
-      console.log('company', response.data.data);
-      this.setState({companyName: companyName.name});
+      let company_name = data.data.name;
+      this.setState({
+        loading: false,
+        token: token,
+        email: email,
+        fullname: fullname,
+        phone_number: phone_number,
+        position: position,
+        company_name: company_name,
+        company_id: company_id,
+        address: address,
+        picture_user: picture_user,
+        gender: gender === 0 ? 'Female' : 'Male',
+      });
     } catch (err) {
       console.log(err);
+      this.setState({loading: false});
+      this.onAlert(
+        'There is an error',
+        'An error has occurred, please try again later.',
+      );
     }
   }
-  // te
-  createFormData = (photo, body) => {
-    const data = new FormData();
 
-    data.append('image', {
-      name: photo.fileName,
-      type: photo.type,
-      uri:
-        Platform.OS === 'android'
-          ? photo.uri
-          : photo.uri.replace('file://', ''),
-    });
-    console.log('dataupload', JSON.stringify(data));
-    return data;
-  };
-  async changePicture() {
-    console.log('click');
-    const options = {
-      noData: true,
-    };
-    const data = new FormData();
-
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.uri) {
-        this.setState({picture: response.uri});
-        data.append('image', {
-          name: response.fileName,
-          type: response.type,
-          uri: response.uri,
-        });
-        // this.setState({photo: response});
-        console.log('respo', response);
-        axios
-          .post('http://bieonbe.defuture.tech/upload-image/user', data, {
-            headers: {
-              'content-type': 'multipart/form-data',
-            },
-          })
-          .then(respo => {
-            this.savePicture(respo.data.data);
-          })
-          .catch(function(error) {
-            console.log('er', error);
-          });
-      }
-    });
+  async componentDidMount() {
+    this.getUserInfo();
   }
-  savePicture(picture_user) {
-    console.log('tok', this.state.token);
 
-    axios
-      .patch(
-        'http://bieonbe.defuture.tech/auth/update',
+  async changePicture() {
+    this.setState({loading: true, isUploadingPhoto: true});
+    try {
+      const options = {
+        noData: true,
+        title: 'Choose an image',
+        mediaType: 'photo',
+        maxWidth: 1000,
+        maxHeight: 1000,
+        quality: 0,
+      };
+      const data = new FormData();
+
+      await ImagePicker.launchImageLibrary(options, response => {
+        if (response.uri) {
+          data.append('image', {
+            name: response.fileName,
+            type: response.type,
+            uri: response.uri,
+          });
+          this.imageUpload(data);
+        } else if (response.didCancel) {
+          this.setState({loading: false, isUploadingPhoto: false});
+        }
+
+        console.log(response);
+      });
+    } catch (err) {
+      console.log(err);
+      this.setState({loading: false, isUploadingPhoto: false});
+      this.onAlert(
+        'There is an error',
+        'An error has occurred, please try again later.',
+      );
+    }
+  }
+
+  async imageUpload(formData) {
+    try {
+      const {data} = await axios.post(
+        `${Config.API_URL}/upload-image/user`,
+        formData,
         {
-          picture_user: picture_user,
-          email: this.state.currentUser.email,
-          fullname: this.state.currentUser.fullname,
-          phone_number: this.state.currentUser.phone_number,
-          company_id: this.state.currentUser.company_id,
-          position: this.state.currentUser.position,
-          address: this.state.currentUser.address,
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        },
+      );
+
+      let imageUri = data.data;
+      this.savePicture(imageUri);
+    } catch (err) {
+      this.setState({loading: false, isUploadingPhoto: false});
+      console.log('Error happen while uploading Image', err);
+      this.onAlert(
+        'There is an error',
+        'An error has occurred while uploading the Image, please try again later.',
+      );
+    }
+  }
+
+  async savePicture(picturePath) {
+    const {
+      email,
+      fullname,
+      phone_number,
+      position,
+      company_id,
+      address,
+      token,
+    } = this.state;
+
+    try {
+      await axios.patch(
+        `${Config.API_URL}/auth/update`,
+        {
+          picture_user: picturePath,
+          email: email,
+          fullname: fullname,
+          phone_number: phone_number,
+          company_id: company_id,
+          position: position,
+          address: address,
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            token: this.state.token,
+            token: token,
           },
         },
-      )
-      .then(resp => {
-        console.log('change picture', resp.data);
-      })
-      .catch(function(error) {
-        console.log('error change picture', error);
-      });
+      );
+
+      let tempObj = JSON.parse(await AsyncStorage.getItem('@userData'));
+      tempObj.picture_user = picturePath;
+
+      await AsyncStorage.setItem('@userData', JSON.stringify(tempObj));
+
+      this.setState({loading: false, picture_user: picturePath});
+      this.onAlert('Success', 'User Picture has been updated.');
+    } catch (error) {
+      this.setState({loading: false});
+      console.log('error change picture', error);
+      this.onAlert(
+        'There is an error',
+        'An error has occurred while uploading the Image, please try again later.',
+      );
+    }
   }
+
   goToEditProfile = () => {
     const {navigate} = this.props.navigation;
-    navigate('EditProfileScreen');
+    const {
+      email,
+      fullname,
+      phone_number,
+      address,
+      company_id,
+      position,
+      picture_user,
+      token,
+    } = this.state;
+    // Parameter obj for the routes
+    let tempObj = {
+      email,
+      fullname,
+      phone_number,
+      address,
+      company_id,
+      position,
+      picture_user,
+      token,
+    };
+    navigate('EditProfileScreen', {
+      refresh: this.getUserInfo.bind(this),
+      data: tempObj,
+    });
   };
+
   render() {
-    const {navigate} = this.props.navigation;
+    const {
+      email,
+      fullname,
+      phone_number,
+      position,
+      company_name,
+      address,
+      picture_user,
+      gender,
+      loading,
+      isUploadingPhoto,
+    } = this.state;
+
     return (
-      <ScrollView>
-        <View style={styles.container}>
-          <Image
+      <View style={styles.container}>
+        <LoadingModal
+          visible={loading}
+          label={
+            isUploadingPhoto
+              ? 'Uploading photo...'
+              : 'Gathering user information...'
+          }
+        />
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={styles.userEditButton}
+            onPress={this.goToEditProfile}>
+            <Icon name="user-cog" style={styles.userEditIcon} />
+          </TouchableOpacity>
+          <RImage
+            borderRadius={100}
+            containerStyle={styles.avatarImageContainer}
             style={styles.avatarImage}
+            resizeMode="cover"
             source={{
-              uri: this.state.picture,
+              uri: `${Config.API_URL}/${picture_user}`,
             }}
+            PlaceholderContent={<ActivityIndicator />}
           />
-          <Icon
-            name="user-edit"
-            style={styles.userEdit}
-            onPress={() => this.changePicture()}
-          />
-          {/* <Button title="Choose Photo" onPress={this.handleChoosePhoto} /> */}
-          <Text style={[styles.textTitle]}>
-            {this.state.currentUser.fullname}
-          </Text>
+          <TouchableOpacity
+            style={styles.userImageEditButton}
+            onPress={() => this.changePicture()}>
+            <Icon name="image" style={styles.userEditIcon} />
+          </TouchableOpacity>
+          <Text style={styles.textName}>{fullname}</Text>
+        </View>
+        <ScrollView contentContainerStyle={styles.scrollviewContainer}>
           <View style={styles.itemContainer}>
-            <Row>
+            <View style={styles.textContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/email.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Email</Text>
                 <TextInput
                   editable={false}
-                  style={[styles.TextInput]}
+                  style={styles.TextInput}
                   placeholder="Email"
-                  underlineColorAndroid={'transparent'}>
-                  {this.state.currentUser.email}
-                </TextInput>
-              </Col>
-            </Row>
-          </View>
-          <View style={styles.itemContainer}>
-            <Row>
+                  underlineColorAndroid={'transparent'}
+                  value={email}
+                />
+              </View>
+            </View>
+            <View style={styles.textContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/phone.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Phone Number</Text>
                 <TextInput
                   editable={false}
                   style={[styles.TextInput]}
                   placeholder="Phone Number"
-                  underlineColorAndroid={'transparent'}>
-                  {this.state.currentUser.phone_number}
-                </TextInput>
-              </Col>
-            </Row>
-          </View>
-          <View style={styles.itemContainer}>
-            <Row>
+                  underlineColorAndroid={'transparent'}
+                  value={phone_number}
+                />
+              </View>
+            </View>
+            <View style={styles.textContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/address.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Address</Text>
                 <TextInput
                   editable={false}
-                  style={[styles.TextArea]}
-                  placeholder="Phone Number"
+                  style={[styles.TextInput]}
                   underlineColorAndroid={'transparent'}
-                  multiline={true}
-                  numberOfLines={10}>
-                  {this.state.currentUser.address}
-                </TextInput>
-              </Col>
-            </Row>
-          </View>
-          <View style={styles.itemContainer}>
-            <Row>
+                  multiline={false}
+                  numberOfLines={2}
+                  value={address}
+                />
+              </View>
+            </View>
+            <View style={styles.textContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/gender.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Gender</Text>
                 <TextInput
                   editable={false}
                   style={[styles.TextInput]}
-                  placeholder="Phone Number"
-                  underlineColorAndroid={'transparent'}>
-                  {this.state.gender}
-                </TextInput>
-              </Col>
-            </Row>
-          </View>
-          {/* <View style={styles.itemContainer}>
-              <Row>
-                <Image
-                  style={styles.itemIconImage}
-                  source={require('../assets/icons/editprofile/gender.png')}
+                  underlineColorAndroid={'transparent'}
+                  value={gender}
                 />
-                <Col>
-                  <Text style={styles.text}>Gender</Text>
-                  <Dropdown
-                    data={data}
-                    style={[styles.Dropdown]}
-                    pickerStyle={{
-                      borderBottomColor: 'transparent',
-                      borderWidth: 0,
-                    }}
-                    dropdownOffset={{top: 10}}
-                    placeholder="Gender"></Dropdown>
-                </Col>
-              </Row>
-            </View> */}
-          <View style={styles.itemContainer}>
-            <Row>
+              </View>
+            </View>
+            <View style={styles.textContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/position.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Position</Text>
                 <TextInput
                   editable={false}
                   style={[styles.TextInput]}
                   placeholder="Position"
                   underlineColorAndroid={'transparent'}>
-                  {this.state.currentUser.position}
+                  {position}
                 </TextInput>
-              </Col>
-            </Row>
-          </View>
-          <View style={styles.itemContainer}>
-            <Row>
+              </View>
+            </View>
+            <View style={styles.textContainer}>
               <Image
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/agency.png')}
               />
-              <Col>
+              <View>
                 <Text style={styles.text}>Company/Institution</Text>
                 <TextInput
                   editable={false}
-                  style={[styles.TextInput]}
+                  style={styles.TextInput}
                   placeholder="Company/Institution"
-                  underlineColorAndroid={'transparent'}>
-                  {this.state.companyName}
-                </TextInput>
-              </Col>
-            </Row>
+                  underlineColorAndroid={'transparent'}
+                  value={company_name}
+                />
+              </View>
+            </View>
           </View>
-          {/* <TouchableOpacity
-          style={[styles.button]}
-          onPress={() => this.goToEditProfile()}>
-          <Text style={[styles.textbutton]}>EDIT PROFILE</Text>
-        </TouchableOpacity> */}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
-
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#fff',
+  },
+  headerContainer: {
+    top: '-1%',
     alignItems: 'center',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+  },
+  userEditButton: {
+    padding: '3%',
+    backgroundColor: 'white',
     justifyContent: 'center',
-  },
-  TextInput: {
-    fontSize: 18,
-    alignSelf: 'stretch',
-    width: 320,
-    height: 50,
-    marginBottom: -10,
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
-  },
-  TextArea: {
-    fontSize: 18,
-    alignSelf: 'stretch',
-    width: 320,
-    height: 100,
-    marginBottom: -10,
-    color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
-  },
+    alignItems: 'center',
+    right: 15,
+    top: 15,
+    position: 'absolute',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
 
-  Dropdown: {
-    fontSize: 18,
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
+    elevation: 5,
+  },
+  userImageEditButton: {
+    zIndex: 15,
+    padding: '2%',
+    backgroundColor: 'white',
+    left: 40,
+    bottom: 20,
+    borderRadius: 100,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  userEditIcon: {
+    fontSize: 20,
+    color: '#129cd8',
+  },
+  avatarImageContainer: {
+    borderRadius: 100,
+    marginTop: '5%',
+  },
+  avatarImage: {
+    borderRadius: 100,
+    width: 110,
+    height: 110,
+  },
+  textName: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 17,
+    top: '-4%',
+    paddingBottom: '5%',
+  },
+  scrollviewContainer: {
+    width: 'auto',
   },
   itemContainer: {
+    width: '100%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    marginBottom: 20,
+    marginTop: 10,
+  },
+  textContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    alignSelf: 'stretch',
+    width: '100%',
+    marginBottom: '5%',
+    borderColor: '#b5b5b5',
+    borderBottomWidth: 1,
+  },
+  TextInput: {
+    fontSize: 16,
+    color: '#000',
+    width: '100%',
+    padding: 0,
   },
   itemIconImage: {
     resizeMode: 'contain',
-    width: 35,
-    height: 35,
-    marginLeft: 20,
-    marginTop: 10,
+    width: 30,
+    height: 30,
+    marginRight: '5%',
   },
   text: {
-    marginLeft: 15,
-    marginBottom: -8,
     fontSize: 12,
+    color: '#757575',
   },
   button: {
     alignSelf: 'center',
@@ -374,42 +516,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
     textAlign: 'center',
-  },
-  avatarImage: {
-    borderRadius: 100,
-    width: 110,
-    height: 110,
-    marginTop: '5%',
-  },
-  textTitle: {
-    margin: 10,
-    color: '#000',
-    fontWeight: 'bold',
-    fontSize: 17,
-    marginTop: 10,
-    marginBottom: 30,
-  },
-  itemMenuImage: {
-    resizeMode: 'contain',
-    width: 25,
-    height: 25,
-    marginTop: 3,
-  },
-  col: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f8f8f8',
-  },
-  textmenu: {
-    fontSize: 10,
-    marginTop: 5,
-    color: '#808080',
-  },
-  userEdit: {
-    fontSize: 20,
-    top: -20,
-    right: -60,
-    color: '#129cd8',
-    zIndex: 15,
   },
 });
