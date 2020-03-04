@@ -4,17 +4,13 @@ import {
   Image,
   Text,
   View,
-  Dimensions,
   TextInput,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {Col, Row, Grid} from 'react-native-easy-grid';
 import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
-import ImagePicker from 'react-native-image-picker';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default class EditProfileScreen extends Component {
   constructor(props) {
