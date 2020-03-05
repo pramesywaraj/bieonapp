@@ -23,6 +23,7 @@ export default class DeviceInfoScreen extends Component {
       content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
       latitude: 0,
       longitude: 0,
+      currentUser: {},
     };
   }
 
@@ -32,6 +33,7 @@ export default class DeviceInfoScreen extends Component {
       JSON.stringify(this.state.content),
     );
     this.setState({
+      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
       latitude: JSON.parse(await AsyncStorage.getItem('@userCoordinate'))
         .latitude,
       longitude: JSON.parse(await AsyncStorage.getItem('@userCoordinate'))
@@ -51,7 +53,6 @@ export default class DeviceInfoScreen extends Component {
       {text: 'Ok', onPress: () => console.log('Pressed')},
     ]);
   };
-
   async saveData() {
     const {goBack} = this.props.navigation;
     try {
@@ -61,9 +62,9 @@ export default class DeviceInfoScreen extends Component {
         {
           device_id: this.state.content.no_seri,
           counter: parseInt(this.state.content.count),
-          // company_id: 11,
+          company_id: parseInt(this.state.currentUser.company_id),
           status_battery: parseInt(this.state.content.battery),
-          last_calibration: '2020-12-02T23:00:00+07:00',
+          last_calibration: this.state.content.lastcal + 'T23:00:00+07:00',
           longitude: this.state.longitude,
           latitude: this.state.latitude,
         },
@@ -75,16 +76,18 @@ export default class DeviceInfoScreen extends Component {
         },
       );
       this.onAlert('Success', 'Data has been uploaded.');
-      navigate('ContainScreen');
+      goBack();
+      console.log('what?', response.config.data);
     } catch (err) {
       this.onAlert(
         'There is an error',
-        'Ther is an error when save data. Please try again',
+        'There is an error when save data. Please try again',
       );
-      console.log('There is an error', err);
+      console.log('There is an error in content', err);
     }
   }
   render() {
+    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <View style={styles.itemContainer}>

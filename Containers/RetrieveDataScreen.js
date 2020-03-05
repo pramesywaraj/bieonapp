@@ -110,9 +110,6 @@ export default class RetrieveDataScreen extends Component {
   async activateBluetooth() {
     try {
       await BluetoothSerial.enable();
-      this.setState({
-        loading: false,
-      });
     } catch (err) {
       console.log('Error happen at activateBluetooth()', err);
       this.onAlert(
@@ -199,21 +196,18 @@ export default class RetrieveDataScreen extends Component {
   async write(message) {
     const {device} = this.state;
     const {navigation} = this.props;
-
     this.setState({loading: true});
-
     let tempObj = {};
 
     try {
       await BluetoothSerial.device(device.address).write(message);
-      await BluetoothSerial.readFromDevice(device.address).then(response => {
-        if (!response) {
-          this.onAlert('Failed to get data', 'Please try again');
-          this.setState({loading: false});
-        } else {
-          console.log(response);
-          setTimeout(() => {
-            let bluetoothObj = JSON.parse(response);
+      await BluetoothSerial.readEvery(
+        (data, intervalId) => {
+          if (!data) {
+            null;
+          } else {
+            let bluetoothObj = JSON.parse(data);
+            this.setState({loading: false});
 
             switch (message) {
               case 'Data1':
@@ -254,9 +248,16 @@ export default class RetrieveDataScreen extends Component {
                 console.log('Device:', tempObj);
                 break;
             }
-          }, 15000);
-        }
-      });
+          }
+          console.log('data in', data);
+
+          if (this.imBoredNow && intervalId) {
+            clearInterval(intervalId);
+          }
+        },
+        3000,
+        '\r\n',
+      );
     } catch (err) {
       console.log('Error happened on write()', err);
       this.setState({loading: false});

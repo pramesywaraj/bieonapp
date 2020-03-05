@@ -30,7 +30,7 @@ import TableDataHeader from '../Components/Toolbar/TableDataHeader';
 
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
-const printSaltA = (saltDatas, userOperator) => {
+const printSaltA = (saltDatas, userOperator, calibration) => {
   try {
     saltDatas.map(data => {
       BluetoothEscposPrinter.printerInit();
@@ -127,10 +127,15 @@ const printSaltA = (saltDatas, userOperator) => {
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
-      BluetoothEscposPrinter.printText(
-        '================================\r\n',
-        {},
-      );
+      BluetoothEscposPrinter.printText('================================', {});
+      if (calibration === true) {
+        BluetoothEscposPrinter.printText(
+          'The device should be calibration\r\n',
+          {},
+        );
+      } else {
+        null;
+      }
 
       BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.CENTER);
       BluetoothEscposPrinter.printPic(base64PngLogo, {
@@ -144,7 +149,7 @@ const printSaltA = (saltDatas, userOperator) => {
   }
 };
 
-const printSaltB = (saltDatas, userOperator) => {
+const printSaltB = (saltDatas, userOperator, calibration) => {
   try {
     saltDatas.map(data => {
       BluetoothEscposPrinter.printerInit();
@@ -221,11 +226,15 @@ const printSaltB = (saltDatas, userOperator) => {
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
-      BluetoothEscposPrinter.printText(
-        '================================\r\n',
-        {},
-      );
-
+      BluetoothEscposPrinter.printText('================================', {});
+      if (calibration === true) {
+        BluetoothEscposPrinter.printText(
+          'The device should be calibration\r\n',
+          {},
+        );
+      } else {
+        null;
+      }
       BluetoothEscposPrinter.printerAlign(BluetoothEscposPrinter.ALIGN.CENTER);
       BluetoothEscposPrinter.printPic(base64PngLogo, {
         width: 220,
@@ -266,6 +275,7 @@ export default class HomeScreen extends Component {
       device_info: {},
       coordinate: {},
       currentUser: {},
+      reminderCalibration: false,
     };
 
     this.openModal = this.openModal.bind(this);
@@ -633,9 +643,18 @@ export default class HomeScreen extends Component {
     });
     console.log('dev', this.state.currentUser);
   }
+  async checkStatusLastcalibration() {
+    const today = moment(new Date()).format('YYYY-MM-DD');
+    this.setState({
+      lastcal: JSON.parse(await AsyncStorage.getItem('@deviceInfo')).lastcal,
+    });
+    this.setState({
+      reminderCalibration: moment(this.state.lastcal).isSameOrAfter(today),
+    });
+  }
   async componentDidMount() {
     this.getDateforPDF();
-
+    this.checkStatusLastcalibration();
     await this.fetchSaltData();
 
     if (Platform.OS === 'ios') {
@@ -1051,8 +1070,8 @@ export default class HomeScreen extends Component {
 
     // Check the selected type
     this.state.selectedSaltType === 0
-      ? printSaltA(selectedData, operator)
-      : printSaltB(selectedData, operator);
+      ? printSaltA(selectedData, operator, this.state.reminderCalibration)
+      : printSaltB(selectedData, operator, this.state.reminderCalibration);
   }
 
   handleSegmentChange(index) {
@@ -1130,7 +1149,7 @@ export default class HomeScreen extends Component {
           />
           <View>
             <SegmentedControlTab
-              values={['Nacl', 'Iodium']}
+              values={['NaCl,White,Water Content', 'Iodium']}
               selectedIndex={this.state.selectedSaltType}
               onTabPress={this.handleSegmentChange}
               borderRadius={0}

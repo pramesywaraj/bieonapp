@@ -94,24 +94,34 @@ export default class ContainDetailNaclScreen extends Component {
     // for data1
     this.setState({loading: true});
     console.log('mes', message);
-    BluetoothSerial.device(id).write(message);
-    BluetoothSerial.readFromDevice().then(response => {
-      setTimeout(() => {
-        console.log('res', response);
-        let objectBluetooth = JSON.parse(response);
-        const newObject = {
-          nacl: objectBluetooth.nacl,
-          battery: objectBluetooth.battery,
-          count: objectBluetooth.count,
-          no_seri: objectBluetooth.no_seri,
-          water_content: objectBluetooth.water_content,
-          whiteness: objectBluetooth.whiteness,
-        };
-        this.setState({content: newObject});
-        this.props.navigation.navigate('ContainDetailNaclScreen');
-        this.setState({loading: false});
-      }, 11000);
-    });
+    await BluetoothSerial.device(id).write(message);
+    await BluetoothSerial.readEvery(
+      (data, intervalId) => {
+        if (!data) {
+          null;
+        } else {
+          let bluetoothObj = JSON.parse(data);
+          const newObject = {
+            nacl: bluetoothObj.nacl,
+            battery: bluetoothObj.battery,
+            count: bluetoothObj.count,
+            no_seri: bluetoothObj.no_seri,
+            water_content: bluetoothObj.water_content,
+            whiteness: bluetoothObj.whiteness,
+          };
+          this.setState({content: newObject});
+          this.props.navigation.navigate('ContainDetailNaclScreen');
+          this.setState({loading: false});
+        }
+        console.log('data in', data);
+
+        if (this.imBoredNow && intervalId) {
+          clearInterval(intervalId);
+        }
+      },
+      3000,
+      '\r\n',
+    );
   };
 
   render() {

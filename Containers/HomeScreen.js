@@ -194,8 +194,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: dimension.height,
-    borderTopRightRadius: 30,
-    borderTopLeftRadius: 30,
     backgroundColor: 'white',
   },
   homeScreenTitle: {
