@@ -849,6 +849,10 @@ export default class HomeScreen extends Component {
 
       if (this.state.selectedSaltType === 0) {
         const {salts_a} = response.data.data;
+        // sort ascending
+        salts_a.sort(function(a, b) {
+          return new Date(b.create_at) - new Date(a.create_at);
+        });
         salts_a.forEach(item => {
           item.isChecked = false;
         });
@@ -858,6 +862,10 @@ export default class HomeScreen extends Component {
         });
       } else if (this.state.selectedSaltType === 1) {
         const {salts_b} = response.data.data;
+        // sort ascending
+        salts_b.sort(function(a, b) {
+          return new Date(b.create_at) - new Date(a.create_at);
+        });
         salts_b.forEach(item => {
           item.isChecked = false;
         });
