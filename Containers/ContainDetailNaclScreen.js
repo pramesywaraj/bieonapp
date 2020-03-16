@@ -21,16 +21,20 @@ export default class ContainDetailNaclScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
+      content: JSON.parse(this.props.navigation.state.params.contentBluetooth1),
       sample_name: '',
       token: '',
       loading: false,
+      currentUser: {},
     };
 
     this.saveData = this.saveData.bind(this);
     this.reMeasure = this.reMeasure.bind(this);
   }
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
+    });
     if (this.state.content.battery < 25) {
       this.onAlert(
         'Battery low',
@@ -60,7 +64,7 @@ export default class ContainDetailNaclScreen extends Component {
           nacl: this.state.content.nacl,
           whiteness: this.state.content.whiteness,
           water_content: this.state.content.water_content,
-          company_id: 1,
+          company_id: parseInt(this.state.currentUser.company_id),
           latitude: 0.0,
           longitude: 0.0,
           status_battery: parseInt(this.state.content.battery),
@@ -73,9 +77,9 @@ export default class ContainDetailNaclScreen extends Component {
           },
         },
       );
-
       this.onAlert('Success', 'Data has been uploaded.');
       goBack();
+      console.log('respon iod', response);
     } catch (err) {
       console.log('Error happened at saveData()', err);
       this.onAlert(
@@ -112,12 +116,12 @@ export default class ContainDetailNaclScreen extends Component {
           this.setState({content: newObject});
           this.props.navigation.navigate('ContainDetailNaclScreen');
           this.setState({loading: false});
+          // stop interval read
+          if (intervalId) {
+            clearInterval(intervalId);
+          }
         }
         console.log('data in', data);
-
-        if (this.imBoredNow && intervalId) {
-          clearInterval(intervalId);
-        }
       },
       3000,
       '\r\n',

@@ -14,15 +14,19 @@ export default class ContainDetailIoduiScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
+      content: JSON.parse(this.props.navigation.state.params.contentBluetooth2),
       sample_name: '',
       token: '',
       loading: false,
+      currentUser: {},
     };
     this.saveData = this.saveData.bind(this);
     this.reMeasure = this.reMeasure.bind(this);
   }
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({
+      currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
+    });
     if (this.state.content.battery < 25) {
       this.onAlert(
         'Battery low',
@@ -50,7 +54,7 @@ export default class ContainDetailIoduiScreen extends Component {
         {
           device_id: this.state.content.no_seri,
           iodium: this.state.content.iodium,
-          company_id: 1,
+          company_id: parseInt(this.state.currentUser.company_id),
           latitude: 0.0,
           longitude: 0.0,
           status_battery: parseInt(this.state.content.battery),
@@ -63,8 +67,9 @@ export default class ContainDetailIoduiScreen extends Component {
           },
         },
       );
-      this.onAlert('Data Tersimpan', 'Anda berhasil menyimpan data.');
+      this.onAlert('Success', 'Data has been uploaded.');
       goBack();
+      console.log('respon iod', response);
     } catch (err) {
       console.log('Error happened at saveData()', err);
       this.onAlert(
@@ -99,12 +104,12 @@ export default class ContainDetailIoduiScreen extends Component {
           this.setState({content: newObject});
           this.props.navigation.navigate('ContainDetailIodiumScreen');
           this.setState({loading: false});
+          // stop interval read
+          if (intervalId) {
+            clearInterval(intervalId);
+          }
         }
         console.log('data in', data);
-
-        if (this.imBoredNow && intervalId) {
-          clearInterval(intervalId);
-        }
       },
       3000,
       '\r\n',

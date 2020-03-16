@@ -76,7 +76,7 @@ const printSaltA = (saltDatas, userOperator, calibration) => {
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
         [
-          'Hari/Tanggal',
+          'Tanggal/Jam',
           ':',
           moment(data.create_at)
             .format('DD/MM/YYYY HH:mm')
@@ -195,7 +195,7 @@ const printSaltB = (saltDatas, userOperator, calibration) => {
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
         [
-          'Hari/Tanggal',
+          'Tanggal/Jam',
           ':',
           moment(data.create_at)
             .format('DD/MM/YYYY HH:mm')

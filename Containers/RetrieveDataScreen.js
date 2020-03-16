@@ -197,7 +197,9 @@ export default class RetrieveDataScreen extends Component {
     const {device} = this.state;
     const {navigation} = this.props;
     this.setState({loading: true});
-    let tempObj = {};
+    let tempObj1 = {};
+    let tempObj2 = {};
+    let tempObj3 = {};
 
     try {
       await BluetoothSerial.device(device.address).write(message);
@@ -207,52 +209,50 @@ export default class RetrieveDataScreen extends Component {
             null;
           } else {
             let bluetoothObj = JSON.parse(data);
-            this.setState({loading: false});
+            console.log('data in', bluetoothObj);
+            if (intervalId) {
+              clearInterval(intervalId);
+            }
 
             switch (message) {
               case 'Data1':
-                tempObj.nacl = bluetoothObj.nacl;
-                tempObj.battery = bluetoothObj.battery;
-                tempObj.count = bluetoothObj.count;
-                tempObj.no_seri = bluetoothObj.no_seri;
-                tempObj.water_content = bluetoothObj.water_content;
-                tempObj.whiteness = bluetoothObj.whiteness;
+                tempObj1.nacl = bluetoothObj.nacl;
+                tempObj1.battery = bluetoothObj.battery;
+                tempObj1.count = bluetoothObj.count;
+                tempObj1.no_seri = bluetoothObj.no_seri;
+                tempObj1.water_content = bluetoothObj.water_content;
+                tempObj1.whiteness = bluetoothObj.whiteness;
                 this.setState({loading: false});
                 navigation.navigate('ContainDetailNaclScreen', {
-                  contentBluetooth: JSON.stringify(tempObj),
+                  contentBluetooth1: JSON.stringify(tempObj1),
                 });
-                console.log('Data1:', tempObj);
+                console.log('Data1:', tempObj1);
                 break;
               case 'Data2':
-                tempObj.iodium = bluetoothObj.iodium;
-                tempObj.battery = bluetoothObj.battery;
-                tempObj.count = bluetoothObj.count;
-                tempObj.no_seri = bluetoothObj.no_seri;
+                tempObj2.iodium = bluetoothObj.iodium;
+                tempObj2.battery = bluetoothObj.battery;
+                tempObj2.count = bluetoothObj.count;
+                tempObj2.no_seri = bluetoothObj.no_seri;
 
                 this.setState({loading: false});
                 navigation.navigate('ContainDetailIodiumScreen', {
-                  contentBluetooth: JSON.stringify(tempObj),
+                  contentBluetooth2: JSON.stringify(tempObj2),
                 });
-                console.log('Data2:', tempObj);
+                console.log('Data2:', tempObj2);
                 break;
               case 'Device':
-                tempObj.lastcal = bluetoothObj.lastcal;
-                tempObj.battery = bluetoothObj.battery;
-                tempObj.count = bluetoothObj.count;
-                tempObj.no_seri = bluetoothObj.no_seri;
+                tempObj3.lastcal = bluetoothObj.lastcal;
+                tempObj3.battery = bluetoothObj.battery;
+                tempObj3.count = bluetoothObj.count;
+                tempObj3.no_seri = bluetoothObj.no_seri;
 
                 this.setState({loading: false});
                 navigation.navigate('DeviceInfoScreen', {
-                  contentBluetooth: JSON.stringify(tempObj),
+                  contentBluetooth3: JSON.stringify(tempObj3),
                 });
-                console.log('Device:', tempObj);
+                console.log('Device:', tempObj3);
                 break;
             }
-          }
-          console.log('data in', data);
-
-          if (this.imBoredNow && intervalId) {
-            clearInterval(intervalId);
           }
         },
         3000,

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {
   StyleSheet,
   Image,
-  ImageBackground,
   Text,
   View,
   Dimensions,
@@ -10,20 +9,21 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
-import {Col, Row, Grid} from 'react-native-easy-grid';
+import {Col, Row} from 'react-native-easy-grid';
+import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class DeviceInfoScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: JSON.parse(this.props.navigation.state.params.contentBluetooth),
+      content: JSON.parse(this.props.navigation.state.params.contentBluetooth3),
       latitude: 0,
       longitude: 0,
       currentUser: {},
+      loading: false,
     };
   }
 
@@ -55,8 +55,8 @@ export default class DeviceInfoScreen extends Component {
   };
   async saveData() {
     const {goBack} = this.props.navigation;
+    this.setState({loading: true});
     try {
-      const {navigate} = this.props.navigation;
       let response = await axios.patch(
         `${Config.API_URL}/device/device-edit`,
         {
@@ -75,9 +75,10 @@ export default class DeviceInfoScreen extends Component {
           },
         },
       );
+      this.setState({loading: false});
       this.onAlert('Success', 'Data has been uploaded.');
       goBack();
-      console.log('what?', response.config.data);
+      console.log('response save device', response.config.data);
     } catch (err) {
       this.onAlert(
         'There is an error',
@@ -90,6 +91,7 @@ export default class DeviceInfoScreen extends Component {
     const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
+        <LoadingModal visible={this.state.loading} />
         <View style={styles.itemContainer}>
           <Row>
             <Image
