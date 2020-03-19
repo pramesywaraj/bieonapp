@@ -649,8 +649,9 @@ export default class HomeScreen extends Component {
       lastcal: JSON.parse(await AsyncStorage.getItem('@deviceInfo')).lastcal,
     });
     this.setState({
-      reminderCalibration: moment(this.state.lastcal).isSameOrAfter(today),
+      reminderCalibration: moment(this.state.lastcal).isSameOrBefore(today),
     });
+    console.log(this.state.reminderCalibration);
   }
   async componentDidMount() {
     this.getDateforPDF();

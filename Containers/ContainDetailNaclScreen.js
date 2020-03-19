@@ -86,6 +86,7 @@ export default class ContainDetailNaclScreen extends Component {
         'There is an error',
         'Ther is an error when save data. Please try again',
       );
+      this.setState({loading: false});
     }
   }
 

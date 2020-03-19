@@ -56,18 +56,20 @@ export default class DeviceInfoScreen extends Component {
   async saveData() {
     const {goBack} = this.props.navigation;
     this.setState({loading: true});
+    let data = {
+      device_id: this.state.content.no_seri,
+      counter: parseInt(this.state.content.count),
+      company_id: parseInt(this.state.currentUser.company_id),
+      status_battery: parseInt(this.state.content.battery),
+      last_calibration: this.state.content.lastcal + 'T23:00:00+07:00',
+      longitude: this.state.longitude,
+      latitude: this.state.latitude,
+    };
+    console.log('data', data);
     try {
       let response = await axios.patch(
         `${Config.API_URL}/device/device-edit`,
-        {
-          device_id: this.state.content.no_seri,
-          counter: parseInt(this.state.content.count),
-          company_id: parseInt(this.state.currentUser.company_id),
-          status_battery: parseInt(this.state.content.battery),
-          last_calibration: this.state.content.lastcal + 'T23:00:00+07:00',
-          longitude: this.state.longitude,
-          latitude: this.state.latitude,
-        },
+        data,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -75,7 +77,6 @@ export default class DeviceInfoScreen extends Component {
           },
         },
       );
-      this.setState({loading: false});
       this.onAlert('Success', 'Data has been uploaded.');
       goBack();
       console.log('response save device', response.config.data);
@@ -84,6 +85,7 @@ export default class DeviceInfoScreen extends Component {
         'There is an error',
         'There is an error when save data. Please try again',
       );
+      this.setState({loading: false});
       console.log('There is an error in content', err);
     }
   }
