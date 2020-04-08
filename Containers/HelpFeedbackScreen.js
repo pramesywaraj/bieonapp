@@ -17,7 +17,7 @@ export default class HelpFeedbackScreen extends Component {
             '2. What parameters can be measured using the Bieon Salt Smart Detector?' +
             '\n',
           body:
-            '• Bieon Salt Smart Detector can be used to measure NaCl levels, whiteness and water content of crystals that are still crystalline.' +
+            '• Bieon Salt Smart Detector can be used to measure NaCl levels, whiteness, water content, and crystalline salt iodine levels.' +
             '\n' +
             '\n' +
             '• Bieon Salt Smart Detector measurement ranges are :' +
@@ -26,19 +26,24 @@ export default class HelpFeedbackScreen extends Component {
             '\n' +
             'Whiteness = 45% – 95%' +
             '\n' +
-            'Moisture content = 0.5% – 12%',
+            'Moisture content = 0.5% – 12%' +
+            '\n' +
+            'Iodine level = 20ppm - 80ppm',
         },
         {
           title:
             '3. What are the benefits of Bieon Salt Smart Detector?' + '\n',
           body:
-            '• Can measure 3 parameters of salt quality at the same time' +
+            '• Can measure 3 parameters of salt quality at the same time (NaCl, Whiteness, Water Content' +
+            '\n' +
+            '\n' +
+            '• Can measure Iodine Levels' +
             '\n' +
             '\n' +
             '• Accurate measurement results' +
             '\n' +
             '\n' +
-            '• The measurement results can be directly printed (print)' +
+            '• Measurement results can be directly printed or shared (pdf)' +
             '\n' +
             '\n' +
             '• Small and portable size' +
@@ -47,7 +52,14 @@ export default class HelpFeedbackScreen extends Component {
             '• Has been certified by Syscal' +
             '\n' +
             '\n' +
-            '• Use a rechargeable battery',
+            '• Use a rechargeable battery' +
+            '\n' +
+            '\n' +
+            '• Use the wireless charging feature' +
+            '\n' +
+            '\n' +
+            '• Operated using SmartPhone',
+
         },
         {
           title: '4. Is the Bieon Salt Smart Detector Ready Stock?' + '\n',
@@ -74,9 +86,9 @@ export default class HelpFeedbackScreen extends Component {
         {
           title: '8. Why doesnt the printed receipt / paper come out?' + '\n',
           body:
-            '• The measurement results can be printed directly by pressing the "PRINT" button on the device. If after' +
-            'pressing the "PRINT" button but no paper comes out, it could be because the printer paper has run out.' +
-            'Please refill the printer paper. How to load printer paper can be seen in the following video.',
+            '• Make sure the apss on the smartphone is connected to the printer. Then select the data you want to print.' +
+            'Press the button with the printer logo. If the results do not come out, try checking the printer paper.' +
+            'If it is finished, please refill the new paper. (full guide can be seen in the manual).',
         },
         {
           title:
