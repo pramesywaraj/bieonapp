@@ -73,6 +73,7 @@ class LoginScreen extends Component {
       }
     } catch (err) {
       const {response} = err;
+      console.log(err);
 
       if (response.status === 422) {
         this.onAlert(

@@ -14,15 +14,18 @@ export default function ArticleDetailScreen({navigation}) {
   const {article} = navigation.state.params;
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
-        <Image
-          style={[styles.headingImage]}
-          resizeMode="cover"
-          source={{
-            uri: `${Config.API_URL}/${article.picture}`,
-          }}
-        />
+        <View style={styles.imageContainer}>
+          <Image
+            style={[styles.headingImage]}
+            resizeMode="cover"
+            source={{
+              uri: `${Config.API_URL}/${article.picture}`,
+            }}
+          />
+        </View>
+
         <View style={styles.articleContainer}>
           <Text style={styles.articleTitle}>{article.title}</Text>
           <Text style={styles.articleDate}>
@@ -38,21 +41,30 @@ export default function ArticleDetailScreen({navigation}) {
 const deviceWindow = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    backgroundColor: 'white',
+  },
   container: {
     flex: 1,
-    height: 'auto',
-    paddingBottom: '70%',
+    flexDirection: 'column',
+    height: deviceWindow.height,
+    marginBottom: '20%',
+  },
+  imageContainer: {
+    width: '100%',
+    height: deviceWindow.height / 3,
+    resizeMode: 'cover',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
     width: '100%',
-    minHeight: '20%',
+    height: '100%',
   },
   articleContainer: {
+    flex: 1,
     width: '100%',
-    minHeight: deviceWindow.height / 2,
     backgroundColor: 'white',
-    padding: '2%',
+    padding: '5%',
   },
   articleTitle: {
     fontWeight: 'bold',
