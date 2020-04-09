@@ -14,8 +14,8 @@ export default function ArticleDetailScreen({navigation}) {
   const {article} = navigation.state.params;
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.imageContainer}>
           <Image
             style={[styles.headingImage]}
@@ -33,8 +33,8 @@ export default function ArticleDetailScreen({navigation}) {
           </Text>
           <Text style={styles.articleText}>{article.description}</Text>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -43,17 +43,16 @@ const deviceWindow = Dimensions.get('window');
 const styles = StyleSheet.create({
   scrollContainer: {
     backgroundColor: 'white',
+    minHeight: deviceWindow.height,
   },
   container: {
     flex: 1,
     flexDirection: 'column',
-    height: deviceWindow.height,
-    marginBottom: '20%',
   },
   imageContainer: {
-    width: '100%',
-    height: deviceWindow.height / 3,
-    resizeMode: 'cover',
+    width: 800 / 2,
+    height: 600 / 2,
+    resizeMode: 'center',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
