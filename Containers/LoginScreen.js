@@ -63,6 +63,7 @@ class LoginScreen extends Component {
   };
 
   async onLoginProcess(payload) {
+    console.log(Config);
     try {
       let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
 
@@ -83,6 +84,7 @@ class LoginScreen extends Component {
         return;
       }
       this.onAlert('There is an error', 'Please try again.');
+      console.log(err);
       this.setState({loading: false});
     }
     this.setState({loading: false});
