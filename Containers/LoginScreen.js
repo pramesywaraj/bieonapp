@@ -66,6 +66,7 @@ class LoginScreen extends Component {
     console.log(Config);
     try {
       let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
+      console.log('check response', response);
 
       if (response.status === 202) {
         const {data, token} = response.data.data;
@@ -74,6 +75,7 @@ class LoginScreen extends Component {
       }
     } catch (err) {
       const {response} = err;
+      console.log('error', err);
 
       if (response.status === 422) {
         this.onAlert(
