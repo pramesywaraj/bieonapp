@@ -77,12 +77,12 @@ export default class HomeScreen extends Component {
     let token = await AsyncStorage.getItem('@userAuth');
     try {
       const response = await Promise.all([
-        axios.get(`${Config.API_URL}/article/list`, {
+        axios.get(Config.API_URL + '/article/list', {
           headers: {
             token: token,
           },
         }),
-        axios.get(`${Config.API_URL}/banner`, {
+        axios.get(Config.API_URL + '/banner', {
           headers: {
             token: token,
           },
@@ -158,7 +158,7 @@ export default class HomeScreen extends Component {
           index={0}
           pageSize={dimension.width}>
           {this.state.banners.map((bann, index) =>
-            this.renderPage(`${Config.API_URL}/` + bann.picture, index),
+            this.renderPage(Config.API_URL + '/' + bann.picture, index),
           )}
         </Carousel>
 

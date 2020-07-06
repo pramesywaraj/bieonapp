@@ -61,11 +61,11 @@ class LoginScreen extends Component {
       this.setState({loading: false});
     }
   };
-
-  async onLoginProcess(payload) {
-    console.log(Config);
+  async loginAccount(payload) {
     try {
-      let response = await axios.post(`${Config.API_URL}/auth/login`, payload);
+      let response = await axios.post(Config.API_URL + '/auth/login', payload, {
+        'Content-type': 'application/json',
+      });
       console.log('check response', response);
 
       if (response.status === 202) {
@@ -75,8 +75,8 @@ class LoginScreen extends Component {
       }
     } catch (err) {
       const {response} = err;
-      console.log('error', err);
-
+      console.log('error2', err);
+      this.setState({loading: false});
       if (response.status === 422) {
         this.onAlert(
           'Email or password is wrong',
@@ -99,8 +99,7 @@ class LoginScreen extends Component {
         email: this.state.email,
         password: this.state.password,
       };
-
-      this.onLoginProcess(newLogin);
+      this.loginAccount(newLogin);
     } else {
       this.onAlert(
         'Email or password is empty',

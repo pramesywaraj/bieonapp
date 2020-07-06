@@ -128,11 +128,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.Bieon"
+        applicationId "id.bieon.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.2"
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled true
     }
     dexOptions {
@@ -194,6 +194,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-android-log')
     implementation project(':react-native-html-to-pdf')
     compile project(':react-native-html-to-pdf')
     implementation project(':react-native-image-picker')
@@ -228,6 +229,8 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 project.ext.envConfigFiles = [
-    debug: ".env.development",
-    release: ".env.production",
+    debug: ".env",
+    release: ".env",
+    debugrelease: ".env.development",
+    productionrelease: ".env.production"
 ]

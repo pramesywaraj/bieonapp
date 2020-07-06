@@ -842,9 +842,11 @@ export default class HomeScreen extends Component {
 
     try {
       const response = await axios.get(
-        `${Config.API_URL}/salt/${
-          this.state.selectedSaltType === 0 ? 'a' : 'b'
-        }/list?max_per_page=100&user_id=${userData.user_id}`,
+        Config.API_URL +
+          '/salt/' +
+          `${
+            this.state.selectedSaltType === 0 ? 'a' : 'b'
+          }/list?max_per_page=100&user_id=${userData.user_id}`,
         {headers: {token: userToken}},
       );
 

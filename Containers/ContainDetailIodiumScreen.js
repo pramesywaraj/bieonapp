@@ -50,7 +50,7 @@ export default class ContainDetailIoduiScreen extends Component {
 
     try {
       let response = await axios.post(
-        `${Config.API_URL}/salt/b/input`,
+        Config.API_URL + '/salt/b/input',
         {
           device_id: this.state.content.no_seri,
           iodium: this.state.content.iodium,

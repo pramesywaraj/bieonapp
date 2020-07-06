@@ -68,7 +68,7 @@ export default class DeviceInfoScreen extends Component {
     console.log('data', data);
     try {
       let response = await axios.patch(
-        `${Config.API_URL}/device/device-edit`,
+        Config.API_URL + '/device/device-edit',
         data,
         {
           headers: {

@@ -90,7 +90,7 @@ export default class EditProfileScreen extends Component {
 
     try {
       let response = await axios.patch(
-        `${Config.API_URL}/auth/update`,
+        Config.API_URL + '/auth/update',
         tempObj,
         {
           headers: {

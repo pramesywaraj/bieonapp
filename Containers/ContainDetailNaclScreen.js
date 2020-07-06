@@ -58,7 +58,7 @@ export default class ContainDetailNaclScreen extends Component {
 
     try {
       let response = await axios.post(
-        `${Config.API_URL}/salt/a/input`,
+        Config.API_URL + '/salt/a/input',
         {
           device_id: this.state.content.no_seri,
           nacl: this.state.content.nacl,

@@ -19,7 +19,7 @@ export default function Article({onClick, title, imageUri, createdAt}) {
           <Image
             style={[styles.articleImage]}
             resizeMode="cover"
-            source={{uri: `${Config.API_URL}/${imageUri}`}}
+            source={{uri: Config.API_URL + '/' + `${imageUri}`}}
             PlaceholderContent={<ActivityIndicator />}
           />
         </View>

@@ -1,4 +1,4 @@
-package com.Bieon;
+package id.bieon.app;
 
 import com.facebook.react.ReactActivity;
 

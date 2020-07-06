@@ -68,7 +68,7 @@ export default class ProfileScreen extends Component {
       const token = userAuth;
 
       const {data} = await axios.get(
-        `${Config.API_URL}/company/detail/` + company_id,
+        Config.API_URL + '/company/detail/' + company_id,
         {
           headers: {
             token: token,
@@ -143,7 +143,7 @@ export default class ProfileScreen extends Component {
   async imageUpload(formData) {
     try {
       const {data} = await axios.post(
-        `${Config.API_URL}/upload-image/user`,
+        Config.API_URL + '/upload-image/user',
         formData,
         {
           headers: {
@@ -177,7 +177,7 @@ export default class ProfileScreen extends Component {
 
     try {
       await axios.patch(
-        `${Config.API_URL}/auth/update`,
+        Config.API_URL + '/auth/update',
         {
           picture_user: picturePath,
           email: email,
@@ -277,7 +277,7 @@ export default class ProfileScreen extends Component {
             style={styles.avatarImage}
             resizeMode="cover"
             source={{
-              uri: `${Config.API_URL}/${picture_user}`,
+              uri: Config.API_URL + '/' + `${picture_user}`,
             }}
             PlaceholderContent={<ActivityIndicator />}
           />

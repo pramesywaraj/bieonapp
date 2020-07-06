@@ -57,7 +57,7 @@ export default class ForgetPasswordScreen extends Component {
     const {goBack} = this.props.navigation;
     try {
       let response = await axios.post(
-        `${Config.API_URL}/auth/forgot/password`,
+        Config.API_URL + '/auth/forgot/password',
         payload,
       );
 

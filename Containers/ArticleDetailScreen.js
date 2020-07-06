@@ -21,7 +21,7 @@ export default function ArticleDetailScreen({navigation}) {
             style={[styles.headingImage]}
             resizeMode="cover"
             source={{
-              uri: `${Config.API_URL}/${article.picture}`,
+              uri: Config.API_URL + '/' + `${article.picture}`,
             }}
           />
         </View>

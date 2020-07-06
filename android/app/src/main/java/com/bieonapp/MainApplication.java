@@ -1,4 +1,4 @@
-package com.Bieon;
+package id.bieon.app;
 
 import android.app.Application;
 import android.content.Context;
