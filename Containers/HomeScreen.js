@@ -3,22 +3,24 @@ import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'react-native-banner-carousel';
-
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 import {
   StyleSheet,
   Image,
   Text,
   FlatList,
   View,
-  Dimensions,
   Alert,
   PermissionsAndroid,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
 import Article from '../Components/Articles/Article';
-const dimension = Dimensions.get('window');
-const bannerHeight = 260;
+const newHeight = heightPercentageToDP(100);
+const newWidth = widthPercentageToDP(100);
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -47,7 +49,7 @@ export default class HomeScreen extends Component {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(
           position => {
-            console.log(position.coords);
+            // console.log(position.coords);
             AsyncStorage.setItem(
               '@userCoordinate',
               JSON.stringify(position.coords),
@@ -141,7 +143,10 @@ export default class HomeScreen extends Component {
     return (
       <View key={index}>
         <Image
-          style={{width: dimension.width, height: bannerHeight}}
+          style={{
+            width: widthPercentageToDP(100),
+            height: widthPercentageToDP(60),
+          }}
           source={{uri: image}}
         />
       </View>
@@ -156,7 +161,7 @@ export default class HomeScreen extends Component {
           autoplayTimeout={5000}
           loop
           index={0}
-          pageSize={dimension.width}>
+          pageSize={newWidth}>
           {this.state.banners.map((bann, index) =>
             this.renderPage(Config.API_URL + '/' + bann.picture, index),
           )}
@@ -186,14 +191,11 @@ export default class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  imageIndicator: {
-    paddingBottom: '13%',
-  },
   articleContainer: {
     marginTop: '60%',
     position: 'absolute',
-    width: '100%',
-    height: dimension.height,
+    width: widthPercentageToDP(100),
+    height: heightPercentageToDP(100),
     backgroundColor: 'white',
   },
   homeScreenTitle: {

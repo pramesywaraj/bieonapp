@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Image,
-  Text,
-  ScrollView,
-  View,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, Image, Text, ScrollView, View} from 'react-native';
 import Config from 'react-native-config';
 import moment from 'moment';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 
 export default function ArticleDetailScreen({navigation}) {
   const {article} = navigation.state.params;
@@ -38,30 +35,31 @@ export default function ArticleDetailScreen({navigation}) {
   );
 }
 
-const deviceWindow = Dimensions.get('window');
+const newHeight = heightPercentageToDP(100);
+const newWidth = widthPercentageToDP(100);
 
 const styles = StyleSheet.create({
   scrollContainer: {
     backgroundColor: 'white',
-    minHeight: deviceWindow.height,
+    minHeight: newHeight,
   },
   container: {
     flex: 1,
     flexDirection: 'column',
   },
   imageContainer: {
-    width: 800 / 2,
-    height: 600 / 2,
+    width: newWidth,
+    height: newHeight / 2.5,
     resizeMode: 'center',
   },
   headingImage: {
     backgroundColor: 'rgba(77,77,77,0.5)',
-    width: '100%',
-    height: '100%',
+    width: newWidth,
+    height: newHeight / 2.5,
   },
   articleContainer: {
     flex: 1,
-    width: '100%',
+    width: newWidth,
     backgroundColor: 'white',
     padding: '5%',
   },

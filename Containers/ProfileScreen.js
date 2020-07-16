@@ -17,7 +17,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Image as RImage} from 'react-native-elements';
-
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class ProfileScreen extends Component {
@@ -333,8 +336,8 @@ export default class ProfileScreen extends Component {
                   editable={false}
                   style={[styles.TextInput]}
                   underlineColorAndroid={'transparent'}
-                  multiline={false}
-                  numberOfLines={2}
+                  multiline={true}
+                  numberOfLines={3}
                   value={address}
                 />
               </View>
@@ -488,8 +491,7 @@ const styles = StyleSheet.create({
   TextInput: {
     fontSize: 16,
     color: '#000',
-    width: '100%',
-    padding: 0,
+    width: widthPercentageToDP(90),
   },
   itemIconImage: {
     resizeMode: 'contain',
