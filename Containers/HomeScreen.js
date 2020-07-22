@@ -4,10 +4,6 @@ import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'react-native-banner-carousel';
 import {
-  widthPercentageToDP,
-  heightPercentageToDP,
-} from 'react-native-responsive-screen';
-import {
   StyleSheet,
   Image,
   Text,
@@ -17,6 +13,10 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 
 import Article from '../Components/Articles/Article';
 const newHeight = heightPercentageToDP(100);
@@ -166,36 +166,40 @@ export default class HomeScreen extends Component {
             this.renderPage(Config.API_URL + '/' + bann.picture, index),
           )}
         </Carousel>
-
         <View style={styles.articleContainer}>
           <Text style={styles.homeScreenTitle}>Headline</Text>
-          <FlatList
-            data={this.state.articles}
-            renderItem={({item}) => (
-              <Article
-                onClick={this.goToArticleDetail.bind(this, item)}
-                title={item.title}
-                imageUri={item.picture}
-                createdAt={item.create_at}
-              />
-            )}
-            ItemSeparatorComponent={this.renderSeparator}
-            keyExtractor={item => item.article_id.toString()}
-            refreshing={this.state.refreshing}
-            onRefresh={this.handleRefresh}
-          />
         </View>
+        <FlatList
+          contentContainerStyle={{flexGrow: 1}}
+          style={styles.flatList}
+          data={this.state.articles}
+          renderItem={({item}) => (
+            <Article
+              onClick={this.goToArticleDetail.bind(this, item)}
+              title={item.title}
+              imageUri={item.picture}
+              createdAt={item.create_at}
+            />
+          )}
+          ItemSeparatorComponent={this.renderSeparator}
+          keyExtractor={item => item.article_id.toString()}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handleRefresh}
+        />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   articleContainer: {
-    marginTop: '60%',
-    position: 'absolute',
-    width: widthPercentageToDP(100),
-    height: heightPercentageToDP(100),
+    backgroundColor: 'white',
+  },
+  flatList: {
     backgroundColor: 'white',
   },
   homeScreenTitle: {

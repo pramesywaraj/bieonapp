@@ -17,10 +17,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Image as RImage} from 'react-native-elements';
-import {
-  widthPercentageToDP,
-  heightPercentageToDP,
-} from 'react-native-responsive-screen';
 import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class ProfileScreen extends Component {
@@ -298,7 +294,7 @@ export default class ProfileScreen extends Component {
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/email.png')}
               />
-              <View>
+              <View style={styles.textWrapper}>
                 <Text style={styles.text}>Email</Text>
                 <TextInput
                   editable={false}
@@ -314,7 +310,7 @@ export default class ProfileScreen extends Component {
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/phone.png')}
               />
-              <View>
+              <View style={styles.textWrapper}>
                 <Text style={styles.text}>Phone Number</Text>
                 <TextInput
                   editable={false}
@@ -330,7 +326,7 @@ export default class ProfileScreen extends Component {
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/address.png')}
               />
-              <View>
+              <View style={styles.textWrapper}>
                 <Text style={styles.text}>Address</Text>
                 <TextInput
                   editable={false}
@@ -347,7 +343,7 @@ export default class ProfileScreen extends Component {
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/gender.png')}
               />
-              <View>
+              <View style={styles.textWrapper}>
                 <Text style={styles.text}>Gender</Text>
                 <TextInput
                   editable={false}
@@ -362,7 +358,7 @@ export default class ProfileScreen extends Component {
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/position.png')}
               />
-              <View>
+              <View style={styles.textWrapper}>
                 <Text style={styles.text}>Position</Text>
                 <TextInput
                   editable={false}
@@ -378,7 +374,7 @@ export default class ProfileScreen extends Component {
                 style={styles.itemIconImage}
                 source={require('../assets/icons/editprofile/agency.png')}
               />
-              <View>
+              <View style={styles.textWrapper}>
                 <Text style={styles.text}>Company/Institution</Text>
                 <TextInput
                   editable={false}
@@ -488,10 +484,11 @@ const styles = StyleSheet.create({
     borderColor: '#b5b5b5',
     borderBottomWidth: 1,
   },
+  textWrapper: {width: '80%'},
   TextInput: {
     fontSize: 16,
     color: '#000',
-    width: widthPercentageToDP(90),
+    padding: 0,
   },
   itemIconImage: {
     resizeMode: 'contain',

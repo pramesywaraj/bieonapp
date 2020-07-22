@@ -12,7 +12,6 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
-import {Col, Row} from 'react-native-easy-grid';
 import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class DeviceInfoScreen extends Component {
@@ -95,12 +94,12 @@ export default class DeviceInfoScreen extends Component {
       <View style={styles.container}>
         <LoadingModal visible={this.state.loading} />
         <View style={styles.itemContainer}>
-          <Row>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/devicestatus/seri.png')}
             />
-            <Col>
+            <View style={styles.textWrapper}>
               <Text style={styles.text}>No. Seri Device</Text>
               <TextInput
                 editable={false}
@@ -108,16 +107,14 @@ export default class DeviceInfoScreen extends Component {
                 underlineColorAndroid={'transparent'}>
                 {this.state.content.no_seri}
               </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
+            </View>
+          </View>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/devicestatus/battery.png')}
             />
-            <Col>
+            <View style={styles.textWrapper}>
               <Text style={styles.text}>Battery Status</Text>
               <TextInput
                 editable={false}
@@ -125,16 +122,14 @@ export default class DeviceInfoScreen extends Component {
                 underlineColorAndroid={'transparent'}>
                 {this.state.content.battery}%
               </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
+            </View>
+          </View>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/devicestatus/location.png')}
             />
-            <Col>
+            <View style={styles.textWrapper}>
               <Text style={styles.text}>Location</Text>
               <TextInput
                 editable={false}
@@ -143,16 +138,14 @@ export default class DeviceInfoScreen extends Component {
                 underlineColorAndroid={'transparent'}>
                 {this.state.latitude},{this.state.longitude}
               </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
+            </View>
+          </View>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/devicestatus/usage.png')}
             />
-            <Col>
+            <View style={styles.textWrapper}>
               <Text style={styles.text}>Ammount of Usage</Text>
               <TextInput
                 editable={false}
@@ -160,16 +153,14 @@ export default class DeviceInfoScreen extends Component {
                 underlineColorAndroid={'transparent'}>
                 {this.state.content.count}
               </TextInput>
-            </Col>
-          </Row>
-        </View>
-        <View style={styles.itemContainer}>
-          <Row>
+            </View>
+          </View>
+          <View style={styles.textContainer}>
             <Image
               style={styles.itemIconImage}
               source={require('../assets/icons/devicestatus/calibration.png')}
             />
-            <Col>
+            <View style={styles.textWrapper}>
               <Text style={styles.text}>Last of Calibration</Text>
               <TextInput
                 editable={false}
@@ -177,14 +168,14 @@ export default class DeviceInfoScreen extends Component {
                 underlineColorAndroid={'transparent'}>
                 {this.state.content.lastcal}
               </TextInput>
-            </Col>
-          </Row>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => this.saveData()}>
+            <Text style={[styles.textbutton]}>SAVE</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[styles.button]}
-          onPress={() => this.saveData()}>
-          <Text style={[styles.textbutton]}>SAVE</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -216,29 +207,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textWrapper: {width: '100%'},
+
   TextInput: {
-    fontSize: 14,
-    alignSelf: 'stretch',
+    fontSize: 16,
     width: 330,
     height: 40,
-    marginBottom: 20,
     color: '#000',
-    borderBottomColor: '#000',
-    borderBottomWidth: 1,
-    marginLeft: 15,
+    marginLeft: 10,
   },
   itemContainer: {
+    width: '100%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
+    marginBottom: 20,
+    marginTop: 10,
+  },
+  textContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
-    alignSelf: 'stretch',
+    width: '100%',
+    marginBottom: '5%',
+    borderColor: '#b5b5b5',
+    borderBottomWidth: 1,
   },
   itemIconImage: {
     resizeMode: 'contain',
-    width: 35,
-    height: 35,
-    marginLeft: 20,
-    marginTop: 5,
+    width: 30,
+    height: 30,
+    marginRight: '5%',
   },
   text: {
     marginLeft: 15,

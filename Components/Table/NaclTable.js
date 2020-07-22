@@ -72,7 +72,9 @@ export default function NaclTable({data, onSelectElement, onSelectAll}) {
                 style={styles.cell}
               />
               <Cell
-                data={moment(item.create_at).format('DD-MM-YYYY')}
+                data={moment(item.create_at)
+                  .subtract(7, 'hours')
+                  .format('DD-MM-YYYY')}
                 textStyle={styles.text}
                 style={styles.cell}
               />

@@ -79,6 +79,7 @@ const printSaltA = (saltDatas, userOperator, calibration) => {
           'Tanggal/Jam',
           ':',
           moment(data.create_at)
+            .subtract(7, 'hours')
             .format('DD/MM/YYYY HH:mm')
             .toString(),
         ],
@@ -103,7 +104,7 @@ const printSaltA = (saltDatas, userOperator, calibration) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['NaCl', ':', data.nacl.toString()],
+        ['NaCl', ':', data.nacl.toString() + '%'],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -113,7 +114,7 @@ const printSaltA = (saltDatas, userOperator, calibration) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Whiteness', ':', data.whiteness.toString()],
+        ['Whiteness', ':', data.whiteness.toString() + '%'],
         {},
       );
       BluetoothEscposPrinter.printColumn(
@@ -123,7 +124,7 @@ const printSaltA = (saltDatas, userOperator, calibration) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Water Content', ':', data.water_content.toString()],
+        ['Water Content', ':', data.water_content.toString() + '%'],
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
@@ -198,6 +199,7 @@ const printSaltB = (saltDatas, userOperator, calibration) => {
           'Tanggal/Jam',
           ':',
           moment(data.create_at)
+            .subtract(7, 'hours')
             .format('DD/MM/YYYY HH:mm')
             .toString(),
         ],
@@ -222,7 +224,7 @@ const printSaltB = (saltDatas, userOperator, calibration) => {
           BluetoothEscposPrinter.ALIGN.CENTER,
           BluetoothEscposPrinter.ALIGN.RIGHT,
         ],
-        ['Iodium', ':', data.iodium.toString()],
+        ['Iodium', ':', data.iodium.toString() + 'ppm'],
         {},
       );
       BluetoothEscposPrinter.printText('\r\n', {});
@@ -316,7 +318,7 @@ export default class HomeScreen extends Component {
               max-width: 100vw;
               margin: 3%;
             }
-    
+
             .document-header {
               left: 0px;
               top: 0px;
@@ -325,75 +327,75 @@ export default class HomeScreen extends Component {
               flex-direction: row;
               justify-content: space-between;
             }
-    
+
             .border-line {
               border-bottom: 3px solid;
               padding: 10px;
             }
-    
+
             .document-content-container {
               height: 80vh;
               padding: 1vh 3vw;
             }
-    
+
             .document-footer {
               bottom: 0;
-    
+
               border-top: 1px solid;
             }
-    
+
             .document-detail {
                 display: flex;
                 width: 100%;
             }
-    
+
             .document-detail > h4 {
                 font-weight: 300;
                 margin: 5px;
             }
-    
+
             .document-table {
                 margin-top: 5vh;
                 width: 100%;
                 border: 1px solid black;
                 border-collapse: collapse;
             }
-    
+
             th {
               border: 1px solid black;
             }
-    
+
             td {
                 border-right: 1px solid black;
             }
-    
+
             .document-table > th,td {
                 text-align: center;
             }
           </style>
         </head>
-    
+
         <body>
           <div class="document-wrapper">
             <div class="document-header">
               <div>
                 <img
-                  src="http://dashboard.matraindonesia.com/static/media/black.a8106b47.svg"
+                  src="http://saltdecbieon.matraindonesia.com/static/media/black.a8106b47.svg"
                   style="width: 150px;height: auto;"
                 />
               </div>
-    
+
               <div style="align-self: center;">
                 <p>
-                  <a href="http://www.bieon.matraindonesia.co.id/"
-                    >www.bieon.matraindonesia.co.id</a
+                  <a href="http://www.saltdecbieon.matraindonesia.com/"
+                    >www.saltdecbieon.matraindonesia.com</a
                   >
                 </p>
               </div>
             </div>
-    
+
             <div class="border-line"></div>
-    
+
             <div class="document-content-container">
               <h1>Probe Information</h1>
               <div class="document-detail">
@@ -408,7 +410,7 @@ export default class HomeScreen extends Component {
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
                     this.state.device_info.battery
-                  }</h4>
+                  }%</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
@@ -445,9 +447,9 @@ export default class HomeScreen extends Component {
                       (item, i) =>
                         `<tr>
                           <td>${i + 1}</td>
-                          <td>${moment(item.create_at).format(
-                            'DD-MM-YYYY HH:mm',
-                          )}</td>
+                          <td>${moment(item.create_at)
+                            .subtract(7, 'hours')
+                            .format('DD-MM-YYYY HH:mm')}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.nacl}</td>
                           <td>${item.whiteness}</td>
@@ -480,7 +482,7 @@ export default class HomeScreen extends Component {
               max-width: 100vw;
               margin: 3%;
             }
-    
+
             .document-header {
               left: 0px;
               top: 0px;
@@ -489,75 +491,75 @@ export default class HomeScreen extends Component {
               flex-direction: row;
               justify-content: space-between;
             }
-    
+
             .border-line {
               border-bottom: 3px solid;
               padding: 10px;
             }
-    
+
             .document-content-container {
               height: 80vh;
               padding: 1vh 3vw;
             }
-    
+
             .document-footer {
               bottom: 0;
-    
+
               border-top: 1px solid;
             }
-    
+
             .document-detail {
                 display: flex;
                 width: 100%;
             }
-    
+
             .document-detail > h4 {
                 font-weight: 300;
                 margin: 5px;
             }
-    
+
             .document-table {
                 margin-top: 5vh;
                 width: 100%;
                 border: 1px solid black;
                 border-collapse: collapse;
             }
-    
+
             th {
               border: 1px solid black;
             }
-    
+
             td {
                 border-right: 1px solid black;
             }
-    
+
             .document-table > th,td {
                 text-align: center;
             }
           </style>
         </head>
-    
+
         <body>
           <div class="document-wrapper">
             <div class="document-header">
               <div>
                 <img
-                  src="http://dashboard.matraindonesia.com/static/media/black.a8106b47.svg"
+                  src="http://saltdecbieon.matraindonesia.com/static/media/black.a8106b47.svg"
                   style="width: 150px;height: auto;"
                 />
               </div>
-    
+
               <div style="align-self: center;">
                 <p>
-                  <a href="http://www.bieon.matraindonesia.co.id/"
-                    >www.bieon.matraindonesia.co.id</a
+                  <a href="http://www.saltdecbieon.matraindonesia.com/"
+                    >www.saltdecbieon.matraindonesia.com</a
                   >
                 </p>
               </div>
             </div>
-    
+
             <div class="border-line"></div>
-    
+
             <div class="document-content-container">
               <h1>Probe Information</h1>
               <div class="document-detail">
@@ -572,7 +574,7 @@ export default class HomeScreen extends Component {
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
                     this.state.device_info.battery
-                  }</h4>
+                  }%</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
@@ -607,9 +609,9 @@ export default class HomeScreen extends Component {
                       (item, i) =>
                         `<tr>
                           <td>${i + 1}</td>
-                          <td>${moment(item.create_at).format(
-                            'DD-MM-YYYY HH:mm',
-                          )}</td>
+                          <td>${moment(item.create_at)
+                            .subtract(7, 'hours')
+                            .format('DD-MM-YYYY HH:mm')}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.iodium}</td>
                         </tr>`,
@@ -639,7 +641,7 @@ export default class HomeScreen extends Component {
     this.setState({
       device_info: JSON.parse(await AsyncStorage.getItem('@deviceInfo')),
       currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
-      today: moment(new Date()).format('DD-MM-YYYY HH:ss'),
+      today: moment(new Date()).format('DD-MM-YYYY HH:mm'),
     });
     console.log('dev', this.state.currentUser);
   }
@@ -777,6 +779,7 @@ export default class HomeScreen extends Component {
       let fileName = `Bieon-${
         selectedSaltType === 0 ? 'NaCl' : 'Iodine'
       }-${moment(date)
+        .subtract(7, 'hours')
         .format('DD-MM-YYYY')
         .toString()}`;
 
