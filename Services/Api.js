@@ -27,7 +27,7 @@ export default class Api {
     return response;
   }
   async get(url, data, withToken) {
-    console.log(url, data, withToken);
+    // console.log(url, data, withToken);
     const headers = withToken
       ? {
           'Content-Type': 'application/json',

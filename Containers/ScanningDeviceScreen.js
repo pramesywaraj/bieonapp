@@ -83,7 +83,7 @@ export default class ScanningDeviceScreen extends Component {
   listDevices = async () => {
     try {
       const list = await BluetoothSerial.listUnpaired();
-      console.log(list);
+      // console.log(list);
 
       this.setState(({devices}) => ({
         devices: devices.map(device => {

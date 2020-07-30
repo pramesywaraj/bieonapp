@@ -10,7 +10,7 @@ export default function LoadingModal({visible, label}) {
       transparent={true}
       isVisible={visible}
       onRequestClose={() => {
-        console.log('close modal');
+        // console.log('close modal');
       }}>
       <View style={styles.loadingLayout}>
         <ActivityIndicator size="large" color="#129cd8" />

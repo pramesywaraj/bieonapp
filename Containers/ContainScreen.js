@@ -84,17 +84,17 @@ export default class ContainScreen extends Component {
     });
 
     this.events.on('data', result => {
-      console.log('result', result);
+      // console.log('result', result);
 
       if (result) {
         const {id, data} = result;
-        console.log(`Data from device ${id} : ${data}`);
+        // console.log(`Data from device ${id} : ${data}`);
       }
     });
 
     this.events.on('error', e => {
       if (e) {
-        console.log(`Error: ${e.message}`);
+        // console.log(`Error: ${e.message}`);
         alert(e.message);
       }
     });
@@ -103,13 +103,13 @@ export default class ContainScreen extends Component {
   write = async (id, message) => {
     // try {
     // for data1
-    console.log('mes', message);
+    // console.log('mes', message);
     this.setState({loading: true});
     if (message === 'Data1') {
       await BluetoothSerial.device(id).write(message);
       await BluetoothSerial.readFromDevice().then(response => {
         setTimeout(() => {
-          console.log('res', response);
+          // console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
             nacl: objectBluetooth.nacl,
@@ -129,7 +129,7 @@ export default class ContainScreen extends Component {
       BluetoothSerial.device(id).write(message);
       BluetoothSerial.readFromDevice().then(response => {
         setTimeout(() => {
-          console.log('res', response);
+          // console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
             iodium: objectBluetooth.iodium,
@@ -147,7 +147,7 @@ export default class ContainScreen extends Component {
       BluetoothSerial.device(id).write(message);
       BluetoothSerial.readFromDevice().then(response => {
         setTimeout(() => {
-          console.log('res', response);
+          // console.log('res', response);
           let objectBluetooth = JSON.parse(response);
           const newObject = {
             lastcal: objectBluetooth.lastcal,

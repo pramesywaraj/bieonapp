@@ -79,7 +79,7 @@ export default class PopUpBluetoothScreen extends Component {
     this.events.on('data', result => {
       if (result) {
         const {id, data} = result;
-        console.log(`Data from device ${id} : ${data}`);
+        // console.log(`Data from device ${id} : ${data}`);
       }
     });
 

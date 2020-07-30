@@ -66,7 +66,7 @@ class LoginScreen extends Component {
       let response = await axios.post(Config.API_URL + '/auth/login', payload, {
         'Content-type': 'application/json',
       });
-      console.log('check response', response);
+      // console.log('check response', response);
 
       if (response.status === 202) {
         const {data, token} = response.data.data;

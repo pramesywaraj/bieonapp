@@ -33,7 +33,7 @@ export default function NaclTable({data, onSelectElement, onSelectAll}) {
   ];
 
   useEffect(() => {
-    console.log('render');
+    // console.log('render');
     setTimeout(() => {
       setLoading(!loading);
     }, 2000);

@@ -27,6 +27,10 @@ import NaclTable from '../Components/Table/NaclTable';
 import IodiumTable from '../Components/Table/IodiumTable';
 import TableDataToolbar from '../Components/Toolbar/TableDataToolbar';
 import TableDataHeader from '../Components/Toolbar/TableDataHeader';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
@@ -131,7 +135,7 @@ const printSaltA = (saltDatas, userOperator, calibration) => {
       BluetoothEscposPrinter.printText('================================', {});
       if (calibration === true) {
         BluetoothEscposPrinter.printText(
-          'The device should be calibration\r\n',
+          'The device should be calibrated\r\n',
           {},
         );
       } else {
@@ -231,7 +235,7 @@ const printSaltB = (saltDatas, userOperator, calibration) => {
       BluetoothEscposPrinter.printText('================================', {});
       if (calibration === true) {
         BluetoothEscposPrinter.printText(
-          'The device should be calibration\r\n',
+          'The device should be calibrated\r\n',
           {},
         );
       } else {
@@ -302,7 +306,7 @@ export default class HomeScreen extends Component {
   }
 
   // HTML template for making the pdf file....
-  pdfTemplate(obj, device_info) {
+  pdfTemplate(obj) {
     const {selectedSaltType} = this.state;
 
     if (selectedSaltType === 0) {
@@ -643,20 +647,35 @@ export default class HomeScreen extends Component {
       currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
       today: moment(new Date()).format('DD-MM-YYYY HH:mm'),
     });
-    console.log('dev', this.state.currentUser);
   }
   async checkStatusLastcalibration() {
     const today = moment(new Date()).format('YYYY-MM-DD');
     this.setState({
       lastcal: JSON.parse(await AsyncStorage.getItem('@deviceInfo')).lastcal,
     });
+    const newPeriodeCalibratiion = moment(this.state.lastcal).add('years', 1);
+
     this.setState({
-      reminderCalibration: moment(this.state.lastcal).isSameOrBefore(today),
+      reminderCalibration: newPeriodeCalibratiion.isSameOrBefore(today),
     });
-    console.log(this.state.reminderCalibration);
+  }
+  async storagePermission() {
+    // Request permission if have not
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Please give the permission',
+        message: 'Give the application to access your storage',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
   }
   async componentDidMount() {
+    this.storagePermission();
     this.getDateforPDF();
+
+    console.log('dev2', this.state.device_info);
     this.checkStatusLastcalibration();
     await this.fetchSaltData();
 
@@ -769,71 +788,69 @@ export default class HomeScreen extends Component {
 
   // Trying html to pdf
   async makePdf() {
-    this.setState({loading: true});
-
-    try {
-      const {selectedSaltType, salts_a, salts_b} = this.state;
-      let temp = selectedSaltType === 0 ? salts_a : salts_b;
-      let selectedDataArray = temp.filter(data => data.isChecked === true);
-      let date = new Date().toISOString();
-      let fileName = `Bieon-${
-        selectedSaltType === 0 ? 'NaCl' : 'Iodine'
-      }-${moment(date)
-        .subtract(7, 'hours')
-        .format('DD-MM-YYYY')
-        .toString()}`;
-
-      // Check if data === 0
-      if (selectedDataArray.length === 0) {
-        this.onAlert(
-          'There is an error.',
-          'Please choose data to convert as PDF.',
-        );
-
-        this.setState({loading: false});
-        return;
-      } else if (selectedDataArray.length > 20) {
-        this.onAlert(
-          'Notice.',
-          'Failed to share data, please select under 20 data and try again.',
-        );
-
-        this.setState({loading: false});
-        return;
-      }
-
-      let options = {
-        html: this.pdfTemplate(selectedDataArray, this.state.device_info),
-        fileName: fileName,
-        directory: 'Documents',
-        width: 595,
-        height: 842,
-        base64: true,
-      };
-
-      // Request permission if have not
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Please give the permission',
-          message: 'Give the application to access your storage',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-
-      // The data maker
-      let file = await RNHTMLtoPDF.convert(options);
-      await this.onShare(file.base64, fileName);
-
-      this.setState({loading: false});
-      // this.onAlert('', 'File berhasil dibuat.');
-    } catch (err) {
-      console.log('Error', err);
+    if (!this.state.device_info) {
       this.onAlert(
-        'There is an error',
-        'Failed to convert data as PDF, please check the data and try again',
+        'There is no device information',
+        'Please retrieve information of device to use feature.',
       );
+    } else {
+      this.setState({loading: true});
+
+      try {
+        const {selectedSaltType, salts_a, salts_b} = this.state;
+        let temp = selectedSaltType === 0 ? salts_a : salts_b;
+        let selectedDataArray = temp.filter(data => data.isChecked === true);
+        let date = new Date().toISOString();
+        let fileName = `Bieon-${
+          selectedSaltType === 0 ? 'NaCl' : 'Iodine'
+        }-${moment(date)
+          .subtract(7, 'hours')
+          .format('DD-MM-YYYY')
+          .toString()}`;
+
+        // Check if data === 0
+        if (selectedDataArray.length === 0) {
+          this.onAlert(
+            'There is an error.',
+            'Please choose data to convert as PDF.',
+          );
+
+          this.setState({loading: false});
+          return;
+        } else if (selectedDataArray.length > 20) {
+          this.onAlert(
+            'Notice.',
+            'Failed to share data, please select under 20 data and try again.',
+          );
+
+          this.setState({loading: false});
+          return;
+        }
+
+        let options = {
+          html: this.pdfTemplate(selectedDataArray),
+          fileName: fileName,
+          directory: 'Documents',
+          width: 595,
+          height: 842,
+          base64: true,
+        };
+
+        // The data maker
+        let file = await RNHTMLtoPDF.convert(options);
+        await this.onShare(file.base64, fileName);
+
+        this.setState({loading: false});
+        // this.onAlert('', 'File berhasil dibuat.');
+      } catch (err) {
+        console.log('Error', err);
+        this.setState({loading: false});
+
+        this.onAlert(
+          'There is an error',
+          'Failed to convert data as PDF, please check the data and try again',
+        );
+      }
     }
   }
 
@@ -880,6 +897,8 @@ export default class HomeScreen extends Component {
         });
       }
     } catch (err) {
+      this.setState({loading: false});
+
       console.log('error happened at FetchingSaltData', err);
     }
   }
@@ -1073,19 +1092,27 @@ export default class HomeScreen extends Component {
   }
 
   async onPrint() {
-    let operator = JSON.parse(await AsyncStorage.getItem('@userData')).fullname;
-    let printedData = this.state.filter
-      ? this.state.filteredData
-      : this.state.selectedSaltType === 0
-      ? this.state.salts_a
-      : this.state.salts_b;
+    if (!this.state.device_info) {
+      this.onAlert(
+        'There is no device information',
+        'Please retrieve information of device to use feature.',
+      );
+    } else {
+      let operator = JSON.parse(await AsyncStorage.getItem('@userData'))
+        .fullname;
+      let printedData = this.state.filter
+        ? this.state.filteredData
+        : this.state.selectedSaltType === 0
+        ? this.state.salts_a
+        : this.state.salts_b;
 
-    let selectedData = printedData.filter(data => data.isChecked === true);
+      let selectedData = printedData.filter(data => data.isChecked === true);
 
-    // Check the selected type
-    this.state.selectedSaltType === 0
-      ? printSaltA(selectedData, operator, this.state.reminderCalibration)
-      : printSaltB(selectedData, operator, this.state.reminderCalibration);
+      // Check the selected type
+      this.state.selectedSaltType === 0
+        ? printSaltA(selectedData, operator, this.state.reminderCalibration)
+        : printSaltB(selectedData, operator, this.state.reminderCalibration);
+    }
   }
 
   handleSegmentChange(index) {
@@ -1253,7 +1280,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   tableContainer: {
-    height: '70%',
+    height: heightPercentageToDP(63),
     margin: '5%',
   },
   segmentContainer: {

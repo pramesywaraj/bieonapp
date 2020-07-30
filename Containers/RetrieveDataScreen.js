@@ -52,7 +52,7 @@ export default class RetrieveDataScreen extends Component {
     this._eventListener.push(
       BluetoothSerial.addListener('connectionSuccess', response => {
         this.onAlert('Success', 'Device has been connected.');
-        console.log(response);
+        // console.log(response);
         this.setState({
           connected: true,
           device: response.device,
@@ -96,6 +96,7 @@ export default class RetrieveDataScreen extends Component {
   componentWillUnmount() {
     this._eventListener.map(listener => {
       listener.remove();
+      this.setState({ loading: false });
     });
   }
 
@@ -163,6 +164,7 @@ export default class RetrieveDataScreen extends Component {
 
     if (isBluetoothEnabled) {
       this.scanAction();
+      
     } else {
       this.activateBluetooth();
       this.scanAction();
@@ -226,7 +228,7 @@ export default class RetrieveDataScreen extends Component {
                 navigation.navigate('ContainDetailNaclScreen', {
                   contentBluetooth1: JSON.stringify(tempObj1),
                 });
-                console.log('Data1:', tempObj1);
+                // console.log('Data1:', tempObj1);
                 break;
               case 'Data2':
                 tempObj2.iodium = bluetoothObj.iodium;
@@ -238,7 +240,7 @@ export default class RetrieveDataScreen extends Component {
                 navigation.navigate('ContainDetailIodiumScreen', {
                   contentBluetooth2: JSON.stringify(tempObj2),
                 });
-                console.log('Data2:', tempObj2);
+                // console.log('Data2:', tempObj2);
                 break;
               case 'Device':
                 tempObj3.lastcal = bluetoothObj.lastcal;
@@ -250,7 +252,7 @@ export default class RetrieveDataScreen extends Component {
                 navigation.navigate('DeviceInfoScreen', {
                   contentBluetooth3: JSON.stringify(tempObj3),
                 });
-                console.log('Device:', tempObj3);
+                // console.log('Device:', tempObj3);
                 break;
             }
           }

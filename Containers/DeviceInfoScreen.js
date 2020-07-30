@@ -64,7 +64,7 @@ export default class DeviceInfoScreen extends Component {
       longitude: this.state.longitude,
       latitude: this.state.latitude,
     };
-    console.log('data', data);
+    // console.log('data', data);
     try {
       let response = await axios.patch(
         Config.API_URL + '/device/device-edit',
@@ -78,14 +78,14 @@ export default class DeviceInfoScreen extends Component {
       );
       this.onAlert('Success', 'Data has been uploaded.');
       goBack();
-      console.log('response save device', response.config.data);
+      // console.log('response save device', response.config.data);
     } catch (err) {
       this.onAlert(
         'There is an error',
         'There is an error when save data. Please try again',
       );
       this.setState({loading: false});
-      console.log('There is an error in content', err);
+      // console.log('There is an error in content', err);
     }
   }
   render() {

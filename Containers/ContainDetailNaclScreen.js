@@ -79,9 +79,9 @@ export default class ContainDetailNaclScreen extends Component {
       );
       this.onAlert('Success', 'Data has been uploaded.');
       goBack();
-      console.log('respon iod', response);
+      // console.log('respon iod', response);
     } catch (err) {
-      console.log('Error happened at saveData()', err);
+      // console.log('Error happened at saveData()', err);
       this.onAlert(
         'There is an error',
         'Ther is an error when save data. Please try again',
@@ -98,7 +98,7 @@ export default class ContainDetailNaclScreen extends Component {
     // try {
     // for data1
     this.setState({loading: true});
-    console.log('mes', message);
+    // console.log('mes', message);
     await BluetoothSerial.device(id).write(message);
     await BluetoothSerial.readEvery(
       (data, intervalId) => {
@@ -122,9 +122,9 @@ export default class ContainDetailNaclScreen extends Component {
             clearInterval(intervalId);
           }
         }
-        console.log('data in', data);
+        // console.log('data in', data);
       },
-      3000,
+      15000,
       '\r\n',
     );
   };

@@ -30,7 +30,7 @@ export default function DateFilterModal({
   };
 
   const showStartDatePicker = async () => {
-    console.log(showStart);
+    // console.log(showStart);
     setShowStart(true);
   };
 

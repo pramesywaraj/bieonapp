@@ -83,7 +83,7 @@ export default class SelectedDeviceScreen extends Component {
     this.events.on('data', result => {
       if (result) {
         const {id, data} = result;
-        console.log(`Data from device ${id} : ${data}`);
+        // console.log(`Data from device ${id} : ${data}`);
       }
     });
 
@@ -188,7 +188,7 @@ export default class SelectedDeviceScreen extends Component {
   };
 
   toggleDevicePairing = async (id, paired) => {
-    console.log(id);
+    // console.log(id);
 
     if (paired) {
       await this.unpairDevice(id);
@@ -391,7 +391,7 @@ export default class SelectedDeviceScreen extends Component {
     }
   };
   render() {
-    console.log(this.state.devices);
+    // console.log(this.state.devices);
 
     const {navigate} = this.props.navigation;
     return (

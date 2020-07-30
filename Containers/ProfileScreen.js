@@ -127,7 +127,7 @@ export default class ProfileScreen extends Component {
           this.setState({loading: false, isUploadingPhoto: false});
         }
 
-        console.log(response);
+        // console.log(response);
       });
     } catch (err) {
       console.log(err);

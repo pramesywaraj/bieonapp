@@ -19,7 +19,6 @@ import {
 } from 'react-native-responsive-screen';
 
 import Article from '../Components/Articles/Article';
-const newHeight = heightPercentageToDP(100);
 const newWidth = widthPercentageToDP(100);
 
 export default class HomeScreen extends Component {
