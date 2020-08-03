@@ -27,10 +27,6 @@ export default class DeviceInfoScreen extends Component {
   }
 
   async componentDidMount() {
-    await AsyncStorage.setItem(
-      '@deviceInfo',
-      JSON.stringify(this.state.content),
-    );
     this.setState({
       currentUser: JSON.parse(await AsyncStorage.getItem('@userData')),
       latitude: JSON.parse(await AsyncStorage.getItem('@userCoordinate'))
@@ -64,6 +60,14 @@ export default class DeviceInfoScreen extends Component {
       longitude: this.state.longitude,
       latitude: this.state.latitude,
     };
+    await AsyncStorage.setItem(
+      '@deviceInfo',
+      JSON.stringify(this.state.content),
+    );
+    console.log(
+      'new device information',
+      await AsyncStorage.getItem('@deviceInfo'),
+    );
     // console.log('data', data);
     try {
       let response = await axios.patch(

@@ -150,7 +150,7 @@ const printSaltA = (saltDatas, userOperator, calibration) => {
       BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
     });
   } catch (e) {
-    alert(e.message || 'ERROR');
+    alert('Printer not found, please connected with printer and try again');
   }
 };
 
@@ -249,7 +249,7 @@ const printSaltB = (saltDatas, userOperator, calibration) => {
       BluetoothEscposPrinter.printText('\r\n\r\n\r\n', {});
     });
   } catch (e) {
-    alert(e.message || 'ERROR');
+    alert('Printer not found, please connected with printer and try again');
   }
 };
 
@@ -306,7 +306,7 @@ export default class HomeScreen extends Component {
   }
 
   // HTML template for making the pdf file....
-  pdfTemplate(obj) {
+  pdfTemplate(obj, device_info) {
     const {selectedSaltType} = this.state;
 
     if (selectedSaltType === 0) {
@@ -406,21 +406,21 @@ export default class HomeScreen extends Component {
                   <h4 style="flex: 1;">No Seri</h4>
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.device_info.no_seri
+                    device_info.no_seri
                   }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Battery Condition</h4>
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.device_info.battery
+                    device_info.battery
                   }%</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.device_info.lastcal
+                    device_info.lastcal
                   }</h4>
               </div>
               <div class="document-detail">
@@ -570,21 +570,21 @@ export default class HomeScreen extends Component {
                   <h4 style="flex: 1;">No Seri</h4>
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.device_info.no_seri
+                    device_info.no_seri
                   }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Battery Condition</h4>
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.device_info.battery
+                    device_info.battery
                   }%</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
                   <h4>:</h4>
                   <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.device_info.lastcal
+                    device_info.lastcal
                   }</h4>
               </div>
               <div class="document-detail">
@@ -788,13 +788,18 @@ export default class HomeScreen extends Component {
 
   // Trying html to pdf
   async makePdf() {
+    this.setState({
+      device_info: JSON.parse(await AsyncStorage.getItem('@deviceInfo')),
+    });
     if (!this.state.device_info) {
+      console.log('device:', this.state.device_info);
       this.onAlert(
         'There is no device information',
         'Please retrieve information of device to use feature.',
       );
     } else {
       this.setState({loading: true});
+      console.log('device else:', this.state.device_info);
 
       try {
         const {selectedSaltType, salts_a, salts_b} = this.state;
@@ -828,7 +833,7 @@ export default class HomeScreen extends Component {
         }
 
         let options = {
-          html: this.pdfTemplate(selectedDataArray),
+          html: this.pdfTemplate(selectedDataArray, this.state.device_info),
           fileName: fileName,
           directory: 'Documents',
           width: 595,
@@ -1092,12 +1097,20 @@ export default class HomeScreen extends Component {
   }
 
   async onPrint() {
+    this.setState({
+      device_info: JSON.parse(await AsyncStorage.getItem('@deviceInfo')),
+    });
+
     if (!this.state.device_info) {
+      console.log('device:', this.state.device_info);
+
       this.onAlert(
         'There is no device information',
         'Please retrieve information of device to use feature.',
       );
     } else {
+      console.log('device else:', this.state.device_info);
+
       let operator = JSON.parse(await AsyncStorage.getItem('@userData'))
         .fullname;
       let printedData = this.state.filter
