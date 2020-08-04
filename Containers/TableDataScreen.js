@@ -1293,7 +1293,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   tableContainer: {
-    height: heightPercentageToDP(63),
+    height: heightPercentageToDP(59),
     margin: '5%',
   },
   segmentContainer: {
