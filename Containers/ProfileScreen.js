@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import FormData from 'form-data';
 import {
   ScrollView,
@@ -16,7 +16,7 @@ import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {Image as RImage} from 'react-native-elements';
+import { Image as RImage } from 'react-native-elements';
 import LoadingModal from '../Components/Modal/LoadingModal';
 
 export default class ProfileScreen extends Component {
@@ -43,12 +43,12 @@ export default class ProfileScreen extends Component {
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
 
   async getUserInfo() {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     try {
       let [userData, userAuth] = await Promise.all([
         AsyncStorage.getItem('@userData'),
@@ -66,8 +66,8 @@ export default class ProfileScreen extends Component {
       } = JSON.parse(userData);
       const token = userAuth;
 
-      const {data} = await axios.get(
-        Config.API_URL + '/company/detail/' + company_id,
+      const { data } = await axios.get(
+        "https://bieonbe.matraindonesia.com" + '/company/detail/' + company_id,
         {
           headers: {
             token: token,
@@ -90,7 +90,7 @@ export default class ProfileScreen extends Component {
       });
     } catch (err) {
       console.log(err);
-      this.setState({loading: false});
+      this.setState({ loading: false });
       this.onAlert(
         'There is an error',
         'An error has occurred, please try again later.',
@@ -103,7 +103,7 @@ export default class ProfileScreen extends Component {
   }
 
   async changePicture() {
-    this.setState({loading: true, isUploadingPhoto: true});
+    this.setState({ loading: true, isUploadingPhoto: true });
     try {
       const options = {
         noData: true,
@@ -124,14 +124,14 @@ export default class ProfileScreen extends Component {
           });
           this.imageUpload(data);
         } else if (response.didCancel) {
-          this.setState({loading: false, isUploadingPhoto: false});
+          this.setState({ loading: false, isUploadingPhoto: false });
         }
 
         // console.log(response);
       });
     } catch (err) {
       console.log(err);
-      this.setState({loading: false, isUploadingPhoto: false});
+      this.setState({ loading: false, isUploadingPhoto: false });
       this.onAlert(
         'There is an error',
         'An error has occurred, please try again later.',
@@ -141,8 +141,8 @@ export default class ProfileScreen extends Component {
 
   async imageUpload(formData) {
     try {
-      const {data} = await axios.post(
-        Config.API_URL + '/upload-image/user',
+      const { data } = await axios.post(
+        "https://bieonbe.matraindonesia.com" + '/upload-image/user',
         formData,
         {
           headers: {
@@ -154,7 +154,7 @@ export default class ProfileScreen extends Component {
       let imageUri = data.data;
       this.savePicture(imageUri);
     } catch (err) {
-      this.setState({loading: false, isUploadingPhoto: false});
+      this.setState({ loading: false, isUploadingPhoto: false });
       console.log('Error happen while uploading Image', err);
       this.onAlert(
         'There is an error',
@@ -176,7 +176,7 @@ export default class ProfileScreen extends Component {
 
     try {
       await axios.patch(
-        Config.API_URL + '/auth/update',
+        "https://bieonbe.matraindonesia.com" + '/auth/update',
         {
           picture_user: picturePath,
           email: email,
@@ -199,10 +199,10 @@ export default class ProfileScreen extends Component {
 
       await AsyncStorage.setItem('@userData', JSON.stringify(tempObj));
 
-      this.setState({loading: false, picture_user: picturePath});
+      this.setState({ loading: false, picture_user: picturePath });
       this.onAlert('Success', 'User Picture has been updated.');
     } catch (error) {
-      this.setState({loading: false});
+      this.setState({ loading: false });
       console.log('error change picture', error);
       this.onAlert(
         'There is an error',
@@ -212,7 +212,7 @@ export default class ProfileScreen extends Component {
   }
 
   goToEditProfile = () => {
-    const {navigate} = this.props.navigation;
+    const { navigate } = this.props.navigation;
     const {
       email,
       fullname,
@@ -276,7 +276,7 @@ export default class ProfileScreen extends Component {
             style={styles.avatarImage}
             resizeMode="cover"
             source={{
-              uri: Config.API_URL + '/' + `${picture_user}`,
+              uri: "https://bieonbe.matraindonesia.com" + '/' + `${picture_user}`,
             }}
             PlaceholderContent={<ActivityIndicator />}
           />
@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
     borderColor: '#b5b5b5',
     borderBottomWidth: 1,
   },
-  textWrapper: {width: '80%'},
+  textWrapper: { width: '80%' },
   TextInput: {
     fontSize: 16,
     color: '#000',

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Image,
@@ -29,7 +29,7 @@ export default class EditProfileScreen extends Component {
 
   async componentDidMount() {
     const getParam = () => {
-      const {data} = this.props.navigation.state.params;
+      const { data } = this.props.navigation.state.params;
       const {
         email,
         fullname,
@@ -56,17 +56,17 @@ export default class EditProfileScreen extends Component {
   }
 
   handleChange = (name, value) => {
-    this.setState({[name]: value});
+    this.setState({ [name]: value });
   };
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
 
   async saveProfile() {
-    const {state, goBack} = this.props.navigation;
+    const { state, goBack } = this.props.navigation;
     const {
       email,
       fullname,
@@ -90,7 +90,7 @@ export default class EditProfileScreen extends Component {
 
     try {
       let response = await axios.patch(
-        Config.API_URL + '/auth/update',
+        "https://bieonbe.matraindonesia.com" + '/auth/update',
         tempObj,
         {
           headers: {
@@ -100,7 +100,7 @@ export default class EditProfileScreen extends Component {
         },
       );
 
-      const {data} = response.data;
+      const { data } = response.data;
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
       this.onAlert('Success', 'Data has been edited.');
       state.params.refresh();
@@ -115,7 +115,7 @@ export default class EditProfileScreen extends Component {
   }
 
   render() {
-    const {phone_number, fullname, address} = this.state;
+    const { phone_number, fullname, address } = this.state;
     return (
       <View style={styles.container}>
         <Text style={styles.titleText}>Edit User Profile</Text>
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     borderColor: '#b5b5b5',
     borderBottomWidth: 1,
   },
-  textWrapper: {width: '80%'},
+  textWrapper: { width: '80%' },
   TextInput: {
     fontSize: 16,
     color: '#000',

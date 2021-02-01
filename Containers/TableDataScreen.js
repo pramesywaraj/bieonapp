@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Platform,
   DeviceEventEmitter,
@@ -307,7 +307,7 @@ export default class HomeScreen extends Component {
 
   // HTML template for making the pdf file....
   pdfTemplate(obj, device_info) {
-    const {selectedSaltType} = this.state;
+    const { selectedSaltType } = this.state;
 
     if (selectedSaltType === 0) {
       return `
@@ -405,37 +405,32 @@ export default class HomeScreen extends Component {
               <div class="document-detail">
                   <h4 style="flex: 1;">No Seri</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    device_info.no_seri
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${device_info.no_seri
+        }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Battery Condition</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    device_info.battery
-                  }%</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${device_info.battery
+        }%</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    device_info.lastcal
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${device_info.lastcal
+        }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">User</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.currentUser.fullname
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${this.state.currentUser.fullname
+        }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Recorded At</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.today
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${this.state.today
+        }</h4>
               </div>
               <table class="document-table">
                   <tr>
@@ -447,20 +442,20 @@ export default class HomeScreen extends Component {
                       <th>Water Content</th>
                   </tr>
                   ${obj
-                    .map(
-                      (item, i) =>
-                        `<tr>
+          .map(
+            (item, i) =>
+              `<tr>
                           <td>${i + 1}</td>
                           <td>${moment(item.create_at)
-                            .subtract(7, 'hours')
-                            .format('DD-MM-YYYY HH:mm')}</td>
+                .subtract(7, 'hours')
+                .format('DD-MM-YYYY HH:mm')}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.nacl}</td>
                           <td>${item.whiteness}</td>
                           <td>${item.water_content}</td>
                         </tr>`,
-                    )
-                    .join('')}
+          )
+          .join('')}
               </table>
             </div>
             <footer class="document-footer">
@@ -569,37 +564,32 @@ export default class HomeScreen extends Component {
               <div class="document-detail">
                   <h4 style="flex: 1;">No Seri</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    device_info.no_seri
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${device_info.no_seri
+        }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Battery Condition</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    device_info.battery
-                  }%</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${device_info.battery
+        }%</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Last Calibration</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    device_info.lastcal
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${device_info.lastcal
+        }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">User</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.currentUser.fullname
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${this.state.currentUser.fullname
+        }</h4>
               </div>
               <div class="document-detail">
                   <h4 style="flex: 1;">Recorded At</h4>
                   <h4>:</h4>
-                  <h4 style="flex: 2; padding-left: 5px;">${
-                    this.state.today
-                  }</h4>
+                  <h4 style="flex: 2; padding-left: 5px;">${this.state.today
+        }</h4>
               </div>
               <table class="document-table">
                   <tr>
@@ -609,18 +599,18 @@ export default class HomeScreen extends Component {
                       <th>Iodine Level (ppm)</th>
                   </tr>
                   ${obj
-                    .map(
-                      (item, i) =>
-                        `<tr>
+          .map(
+            (item, i) =>
+              `<tr>
                           <td>${i + 1}</td>
                           <td>${moment(item.create_at)
-                            .subtract(7, 'hours')
-                            .format('DD-MM-YYYY HH:mm')}</td>
+                .subtract(7, 'hours')
+                .format('DD-MM-YYYY HH:mm')}</td>
                           <td>${item.sample_name}</td>
                           <td>${item.iodium}</td>
                         </tr>`,
-                    )
-                    .join('')}
+          )
+          .join('')}
               </table>
             </div>
             <footer class="document-footer">
@@ -638,7 +628,7 @@ export default class HomeScreen extends Component {
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
   async getDateforPDF() {
@@ -798,20 +788,19 @@ export default class HomeScreen extends Component {
         'Please retrieve information of device to use feature.',
       );
     } else {
-      this.setState({loading: true});
+      this.setState({ loading: true });
       console.log('device else:', this.state.device_info);
 
       try {
-        const {selectedSaltType, salts_a, salts_b} = this.state;
+        const { selectedSaltType, salts_a, salts_b } = this.state;
         let temp = selectedSaltType === 0 ? salts_a : salts_b;
         let selectedDataArray = temp.filter(data => data.isChecked === true);
         let date = new Date().toISOString();
-        let fileName = `Bieon-${
-          selectedSaltType === 0 ? 'NaCl' : 'Iodine'
-        }-${moment(date)
-          .subtract(7, 'hours')
-          .format('DD-MM-YYYY')
-          .toString()}`;
+        let fileName = `Bieon-${selectedSaltType === 0 ? 'NaCl' : 'Iodine'
+          }-${moment(date)
+            .subtract(7, 'hours')
+            .format('DD-MM-YYYY')
+            .toString()}`;
 
         // Check if data === 0
         if (selectedDataArray.length === 0) {
@@ -820,7 +809,7 @@ export default class HomeScreen extends Component {
             'Please choose data to convert as PDF.',
           );
 
-          this.setState({loading: false});
+          this.setState({ loading: false });
           return;
         } else if (selectedDataArray.length > 20) {
           this.onAlert(
@@ -828,7 +817,7 @@ export default class HomeScreen extends Component {
             'Failed to share data, please select under 20 data and try again.',
           );
 
-          this.setState({loading: false});
+          this.setState({ loading: false });
           return;
         }
 
@@ -845,11 +834,11 @@ export default class HomeScreen extends Component {
         let file = await RNHTMLtoPDF.convert(options);
         await this.onShare(file.base64, fileName);
 
-        this.setState({loading: false});
+        this.setState({ loading: false });
         // this.onAlert('', 'File berhasil dibuat.');
       } catch (err) {
         console.log('Error', err);
-        this.setState({loading: false});
+        this.setState({ loading: false });
 
         this.onAlert(
           'There is an error',
@@ -867,18 +856,17 @@ export default class HomeScreen extends Component {
 
     try {
       const response = await axios.get(
-        Config.API_URL +
-          '/salt/' +
-          `${
-            this.state.selectedSaltType === 0 ? 'a' : 'b'
-          }/list?max_per_page=100&user_id=${userData.user_id}`,
-        {headers: {token: userToken}},
+        "https://bieonbe.matraindonesia.com" +
+        '/salt/' +
+        `${this.state.selectedSaltType === 0 ? 'a' : 'b'
+        }/list?max_per_page=100&user_id=${userData.user_id}`,
+        { headers: { token: userToken } },
       );
 
       if (this.state.selectedSaltType === 0) {
-        const {salts_a} = response.data.data;
+        const { salts_a } = response.data.data;
         // sort ascending
-        salts_a.sort(function(a, b) {
+        salts_a.sort(function (a, b) {
           return new Date(b.create_at) - new Date(a.create_at);
         });
         salts_a.forEach(item => {
@@ -889,9 +877,9 @@ export default class HomeScreen extends Component {
           salts_a: salts_a,
         });
       } else if (this.state.selectedSaltType === 1) {
-        const {salts_b} = response.data.data;
+        const { salts_b } = response.data.data;
         // sort ascending
-        salts_b.sort(function(a, b) {
+        salts_b.sort(function (a, b) {
           return new Date(b.create_at) - new Date(a.create_at);
         });
         salts_b.forEach(item => {
@@ -902,7 +890,7 @@ export default class HomeScreen extends Component {
         });
       }
     } catch (err) {
-      this.setState({loading: false});
+      this.setState({ loading: false });
 
       console.log('error happened at FetchingSaltData', err);
     }
@@ -923,11 +911,11 @@ export default class HomeScreen extends Component {
   }
 
   openModal() {
-    this.setState({modalVisible: true});
+    this.setState({ modalVisible: true });
   }
 
   closeModal() {
-    this.setState({modalVisible: false});
+    this.setState({ modalVisible: false });
   }
 
   _deviceAlreadyPaired(response) {
@@ -937,7 +925,7 @@ export default class HomeScreen extends Component {
     } else {
       try {
         temp = JSON.parse(response.devices);
-      } catch (e) {}
+      } catch (e) { }
     }
     if (temp && temp.length) {
       // let paired = this.state.pairedDs;
@@ -964,7 +952,7 @@ export default class HomeScreen extends Component {
     if (r) {
       let found = this.state.foundDs || [];
       if (found.findIndex) {
-        let duplicated = found.findIndex(function(x) {
+        let duplicated = found.findIndex(function (x) {
           return x.address === r.address;
         });
 
@@ -1079,7 +1067,7 @@ export default class HomeScreen extends Component {
     this.setState({
       loading: true,
     });
-    this.setState({modalVisible: false, connected: true});
+    this.setState({ modalVisible: false, connected: true });
     BluetoothManager.connect(item.address).then(
       s => {
         this.setState({
@@ -1116,8 +1104,8 @@ export default class HomeScreen extends Component {
       let printedData = this.state.filter
         ? this.state.filteredData
         : this.state.selectedSaltType === 0
-        ? this.state.salts_a
-        : this.state.salts_b;
+          ? this.state.salts_a
+          : this.state.salts_b;
 
       let selectedData = printedData.filter(data => data.isChecked === true);
 
@@ -1213,9 +1201,9 @@ export default class HomeScreen extends Component {
                 borderWidth: 0,
                 borderColor: 'transparent',
               }}
-              activeTabStyle={{backgroundColor: '#129cd8', marginTop: 2}}
-              tabTextStyle={{color: '#129cd8', fontWeight: 'bold'}}
-              activeTabTextStyle={{color: 'white'}}
+              activeTabStyle={{ backgroundColor: '#129cd8', marginTop: 2 }}
+              tabTextStyle={{ color: '#129cd8', fontWeight: 'bold' }}
+              activeTabTextStyle={{ color: 'white' }}
             />
           </View>
           <View style={styles.tableContainer}>

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import axios from 'axios';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -58,7 +58,7 @@ export default class HomeScreen extends Component {
             // See error code charts below.
             console.log(error.code, error.message);
           },
-          {enableHighAccuracy: true},
+          { enableHighAccuracy: true },
         );
       } else {
         console.log('Location permission denied');
@@ -70,7 +70,7 @@ export default class HomeScreen extends Component {
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
 
@@ -78,20 +78,20 @@ export default class HomeScreen extends Component {
     let token = await AsyncStorage.getItem('@userAuth');
     try {
       const response = await Promise.all([
-        axios.get(Config.API_URL + '/article/list', {
+        axios.get("https://bieonbe.matraindonesia.com" + '/article/list', {
           headers: {
             token: token,
           },
         }),
-        axios.get(Config.API_URL + '/banner', {
+        axios.get("https://bieonbe.matraindonesia.com" + '/banner', {
           headers: {
             token: token,
           },
         }),
       ]);
 
-      let {articles} = response[0].data.data;
-      let {banners} = response[1].data.data;
+      let { articles } = response[0].data.data;
+      let { banners } = response[1].data.data;
 
       this.setState({
         articles: articles,
@@ -123,8 +123,8 @@ export default class HomeScreen extends Component {
   }
 
   goToArticleDetail(item) {
-    const {navigate} = this.props.navigation;
-    navigate('ArticleDetailScreen', {article: item});
+    const { navigate } = this.props.navigation;
+    navigate('ArticleDetailScreen', { article: item });
   }
 
   renderSeparator = () => {
@@ -146,7 +146,7 @@ export default class HomeScreen extends Component {
             width: widthPercentageToDP(100),
             height: widthPercentageToDP(60),
           }}
-          source={{uri: image}}
+          source={{ uri: image }}
         />
       </View>
     );
@@ -162,17 +162,17 @@ export default class HomeScreen extends Component {
           index={0}
           pageSize={newWidth}>
           {this.state.banners.map((bann, index) =>
-            this.renderPage(Config.API_URL + '/' + bann.picture, index),
+            this.renderPage("https://bieonbe.matraindonesia.com" + '/' + bann.picture, index),
           )}
         </Carousel>
         <View style={styles.articleContainer}>
           <Text style={styles.homeScreenTitle}>Headline</Text>
         </View>
         <FlatList
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           style={styles.flatList}
           data={this.state.articles}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <Article
               onClick={this.goToArticleDetail.bind(this, item)}
               title={item.title}

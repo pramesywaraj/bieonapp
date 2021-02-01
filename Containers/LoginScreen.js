@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Image,
@@ -33,12 +33,12 @@ class LoginScreen extends Component {
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
 
   storeUserCredentials = async (data, token) => {
-    const {navigate} = this.props.navigation;
+    const { navigate } = this.props.navigation;
 
     try {
       await AsyncStorage.setItem('@userData', JSON.stringify(data));
@@ -50,7 +50,7 @@ class LoginScreen extends Component {
         );
       } else {
         navigate('HomeScreen');
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     } catch (err) {
       console.log(err);
@@ -58,42 +58,42 @@ class LoginScreen extends Component {
         'There is an error',
         'There is an error when load data. Please try again',
       );
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   };
   async loginAccount(payload) {
     try {
-      let response = await axios.post(Config.API_URL + '/auth/login', payload, {
+      let response = await axios.post("https://bieonbe.matraindonesia.com" + '/auth/login', payload, {
         'Content-type': 'application/json',
       });
       // console.log('check response', response);
 
       if (response.status === 202) {
-        const {data, token} = response.data.data;
+        const { data, token } = response.data.data;
 
         await this.storeUserCredentials(data, token);
       }
     } catch (err) {
-      const {response} = err;
+      const { response } = err;
       console.log('error2', err);
-      this.setState({loading: false});
+      this.setState({ loading: false });
       if (response.status === 422) {
         this.onAlert(
           'Email or password is wrong',
           'please check your email and password and try again.',
         );
-        this.setState({loading: false});
+        this.setState({ loading: false });
         return;
       }
       this.onAlert('There is an error', 'Please try again.');
       console.log(err);
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
-    this.setState({loading: false});
+    this.setState({ loading: false });
   }
 
   onPressLogin() {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     if (this.state.email !== '' && this.state.password !== '') {
       let newLogin = {
         email: this.state.email,
@@ -105,12 +105,12 @@ class LoginScreen extends Component {
         'Email or password is empty',
         'Please enter your email or password before submit.',
       );
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   }
 
   onForgotPassword() {
-    const {navigate} = this.props.navigation;
+    const { navigate } = this.props.navigation;
     navigate('ForgetPasswordScreen');
   }
 
@@ -122,7 +122,7 @@ class LoginScreen extends Component {
           source={require('../assets/background/background.png')}>
           <KeyboardAvoidingView
             behavior="padding"
-            style={{alignItems: 'center', justifyContent: 'center'}}>
+            style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Image
               style={[styles.logo]}
               source={require('../assets/logo/loginwhite.png')}
@@ -138,7 +138,7 @@ class LoginScreen extends Component {
                   value={this.state.email}
                   underlineColorAndroid="transparent"
                   placeholder={'Email'}
-                  onChangeText={email => this.setState({email: email})}
+                  onChangeText={email => this.setState({ email: email })}
                 />
               </View>
               <View style={styles.blankMargin} />
@@ -153,7 +153,7 @@ class LoginScreen extends Component {
                   value={this.state.password}
                   underlineColorAndroid={'transparent'}
                   placeholder={'Password'}
-                  onChangeText={password => this.setState({password: password})}
+                  onChangeText={password => this.setState({ password: password })}
                 />
               </View>
             </View>

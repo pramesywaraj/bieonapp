@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Image,
@@ -45,12 +45,12 @@ export default class DeviceInfoScreen extends Component {
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
   async saveData() {
-    const {goBack} = this.props.navigation;
-    this.setState({loading: true});
+    const { goBack } = this.props.navigation;
+    this.setState({ loading: true });
     let data = {
       device_id: this.state.content.no_seri,
       counter: parseInt(this.state.content.count),
@@ -70,8 +70,8 @@ export default class DeviceInfoScreen extends Component {
     );
     // console.log('data', data);
     try {
-      let response = await axios.patch(
-        Config.API_URL + '/device/device-edit',
+      let response = await axios.post(
+        "https://bieonbe.matraindonesia.com" + '/device/device-edit',
         data,
         {
           headers: {
@@ -88,12 +88,12 @@ export default class DeviceInfoScreen extends Component {
         'There is an error',
         'There is an error when save data. Please try again',
       );
-      this.setState({loading: false});
+      this.setState({ loading: false });
       // console.log('There is an error in content', err);
     }
   }
   render() {
-    const {navigate} = this.props.navigation;
+    const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <LoadingModal visible={this.state.loading} />
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textWrapper: {width: '100%'},
+  textWrapper: { width: '100%' },
 
   TextInput: {
     fontSize: 16,

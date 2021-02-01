@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Image,
@@ -32,12 +32,12 @@ export default class ForgetPasswordScreen extends Component {
 
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
 
   onSendForgotPassword() {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     if (this.state.email !== '') {
       let forgotPassObj = {
         email: this.state.email,
@@ -49,15 +49,15 @@ export default class ForgetPasswordScreen extends Component {
         'Email or Password not yet filled',
         'Please enter your email or password first.',
       );
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   }
 
   async onForgotPasswordProcess(payload) {
-    const {goBack} = this.props.navigation;
+    const { goBack } = this.props.navigation;
     try {
       let response = await axios.post(
-        Config.API_URL + '/auth/forgot/password',
+        "https://bieonbe.matraindonesia.com" + '/auth/forgot/password',
         payload,
       );
 
@@ -67,26 +67,26 @@ export default class ForgetPasswordScreen extends Component {
           'Please check your email to reset the password.',
         );
         goBack();
-        this.setState({loading: false});
+        this.setState({ loading: false });
       }
     } catch (err) {
-      const {response} = err;
+      const { response } = err;
       console.log(err);
       if (response.status === 422) {
         this.onAlert('There is an error', 'Please try again.');
-        this.setState({loading: false});
+        this.setState({ loading: false });
         return;
       } else if (response.status === 400) {
         this.onAlert('Email not found', 'Email not found, please try again.');
-        this.setState({loading: false});
+        this.setState({ loading: false });
         return;
       }
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   }
 
   onBackToLogin() {
-    const {goBack} = this.props.navigation;
+    const { goBack } = this.props.navigation;
     goBack();
   }
 
@@ -98,7 +98,7 @@ export default class ForgetPasswordScreen extends Component {
           source={require('../assets/background/background.png')}>
           <KeyboardAvoidingView
             behavior="padding"
-            style={{alignItems: 'center', justifyContent: 'center'}}>
+            style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Image
               style={[styles.logo]}
               source={require('../assets/logo/loginwhite.png')}
@@ -114,7 +114,7 @@ export default class ForgetPasswordScreen extends Component {
                   value={this.state.email}
                   underlineColorAndroid="transparent"
                   placeholder={'Email'}
-                  onChangeText={email => this.setState({email: email})}
+                  onChangeText={email => this.setState({ email: email })}
                 />
               </View>
             </View>

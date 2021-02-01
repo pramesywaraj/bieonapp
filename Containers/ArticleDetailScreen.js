@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Image, Text, ScrollView, View} from 'react-native';
+import { StyleSheet, Image, Text, ScrollView, View } from 'react-native';
 import Config from 'react-native-config';
 import moment from 'moment';
 import {
@@ -7,8 +7,8 @@ import {
   heightPercentageToDP,
 } from 'react-native-responsive-screen';
 
-export default function ArticleDetailScreen({navigation}) {
-  const {article} = navigation.state.params;
+export default function ArticleDetailScreen({ navigation }) {
+  const { article } = navigation.state.params;
 
   return (
     <View style={styles.container}>
@@ -18,7 +18,7 @@ export default function ArticleDetailScreen({navigation}) {
             style={[styles.headingImage]}
             resizeMode="cover"
             source={{
-              uri: Config.API_URL + '/' + `${article.picture}`,
+              uri: "https://bieonbe.matraindonesia.com" + '/' + `${article.picture}`,
             }}
           />
         </View>

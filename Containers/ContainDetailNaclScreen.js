@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Image,
@@ -44,12 +44,12 @@ export default class ContainDetailNaclScreen extends Component {
   }
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
 
   async saveData() {
-    const {goBack} = this.props.navigation;
+    const { goBack } = this.props.navigation;
 
     if (this.state.sample_name === '') {
       this.onAlert('Sample name is blank', 'Please fill the sample name');
@@ -58,7 +58,7 @@ export default class ContainDetailNaclScreen extends Component {
 
     try {
       let response = await axios.post(
-        Config.API_URL + '/salt/a/input',
+        "https://bieonbe.matraindonesia.com" + '/salt/a/input',
         {
           device_id: this.state.content.no_seri,
           nacl: this.state.content.nacl,
@@ -86,7 +86,7 @@ export default class ContainDetailNaclScreen extends Component {
         'There is an error',
         'Ther is an error when save data. Please try again',
       );
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   }
 
@@ -97,7 +97,7 @@ export default class ContainDetailNaclScreen extends Component {
   write = async (id, message) => {
     // try {
     // for data1
-    this.setState({loading: true});
+    this.setState({ loading: true });
     // console.log('mes', message);
     await BluetoothSerial.device(id).write(message);
     await BluetoothSerial.readEvery(
@@ -114,9 +114,9 @@ export default class ContainDetailNaclScreen extends Component {
             water_content: bluetoothObj.water_content,
             whiteness: bluetoothObj.whiteness,
           };
-          this.setState({content: newObject});
+          this.setState({ content: newObject });
           this.props.navigation.navigate('ContainDetailNaclScreen');
-          this.setState({loading: false});
+          this.setState({ loading: false });
           // stop interval read
           if (intervalId) {
             clearInterval(intervalId);
@@ -130,7 +130,7 @@ export default class ContainDetailNaclScreen extends Component {
   };
 
   render() {
-    const {nacl, whiteness, water_content} = this.state.content;
+    const { nacl, whiteness, water_content } = this.state.content;
     return (
       <View style={styles.container}>
         <LoadingModal visible={this.state.loading} />
@@ -166,7 +166,7 @@ export default class ContainDetailNaclScreen extends Component {
                   style={styles.inputText}
                   placeholder="Sample Name"
                   underlineColorAndroid={'transparent'}
-                  onChangeText={sample_name => this.setState({sample_name})}
+                  onChangeText={sample_name => this.setState({ sample_name })}
                 />
               </View>
             </View>

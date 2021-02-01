@@ -6,12 +6,12 @@ import {
   Text,
   TouchableNativeFeedback,
 } from 'react-native';
-import {Image} from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import moment from 'moment';
 
 import Config from 'react-native-config';
 
-export default function Article({onClick, title, imageUri, createdAt}) {
+export default function Article({ onClick, title, imageUri, createdAt }) {
   return (
     <TouchableNativeFeedback onPress={onClick}>
       <View style={[styles.articleContainer]}>
@@ -19,7 +19,7 @@ export default function Article({onClick, title, imageUri, createdAt}) {
           <Image
             style={[styles.articleImage]}
             resizeMode="cover"
-            source={{uri: Config.API_URL + '/' + `${imageUri}`}}
+            source={{ uri: "https://bieonbe.matraindonesia.com" + '/' + `${imageUri}` }}
             PlaceholderContent={<ActivityIndicator />}
           />
         </View>

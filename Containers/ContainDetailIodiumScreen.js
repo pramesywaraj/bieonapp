@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-dupe-class-members */
-import React, {Component} from 'react';
-import {StyleSheet, Image, Alert, Text, View, TextInput} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Image, Alert, Text, View, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Config from 'react-native-config';
@@ -36,12 +36,12 @@ export default class ContainDetailIoduiScreen extends Component {
   }
   onAlert = (title, message) => {
     return Alert.alert(title, message, [
-      {text: 'Ok', onPress: () => console.log('Pressed')},
+      { text: 'Ok', onPress: () => console.log('Pressed') },
     ]);
   };
 
   async saveData() {
-    const {goBack} = this.props.navigation;
+    const { goBack } = this.props.navigation;
 
     if (this.state.sample_name === '') {
       this.onAlert('Sample name is blank', 'Please fill the sample name');
@@ -50,7 +50,7 @@ export default class ContainDetailIoduiScreen extends Component {
 
     try {
       let response = await axios.post(
-        Config.API_URL + '/salt/b/input',
+        "https://bieonbe.matraindonesia.com" + '/salt/b/input',
         {
           device_id: this.state.content.no_seri,
           iodium: this.state.content.iodium,
@@ -76,7 +76,7 @@ export default class ContainDetailIoduiScreen extends Component {
         'There is an error',
         'Ther is an error when save data. Please try again',
       );
-      this.setState({loading: false});
+      this.setState({ loading: false });
     }
   }
 
@@ -87,7 +87,7 @@ export default class ContainDetailIoduiScreen extends Component {
   write = async (id, message) => {
     // try {
     // for data1
-    this.setState({loading: true});
+    this.setState({ loading: true });
     // console.log('mes', message);
     await BluetoothSerial.device(id).write(message);
     await BluetoothSerial.readEvery(
@@ -102,9 +102,9 @@ export default class ContainDetailIoduiScreen extends Component {
             count: bluetoothObj.count,
             no_seri: bluetoothObj.no_seri,
           };
-          this.setState({content: newObject});
+          this.setState({ content: newObject });
           this.props.navigation.navigate('ContainDetailIodiumScreen');
-          this.setState({loading: false});
+          this.setState({ loading: false });
           // stop interval read
           if (intervalId) {
             clearInterval(intervalId);
@@ -118,7 +118,7 @@ export default class ContainDetailIoduiScreen extends Component {
   };
 
   render() {
-    const {iodium} = this.state.content;
+    const { iodium } = this.state.content;
 
     return (
       <View style={styles.container}>
@@ -148,7 +148,7 @@ export default class ContainDetailIoduiScreen extends Component {
                   style={styles.inputText}
                   placeholder="Sample Name"
                   underlineColorAndroid={'transparent'}
-                  onChangeText={sample_name => this.setState({sample_name})}
+                  onChangeText={sample_name => this.setState({ sample_name })}
                 />
               </View>
             </View>
