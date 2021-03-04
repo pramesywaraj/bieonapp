@@ -24,7 +24,9 @@ export default function Article({ onClick, title, imageUri, createdAt }) {
           />
         </View>
         <View style={styles.articleTextContainer}>
-          <Text style={[styles.title]}>{title}</Text>
+          <Text style={[styles.title]}>{
+            title.length > 35 ? title.substring(0, 31) + "..." : title
+          }</Text>
           <View style={styles.date}>
             <Text style={styles.dateText}>Terbit tanggal</Text>
             <Text style={styles.dateText}>

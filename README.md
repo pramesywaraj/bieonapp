@@ -9,7 +9,9 @@
 
 3. run "npm install" in command line
 
-4. After that, run the application with command "npx react-native run-android"
+4. create file .env, enter the base url
+
+5. After that, run the application with command "npx react-native run-android"
 
 
 ### How to deploy to Android

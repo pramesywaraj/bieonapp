@@ -1,8 +1,8 @@
 import React from 'react';
-import {Text, StyleSheet} from 'react-native';
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {createStackNavigator} from 'react-navigation-stack';
+import { Text, StyleSheet } from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -153,12 +153,12 @@ const AppNavigator = createBottomTabNavigator(
     Home: {
       screen: HomeNavigator,
       navigationOptions: {
-        tabBarLabel: ({tintColor}) => (
-          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+        tabBarLabel: ({ tintColor }) => (
+          <Text style={[tabStyle.bottomTabLabel, { color: tintColor }]}>
             Home
           </Text>
         ),
-        tabBarIcon: ({horizontal, tintColor}) => (
+        tabBarIcon: ({ horizontal, tintColor }) => (
           <Icon name="home" size={horizontal ? 20 : 25} color={tintColor} />
         ),
       },
@@ -166,12 +166,12 @@ const AppNavigator = createBottomTabNavigator(
     RetrieveData: {
       screen: RetrieveDataNavigator,
       navigationOptions: {
-        tabBarLabel: ({tintColor}) => (
-          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+        tabBarLabel: ({ tintColor }) => (
+          <Text style={[tabStyle.bottomTabLabel, { color: tintColor }]}>
             Retrieve Data
           </Text>
         ),
-        tabBarIcon: ({horizontal, tintColor}) => (
+        tabBarIcon: ({ horizontal, tintColor }) => (
           <Icon name="weight" size={horizontal ? 20 : 25} color={tintColor} />
         ),
       },
@@ -179,12 +179,12 @@ const AppNavigator = createBottomTabNavigator(
     ViewData: {
       screen: ViewDataNavigator,
       navigationOptions: {
-        tabBarLabel: ({tintColor}) => (
-          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+        tabBarLabel: ({ tintColor }) => (
+          <Text style={[tabStyle.bottomTabLabel, { color: tintColor }]}>
             View Data
           </Text>
         ),
-        tabBarIcon: ({horizontal, tintColor}) => (
+        tabBarIcon: ({ horizontal, tintColor }) => (
           <Icon name="table" size={horizontal ? 20 : 25} color={tintColor} />
         ),
       },
@@ -192,12 +192,12 @@ const AppNavigator = createBottomTabNavigator(
     Profile: {
       screen: ProfileNavigator,
       navigationOptions: {
-        tabBarLabel: ({tintColor}) => (
-          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+        tabBarLabel: ({ tintColor }) => (
+          <Text style={[tabStyle.bottomTabLabel, { color: tintColor }]}>
             Profile
           </Text>
         ),
-        tabBarIcon: ({horizontal, tintColor}) => (
+        tabBarIcon: ({ horizontal, tintColor }) => (
           <Icon
             name="user"
             size={horizontal ? 20 : 25}
@@ -210,12 +210,12 @@ const AppNavigator = createBottomTabNavigator(
     Settings: {
       screen: SettingsNavigator,
       navigationOptions: {
-        tabBarLabel: ({tintColor}) => (
-          <Text style={[tabStyle.bottomTabLabel, {color: tintColor}]}>
+        tabBarLabel: ({ tintColor }) => (
+          <Text style={[tabStyle.bottomTabLabel, { color: tintColor }]}>
             Settings
           </Text>
         ),
-        tabBarIcon: ({horizontal, tintColor}) => (
+        tabBarIcon: ({ horizontal, tintColor }) => (
           <Icon
             name="cog"
             size={horizontal ? 20 : 25}
@@ -245,7 +245,7 @@ const AppNavigator = createBottomTabNavigator(
       },
       tabStyle: {
         width: '100%',
-        paddingBottom: '10%',
+        paddingBottom: '1%',
       },
       allowFontScaling: true,
     },
